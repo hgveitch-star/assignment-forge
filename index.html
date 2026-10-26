@@ -389,7 +389,7 @@
   .ai-log-entry .ale-delete:hover { color: var(--danger); }
   .ai-log-empty { padding: var(--gap) 0; font-size: var(--size-small); color: var(--text-quiet); font-style: italic; text-align: left; }
 
-  .completion-view { /* reuses body typography */ }
+  .completion-view { }
   .completion-surface-heading { font-size: var(--size-heading); font-weight: 600; line-height: 1.3; margin: var(--gap-loose) 0 var(--gap-tight); letter-spacing: -0.01em; }
   .completion-surface-heading:first-child { margin-top: 0; }
   .completion-section-heading { font-size: var(--size-body); font-weight: 600; color: var(--text); line-height: 1.4; margin: var(--gap) 0 var(--gap-tight); }
@@ -407,7 +407,6 @@
   .revision-note .rn-remove { font-size: var(--size-tiny); color: var(--text-quiet); background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; text-decoration: underline; }
   .revision-note .rn-remove:hover { color: var(--danger); }
 
-  /* Phase 5 styles */
   .p5-header { margin-bottom: var(--gap-loose); }
   .p5-header h1 { font-size: var(--size-title); font-weight: 600; line-height: 1.25; margin: 0 0 6px; letter-spacing: -0.01em; }
   .p5-header p { margin: 0; font-size: var(--size-small); color: var(--text-quiet); line-height: 1.55; }
@@ -457,6 +456,13 @@
 
   .p5-close-nudge { font-size: var(--size-body); color: var(--text); line-height: 1.65; font-style: italic; }
 
+  #boot-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 500; transition: opacity 200ms ease; }
+  #boot-screen.hidden { opacity: 0; pointer-events: none; }
+  #boot-screen .boot-inner { max-width: 320px; padding: 0 var(--pad-screen); text-align: center; }
+  #boot-screen .boot-line { font-size: var(--size-small); color: var(--text-quiet); line-height: 1.55; }
+  #boot-screen .boot-error { font-size: var(--size-small); color: var(--danger); line-height: 1.55; margin-top: var(--gap-tight); display: none; }
+  #boot-screen .boot-error.visible { display: block; }
+
   #scrim { position: fixed; inset: 0; background: rgba(35, 34, 31, 0.35); opacity: 0; pointer-events: none; transition: opacity 180ms ease; z-index: 40; }
   #scrim.open { opacity: 1; pointer-events: auto; }
   .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 720px; margin: 0 auto; background: var(--surface); border-top-left-radius: var(--sheet-radius); border-top-right-radius: var(--sheet-radius); padding: var(--gap) var(--pad-screen) calc(var(--gap) + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform 220ms ease; z-index: 50; box-shadow: 0 -8px 30px rgba(35, 34, 31, 0.08); max-height: 88vh; overflow-y: auto; }
@@ -502,11 +508,19 @@
   @media (prefers-reduced-motion: reduce) {
     #scrim, .sheet, #support-menu, .p4-surface-menu, .p4-tools-menu,
     .level-card, .provider-card, #footer-action,
-    .progress-fill, .progress-inner, .setup-complete-line { transition: none; }
+    .progress-fill, .progress-inner, .setup-complete-line, #boot-screen { transition: none; }
   }
 </style>
 </head>
 <body>
+
+<div id="boot-screen" aria-live="polite">
+  <div class="boot-inner">
+    <div class="boot-line" id="boot-line">Getting things ready…</div>
+    <div class="boot-error" id="boot-error"></div>
+  </div>
+</div>
+
 <div id="app">
   <header id="frame-header">
     <div id="header-left">
@@ -730,6 +744,16 @@
 </div>
 
 <script>
+  // ============================================================================
+  // STORAGE LAYER
+  // Per the consolidation summary's data model:
+  //   - Student (level, API config, setupComplete) -> localStorage
+  //   - Course + Assignment -> IndexedDB
+  // The rest of the app calls these functions; it does not touch
+  // localStorage or IndexedDB directly. This is deliberate: when the UI
+  // changes in points 2-4, this layer stays put.
+  // ============================================================================
+
   var PROVIDERS = {
     deepseek: { label: 'DeepSeek', defaultModel: 'deepseek-chat', keyHint: 'DeepSeek keys usually start with "sk-".' },
     openai: { label: 'OpenAI', defaultModel: 'gpt-4o-mini', keyHint: 'OpenAI keys usually start with "sk-".' },
@@ -739,25 +763,128 @@
     groq: { label: 'Groq', defaultModel: 'openai/gpt-oss-20b', keyHint: 'Groq keys usually start with "gsk_".' }
   };
 
-  var API_STORE_KEY = 'taf_api_config_v1';
-  var API_LAST_KEY = 'taf_api_last_provider';
+  var STORAGE_VERSION = 1;
+  var LS_STUDENT_KEY = 'taf_student_v1';
+  var IDB_NAME = 'taf_store_v1';
+  var IDB_VERSION = 1;
+  var IDB_STORE = 'assignments';
 
-  function readApiStore() {
-    try { var raw = localStorage.getItem(API_STORE_KEY); if (raw) return JSON.parse(raw); }
-    catch (e) {}
-    return {};
+  var _idbPromise = null;
+
+  function openIdb() {
+    if (_idbPromise) return _idbPromise;
+    _idbPromise = new Promise(function (resolve, reject) {
+      if (typeof indexedDB === 'undefined') { reject(new Error('This browser cannot store your work (IndexedDB is unavailable).')); return; }
+      var req;
+      try { req = indexedDB.open(IDB_NAME, IDB_VERSION); }
+      catch (e) { reject(e); return; }
+      req.onupgradeneeded = function (ev) {
+        var db = ev.target.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) {
+          var store = db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+          store.createIndex('by_updated', 'updatedAt', { unique: false });
+        }
+      };
+      req.onsuccess = function (ev) { resolve(ev.target.result); };
+      req.onerror = function (ev) { reject(ev.target.error || new Error('Could not open your work store.')); };
+      req.onblocked = function () { reject(new Error('Your work store is open in another tab. Close other tabs and try again.')); };
+    });
+    return _idbPromise;
   }
-  function writeApiStore(store) { localStorage.setItem(API_STORE_KEY, JSON.stringify(store)); }
 
-  var welcome = { step: 1, integrityAgreed: false, level: null, provider: null };
+  function idbTx(mode) {
+    return openIdb().then(function (db) {
+      return db.transaction(IDB_STORE, mode).objectStore(IDB_STORE);
+    });
+  }
+
+  function idbGetAll() {
+    return idbTx('readonly').then(function (store) {
+      return new Promise(function (resolve, reject) {
+        var req = store.getAll();
+        req.onsuccess = function () { resolve(req.result || []); };
+        req.onerror = function () { reject(req.error); };
+      });
+    });
+  }
+
+  function idbPut(record) {
+    return idbTx('readwrite').then(function (store) {
+      return new Promise(function (resolve, reject) {
+        var req = store.put(record);
+        req.onsuccess = function () { resolve(); };
+        req.onerror = function () { reject(req.error); };
+      });
+    });
+  }
+
+  function idbDelete(id) {
+    return idbTx('readwrite').then(function (store) {
+      return new Promise(function (resolve, reject) {
+        var req = store.delete(id);
+        req.onsuccess = function () { resolve(); };
+        req.onerror = function () { reject(req.error); };
+      });
+    });
+  }
+
+  function readStudent() {
+    try {
+      var raw = localStorage.getItem(LS_STUDENT_KEY);
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      if (!obj || obj.version !== STORAGE_VERSION) return null;
+      return obj;
+    } catch (e) { return null; }
+  }
+
+  function writeStudent(student) {
+    var record = {
+      version: STORAGE_VERSION,
+      setupComplete: !!student.setupComplete,
+      level: student.level || null,
+      integrityAgreed: !!student.integrityAgreed,
+      api: student.api || null,
+      updatedAt: new Date().toISOString()
+    };
+    try { localStorage.setItem(LS_STUDENT_KEY, JSON.stringify(record)); } catch (e) {}
+    return record;
+  }
+
+  function readAssignmentStore() {
+    return idbGetAll().then(function (rows) {
+      rows.sort(function (a, b) { return (a.updatedAt || '').localeCompare(b.updatedAt || ''); });
+      return rows;
+    });
+  }
+
+  function saveAssignmentRecord(a) {
+    var record = JSON.parse(JSON.stringify(a));
+    record.updatedAt = new Date().toISOString();
+    if (!record.createdAt) record.createdAt = record.updatedAt;
+    return idbPut(record);
+  }
+
+  function deleteAssignmentRecord(id) {
+    return idbDelete(id);
+  }
+
+  // ============================================================================
+  // END STORAGE LAYER
+  // ============================================================================
+
+
+  var welcome = { step: 1, integrityAgreed: false, level: null, provider: null, setupComplete: false };
 
   function getApiConfig() {
-    var provider = welcome.provider || (localStorage.getItem(API_LAST_KEY) || 'deepseek');
+    var provider = welcome.provider || (welcome.api && welcome.api.provider) || (localStorage.getItem('taf_api_last_provider') || 'deepseek');
     var meta = PROVIDERS[provider] || {};
     var key = '';
     var model = '';
     if (document.getElementById('api-key')) key = document.getElementById('api-key').value.trim();
     if (document.getElementById('api-model')) model = document.getElementById('api-model').value.trim();
+    if (!key && welcome.api && welcome.api.provider === provider) key = welcome.api.key || '';
+    if (!model && welcome.api && welcome.api.provider === provider) model = welcome.api.model || '';
     return { provider: provider, key: key, model: model || meta.defaultModel || '' };
   }
 
@@ -801,7 +928,7 @@
     } else { throw new Error('Unknown provider: ' + provider); }
     var response;
     try { response = await fetch(endpoint, { method: 'POST', headers: headers, body: body }); }
-    catch (netErr) { throw new Error('Could not reach ' + meta.label + ' (' + netErr.message + '). Make sure you\u2019re serving over http://localhost, not file://.'); }
+    catch (netErr) { throw new Error('Could not reach ' + meta.label + ' (' + netErr.message + ').'); }
     if (!response.ok) {
       var errorText = await response.text();
       var detail = errorText.slice(0, 400);
@@ -849,7 +976,6 @@
     { id: 'claim-evidence', name: 'Claim + Evidence', shape: '[Claim], as [evidence] shows.' }
   ];
 
-  // Institutional AI policies (sample text — student can edit for their institution)
   var INSTITUTION_POLICIES = {
     'Default (unspecified)': 'Your institution\'s AI policy applies. Follow the rules your lecturer has given you. Declare any AI use in the form your institution requires.',
     'NWU': 'North-West University: requires a record of prompts and answers when AI is used in an assessment.',
@@ -859,7 +985,6 @@
     'UKZN': 'University of KwaZulu-Natal: substantial AI contributions must be methodologically sound and appropriately acknowledged.'
   };
 
-  // Citation style guide for AI tools (sample guidance)
   var CITATION_STYLES = {
     'None / not required': 'Your institution does not require a citation for AI use.',
     'APA 7': 'APA 7: AI tools cannot be authors because they cannot consent to the responsibilities of authorship. If you quote or reproduce AI-generated text, cite it in-text and in the reference list (author = the company; date = version date; title = tool name; source = URL). If you use AI in other ways, describe the use in the Method section, introduction, or a comparable place.',
@@ -869,7 +994,7 @@
   };
 
   var assignments = [];
-  var currentView = 'welcome';
+  var currentView = 'boot';
   var currentAssignmentId = null;
   var setupState = { syllabusFiles: [], briefFiles: [], manualEntries: [], completed: false, inProgress: false, isEditMode: false };
   var phase1State = { mode: 'create', targetId: null, sourceEntry: '', fields: { purpose: '', skills: '', knowledge: '', task: '', criteria: '', logistics: '' } };
@@ -946,6 +1071,20 @@
   var supportBtn = document.getElementById('support-btn');
   var supportMenu = document.getElementById('support-menu');
 
+  var bootScreen = document.getElementById('boot-screen');
+  var bootLine = document.getElementById('boot-line');
+  var bootError = document.getElementById('boot-error');
+
+  function hideBoot() {
+    bootScreen.classList.add('hidden');
+    setTimeout(function () { if (bootScreen.parentNode) bootScreen.parentNode.removeChild(bootScreen); }, 300);
+  }
+  function showBootError(message) {
+    bootLine.textContent = 'We couldn\'t open your work.';
+    bootError.textContent = message + ' If this keeps happening, try a different browser, or close other tabs of this page.';
+    bootError.classList.add('visible');
+  }
+
   function hideAllViews() {
     Object.keys(screens).forEach(function (k) { screens[k].classList.remove('active'); });
     setupView.classList.remove('active');
@@ -955,17 +1094,29 @@
     hideContextPanel();
   }
 
+  function persistStudentFromWelcome() {
+    var provider = welcome.provider;
+    var meta = PROVIDERS[provider] || {};
+    var key = apiKeyInput.value.trim();
+    var model = apiModelInput.value.trim() || meta.defaultModel || '';
+    welcome.api = { provider: provider, key: key, model: model };
+    try { localStorage.setItem('taf_api_last_provider', provider); } catch (e) {}
+    writeStudent({
+      setupComplete: true,
+      level: welcome.level,
+      integrityAgreed: welcome.integrityAgreed,
+      api: welcome.api
+    });
+    welcome.setupComplete = true;
+  }
+
   function setSelectedProvider(provider) {
     welcome.provider = provider;
     providerCards.forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-provider') === provider ? 'true' : 'false'); });
     var meta = PROVIDERS[provider] || {};
-    if (apiModelInput) { apiModelInput.value = meta.defaultModel || ''; apiModelInput.placeholder = meta.defaultModel || ''; }
+    if (apiModelInput) { apiModelInput.value = (welcome.api && welcome.api.provider === provider && welcome.api.model) ? welcome.api.model : (meta.defaultModel || ''); apiModelInput.placeholder = meta.defaultModel || ''; }
     if (apiKeyHint) apiKeyHint.textContent = meta.keyHint || 'Choose a provider above, then paste the key it gave you.';
-    var store = readApiStore();
-    if (store[provider] && store[provider].key) {
-      if (apiKeyInput) apiKeyInput.value = store[provider].key;
-      if (apiModelInput) apiModelInput.value = store[provider].model || meta.defaultModel || '';
-    }
+    if (apiKeyInput) apiKeyInput.value = (welcome.api && welcome.api.provider === provider && welcome.api.key) ? welcome.api.key : '';
     if (welcome.step === 4) updateWelcomeFooter();
   }
 
@@ -987,14 +1138,7 @@
   function welcomeNext() {
     if (welcome.step < 4) { welcome.step += 1; showWelcomeScreen(welcome.step); updateWelcomeFooter(); }
     else {
-      var provider = welcome.provider;
-      var meta = PROVIDERS[provider] || {};
-      var key = apiKeyInput.value.trim();
-      var model = apiModelInput.value.trim() || meta.defaultModel || '';
-      var store = readApiStore();
-      store[provider] = { key: key, model: model };
-      writeApiStore(store);
-      try { localStorage.setItem(API_LAST_KEY, provider); } catch (e) {}
+      persistStudentFromWelcome();
       enterSetup(false);
     }
   }
@@ -1044,7 +1188,7 @@
     updateSupportMenuVisibility();
   }
   function updateSupportMenuVisibility() {
-    var showChange = currentView !== 'welcome';
+    var showChange = currentView !== 'welcome' && currentView !== 'boot';
     changeApiBtn.style.display = showChange ? 'block' : 'none';
     supportDivider.style.display = showChange ? 'block' : 'none';
   }
@@ -1194,6 +1338,7 @@
     var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-primary'; del.textContent = 'Delete';
     del.addEventListener('click', function () {
       assignments = assignments.filter(function (x) { return x.id !== id; });
+      deleteAssignmentRecord(id).catch(function (e) { console.error('Could not delete record:', e); });
       closeSheet(); renderAssignments(); renderChosenSummary();
       footerAction.disabled = !hasAnyPendingInput();
       updateSetupExitVisibility();
@@ -1331,6 +1476,7 @@
         a.spec.knowledge = phase1State.fields.knowledge; a.spec.task = phase1State.fields.task;
         a.spec.criteria = phase1State.fields.criteria; a.spec.logistics = phase1State.fields.logistics;
         a.spec.studentAnswer = phase1State.sourceEntry;
+        saveAssignmentRecord(a).catch(function (e) { console.error('Could not save assignment:', e); });
       }
       enterSetup(true); return;
     }
@@ -1349,6 +1495,7 @@
       p2: { topic: '', sources: [] }, p3: { structure: null, thesis: '', outline: [] }
     };
     assignments.push(newAssignment);
+    saveAssignmentRecord(newAssignment).catch(function (e) { console.error('Could not save assignment:', e); });
     setupState.manualEntries.shift();
     if (setupState.manualEntries.length > 0) { enterPhase1('create'); return; }
     enterSetup(true);
@@ -1522,8 +1669,7 @@
     else if (phaseNum === 3) { p5UI.screen = 'inactive'; footerState.textContent = 'Build the Argument'; footerAction.classList.add('hidden'); renderPhase3(); }
     else if (phaseNum === 4) { p5UI.screen = 'inactive'; renderPhase4(); }
     else if (phaseNum === 5) {
-      // Auto-advance phase to 5
-      if (a.phase < 5) { a.phase = 5; a.phaseLabel = 'Phase 5 — Complete'; a.progressPercent = 90; a.quietLine = 'Draft complete. Ready to submit.'; updatePhaseTabsForAssignment(); }
+      if (a.phase < 5) { a.phase = 5; a.phaseLabel = 'Phase 5 — Complete'; a.progressPercent = 90; a.quietLine = 'Draft complete. Ready to submit.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
       p5UI.screen = 'arrival';
       renderPhase5();
     }
@@ -1650,6 +1796,7 @@
         parsed.forEach(function (src) {
           st.sources.push({ id: 'src-' + Date.now() + '-' + Math.floor(Math.random() * 10000), title: src.title, author: src.author, year: src.year, journal: src.journal, doi: src.doi, readingNote: '', approved: false });
         });
+        saveAssignmentRecord(a).catch(function (e) { console.error(e); });
         if (statusEl) { statusEl.className = 'p2-status ok'; statusEl.textContent = '✓ ' + parsed.length + ' source' + (parsed.length === 1 ? '' : 's') + ' found. Review below.'; }
         renderPhase2();
       }
@@ -1693,6 +1840,7 @@
       a.progressPercent = 50; a.quietLine = 'Phase 2 complete. Ready for Phase 3.';
       updatePhaseTabsForAssignment();
     }
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase2();
   }
   function removeSource(assignmentId, srcId) {
@@ -1710,6 +1858,7 @@
       a.progressPercent = 30; a.quietLine = 'Phase 2 in progress.';
       updatePhaseTabsForAssignment();
     }
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase2();
   }
 
@@ -1812,7 +1961,7 @@
     phase3Body.querySelectorAll('.outline-section-remove').forEach(function (btn) { btn.addEventListener('click', function () { removeOutlineSection(a.id, parseInt(btn.getAttribute('data-idx'), 10)); }); });
     var continueBtn = document.getElementById('p3-continue-btn');
     if (continueBtn) continueBtn.addEventListener('click', function () {
-      if (a.phase < 4) { a.phase = 4; a.phaseLabel = 'Phase 4 — Write'; a.progressPercent = 70; a.quietLine = 'Phase 3 complete. Ready to write.'; updatePhaseTabsForAssignment(); }
+      if (a.phase < 4) { a.phase = 4; a.phaseLabel = 'Phase 4 — Write'; a.progressPercent = 70; a.quietLine = 'Phase 3 complete. Ready to write.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
       setActivePhaseTab(4);
     });
   }
@@ -2037,6 +2186,7 @@
         else if (heading) heading.classList.remove('filled');
         if (el.value.trim().length > 0 && getSurfaceState(a, 'body') === 'not-started') setSurfaceState(a, 'body', 'in-progress');
         autosizeTextarea(el); updatePhase4Footer(a);
+        saveAssignmentRecord(a).catch(function (e) { console.error(e); });
       });
     });
     phase4Body.querySelectorAll('.p4-single-editor').forEach(function (el) {
@@ -2047,6 +2197,7 @@
         else if (surfaceId === 'introduction') a.p4.introduction.text = el.value;
         if (el.value.trim().length > 0 && getSurfaceState(a, surfaceId) === 'not-started') setSurfaceState(a, surfaceId, 'in-progress');
         autosizeTextarea(el); updatePhase4Footer(a);
+        saveAssignmentRecord(a).catch(function (e) { console.error(e); });
       });
     });
     var toolsBtn = document.getElementById('p4-tools-btn');
@@ -2100,7 +2251,7 @@
     if (action === 'draft') {
       var surfaceId = p4UI.activeSurface;
       if (!surfaceHasAnyText(a, surfaceId)) { showToastSmall('Write something first.'); return; }
-      setSurfaceState(a, surfaceId, 'drafted'); updatePhase4Footer(a);
+      setSurfaceState(a, surfaceId, 'drafted'); saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhase4Footer(a);
     } else if (action === 'next') {
       var idx = surfaces.indexOf(p4UI.activeSurface);
       if (idx >= 0 && idx < surfaces.length - 1) p4UI.activeSurface = surfaces[idx + 1];
@@ -2111,6 +2262,7 @@
     if (!a.p4) return;
     if (!a.p4.aiLog) a.p4.aiLog = [];
     a.p4.aiLog.push({ id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 10000), timestamp: new Date().toISOString(), tool: tool, surface: surface, note: '' });
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
   }
   function openFeedbackSheet(a, layer) {
     var surfaceId = p4UI.activeSurface;
@@ -2361,6 +2513,7 @@
       btn.addEventListener('click', function () {
         var logId = btn.getAttribute('data-log-id');
         a.p4.aiLog = a.p4.aiLog.filter(function (x) { return x.id !== logId; });
+        saveAssignmentRecord(a).catch(function (e) { console.error(e); });
         openAiLogSheet(a);
       });
     });
@@ -2407,6 +2560,7 @@
         var idx = parseInt(btn.getAttribute('data-rn-idx'), 10);
         if (isNaN(idx)) return;
         a.p4.revisionNotes.splice(idx, 1);
+        saveAssignmentRecord(a).catch(function (e) { console.error(e); });
         openCompletionView(a);
       });
     });
@@ -2436,6 +2590,7 @@
       if (!note) return;
       if (!a.p4.revisionNotes) a.p4.revisionNotes = [];
       a.p4.revisionNotes.push({ surface: surfaceKey, snippet: snippet, note: note, timestamp: new Date().toISOString() });
+      saveAssignmentRecord(a).catch(function (e) { console.error(e); });
       openCompletionView(a);
     });
     sheetActions.appendChild(cancelBtn); sheetActions.appendChild(saveBtn);
@@ -2562,12 +2717,10 @@
   }
   function runP5Citations(a) {
     var fullText = getSurfaceText(a, 'introduction') + '\n' + getSurfaceText(a, 'body') + '\n' + getSurfaceText(a, 'conclusion');
-    // Very simple in-text citation detector: looks for (Author Year) or (Author, Year) patterns.
     var inTextRe = /\(([A-Z][A-Za-z\-']+)(?:,|\s)\s*(\d{4})\)/g;
     var found = [];
     var m;
     while ((m = inTextRe.exec(fullText)) !== null) found.push(m[1] + ' ' + m[2]);
-    // Build a list of approved sources in "Author Year" form.
     var sources = (a.p2 && a.p2.sources) || [];
     var approvedSources = sources.filter(function (s) { return s.approved; });
     var refs = approvedSources.map(function (s) { return ((s.author || 'Unknown') + ' ' + (s.year || '')).trim(); });
@@ -2588,6 +2741,7 @@
     html += '<div class="cr-item" style="color:var(--text-quiet);font-style:italic;">This checks the mechanics, not whether each citation supports its claim. That\u2019s your call.</div>';
     a.p5.citationResult = html;
     a.p5.checksRun.citations = true;
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase5();
   }
   function runP5WordCount(a) {
@@ -2611,6 +2765,7 @@
     });
     a.p5.wordCountResult = html;
     a.p5.checksRun.wordCount = true;
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase5();
   }
   function runP5Formatting(a) {
@@ -2623,6 +2778,7 @@
     html += '<p class="form-hint" style="font-size:var(--size-tiny);color:var(--text-quiet);font-style:italic;line-height:1.5;">Title page, margins, font, spacing, page numbers and heading styles will be applied automatically at export.</p>';
     openSheet({ title: 'Formatting details', body: html, actions: [{ label: 'Save and continue', primary: true, onClick: function () {
       a.p5.checksRun.formatting = true;
+      saveAssignmentRecord(a).catch(function (e) { console.error(e); });
       renderPhase5();
     } }] });
     setTimeout(function () {
@@ -2662,6 +2818,7 @@
         a.p5.integrityComments[idx] = el.value;
       });
       a.p5.checksRun.integrity = true;
+      saveAssignmentRecord(a).catch(function (e) { console.error(e); });
       renderPhase5();
     } }] });
   }
@@ -2848,19 +3005,17 @@
       md += '## Conclusion\n\n' + a.p4.conclusion.text.trim() + '\n\n';
       htm += '<h2 style="font-size:16pt;font-weight:600;margin-top:24pt;">Conclusion</h2><p style="font-size:12pt;line-height:1.7;">' + escapeHtml(a.p4.conclusion.text.trim()).replace(/\n/g, '<br>') + '</p>';
     }
-    // References
     var sources = (a.p2 && a.p2.sources) || [];
     var approvedSources = sources.filter(function (s) { return s.approved; });
     if (approvedSources.length > 0) {
       md += '## References\n\n';
       htm += '<h2 style="font-size:16pt;font-weight:600;margin-top:24pt;">References</h2>';
-      approvedSources.forEach(function (src, idx) {
+      approvedSources.forEach(function (src) {
         var ref = (src.author || 'Unknown') + (src.year ? ' (' + src.year + ')' : '') + '. ' + (src.title || '') + (src.journal ? '. ' + src.journal : '') + (src.doi ? '. https://doi.org/' + src.doi : '') + '.';
         md += ref + '\n\n';
         htm += '<p style="font-size:12pt;line-height:1.7;padding-left:24pt;text-indent:-24pt;">' + escapeHtml(ref) + '</p>';
       });
     }
-    // Declaration
     if (a.p5 && a.p5.declarationText && a.p5.declarationText.trim()) {
       md += '## AI-use declaration\n\n' + a.p5.declarationText.trim() + '\n\n';
       htm += '<h2 style="font-size:16pt;font-weight:600;margin-top:24pt;">AI-use declaration</h2><p style="font-size:12pt;line-height:1.7;">' + escapeHtml(a.p5.declarationText.trim()).replace(/\n/g, '<br>') + '</p>';
@@ -2893,14 +3048,12 @@
 
   // ---------- Change AI provider ----------
   function openChangeApiSheet() {
-    var savedProvider = 'deepseek';
-    try { savedProvider = localStorage.getItem(API_LAST_KEY) || 'deepseek'; } catch (e) {}
+    var savedProvider = welcome.provider || (welcome.api && welcome.api.provider) || 'deepseek';
     if (!PROVIDERS[savedProvider]) savedProvider = 'deepseek';
-    var store = readApiStore();
-    var saved = store[savedProvider] || {};
+    var savedApi = (welcome.api && welcome.api.provider === savedProvider) ? welcome.api : {};
     var savedMeta = PROVIDERS[savedProvider] || {};
-    var savedKey = saved.key || '';
-    var savedModel = saved.model || savedMeta.defaultModel || '';
+    var savedKey = savedApi.key || '';
+    var savedModel = savedApi.model || savedMeta.defaultModel || '';
     sheetTitle.textContent = 'Change AI provider';
     var providersHTML = '<div class="cap-providers" role="group">';
     Object.keys(PROVIDERS).forEach(function (key) {
@@ -2922,10 +3075,10 @@
         var chosen = btn.getAttribute('data-cap-provider');
         sheetBody.querySelectorAll('.cap-provider').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cap-provider') === chosen ? 'true' : 'false'); });
         var meta = PROVIDERS[chosen] || {};
-        var s = readApiStore(); var sv = s[chosen] || {};
+        var cur = (welcome.api && welcome.api.provider === chosen) ? welcome.api : {};
         var keyEl = document.getElementById('cap-key'); var modelEl = document.getElementById('cap-model');
-        if (keyEl) keyEl.value = sv.key || '';
-        if (modelEl) modelEl.value = sv.model || meta.defaultModel || '';
+        if (keyEl) keyEl.value = cur.key || '';
+        if (modelEl) modelEl.value = cur.model || meta.defaultModel || '';
         var st = document.getElementById('cap-status'); if (st) { st.textContent = ''; st.className = 'cap-status'; }
       });
     });
@@ -2966,7 +3119,7 @@
     else throw new Error('Unknown provider: ' + provider);
     var response;
     try { response = await fetch(endpoint, { method: 'POST', headers: headers, body: body }); }
-    catch (netErr) { throw new Error('Could not reach ' + meta.label + ' (' + netErr.message + '). Serve over http://localhost, not file://.'); }
+    catch (netErr) { throw new Error('Could not reach ' + meta.label + ' (' + netErr.message + ').'); }
     if (!response.ok) { var errorText = await response.text(); var detail = errorText.slice(0, 400); try { var j = JSON.parse(errorText); detail = (j.error && j.error.message) || j.message || detail; } catch (e) {} throw new Error(meta.label + ' error ' + response.status + ': ' + detail); }
     return '';
   }
@@ -2978,11 +3131,15 @@
     var key = keyEl.value.trim();
     if (!key) { var st = document.getElementById('cap-status'); if (st) { st.className = 'cap-status error'; st.textContent = 'Paste a key first.'; } return; }
     var model = (modelEl && modelEl.value.trim()) || meta.defaultModel || '';
-    var store = readApiStore();
-    store[provider] = { key: key, model: model };
-    writeApiStore(store);
-    try { localStorage.setItem(API_LAST_KEY, provider); } catch (e) {}
     welcome.provider = provider;
+    welcome.api = { provider: provider, key: key, model: model };
+    try { localStorage.setItem('taf_api_last_provider', provider); } catch (e) {}
+    writeStudent({
+      setupComplete: welcome.setupComplete,
+      level: welcome.level,
+      integrityAgreed: welcome.integrityAgreed,
+      api: welcome.api
+    });
     closeSheet(); showToastSmall('Saved.');
   }
   function showToastSmall(message) {
@@ -3055,14 +3212,64 @@
   supportBtn.addEventListener('click', function (e) { e.stopPropagation(); if (supportMenu.classList.contains('open')) closeSupport(); else openSupport(); });
   document.addEventListener('click', function (e) { if (!supportMenu.contains(e.target) && e.target !== supportBtn) closeSupport(); });
 
-  (function initApiScreen() {
-    var lastProvider = 'deepseek';
-    try { lastProvider = localStorage.getItem(API_LAST_KEY) || 'deepseek'; } catch (e) {}
-    if (!PROVIDERS[lastProvider]) lastProvider = 'deepseek';
-    setSelectedProvider(lastProvider);
-  })();
-  showWelcomeScreen(1);
-  updateWelcomeFooter();
+  // ---------- Arrival sheet (plane metaphor) ----------
+  function showArrivalSheet(a) {
+    var body = '<p>The body is the journey. The introduction is boarding \u2014 it gets the reader on the plane and tells them where they\u2019re going. The conclusion is the landing \u2014 it brings them to the destination and lets them off.</p><p>You can\u2019t board passengers until you know where the plane is going. So: write the body first, then the landing, then the boarding.</p>';
+    openSheet({ title: 'Let\u2019s write', body: body, actions: [{ label: 'Let\u2019s write', primary: true }] });
+  }
+
+  // ============================================================================
+  // BOOT
+  // ============================================================================
+  function boot() {
+    bootLine.textContent = 'Getting things ready…';
+    var student = readStudent();
+    if (student) {
+      welcome.setupComplete = !!student.setupComplete;
+      welcome.level = student.level || null;
+      welcome.integrityAgreed = !!student.integrityAgreed;
+      welcome.api = student.api || null;
+      welcome.provider = (student.api && student.api.provider) || null;
+    }
+    var readPromise;
+    try { readPromise = readAssignmentStore(); }
+    catch (e) { readPromise = Promise.reject(e); }
+    readPromise.then(function (rows) {
+      assignments = Array.isArray(rows) ? rows : [];
+      if (assignments.length > 0) bootLine.textContent = 'Opening your semester…';
+
+      // Decide the entry point.
+      if (welcome.setupComplete) {
+        // The welcome flow is closed. The student is set up. They land either
+        // in setup (to add another assignment) or in the semester view.
+        setTimeout(function () {
+          hideBoot();
+          if (assignments.length > 0) enterSemester(false);
+          else enterSetup(false);
+        }, 50);
+      } else {
+        // First visit: welcome flow as before.
+        setTimeout(function () {
+          hideBoot();
+          currentView = 'welcome';
+          welcome.step = 1;
+          if (welcome.level) {
+            levelCards.forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-level') === welcome.level ? 'true' : 'false'); });
+          }
+          if (welcome.integrityAgreed) { integrityCheck.checked = true; }
+          if (welcome.provider) { setSelectedProvider(welcome.provider); }
+          else { setSelectedProvider('deepseek'); }
+          showWelcomeScreen(1);
+          updateWelcomeFooter();
+          updateSupportMenuVisibility();
+        }, 50);
+      }
+    }).catch(function (e) {
+      showBootError(e && e.message ? e.message : String(e));
+    });
+  }
+
+  boot();
 </script>
 </body>
 </html>
