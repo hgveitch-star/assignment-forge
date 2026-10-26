@@ -26,13 +26,15 @@
   a:hover { text-decoration: underline; }
 
   #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 720px; margin: 0 auto; }
-  header#frame-header { flex: 0 0 auto; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--pad-screen); background: var(--bg); border-bottom: 1px solid var(--rule); position: relative; z-index: 30; }
-  #header-left { min-width: 90px; display: flex; align-items: center; }
-  #back-btn { font-size: var(--size-small); color: var(--text-quiet); padding: 6px 2px; visibility: hidden; }
+
+  /* ---- Header: wordmark one line, truncates with ellipsis if narrow ---- */
+  header#frame-header { flex: 0 0 auto; height: var(--header-h); display: flex; align-items: center; gap: var(--gap-tight); padding: 0 var(--pad-screen); background: var(--bg); border-bottom: 1px solid var(--rule); position: relative; z-index: 30; }
+  #header-left { flex: 0 0 auto; display: flex; align-items: center; }
+  #back-btn { font-size: var(--size-small); color: var(--text-quiet); padding: 6px 2px; visibility: hidden; white-space: nowrap; }
   #back-btn.visible { visibility: visible; }
   #back-btn:hover { color: var(--text); }
-  #wordmark { font-size: var(--size-small); font-weight: 600; letter-spacing: 0.01em; color: var(--text); text-align: center; flex: 1; }
-  #support-btn { font-size: var(--size-small); color: var(--text-quiet); padding: 6px 2px; min-width: 90px; text-align: right; }
+  #wordmark { font-size: var(--size-small); font-weight: 600; letter-spacing: 0.01em; color: var(--text); text-align: left; flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #support-btn { flex: 0 0 auto; font-size: var(--size-small); color: var(--text-quiet); padding: 6px 2px; text-align: right; white-space: nowrap; }
   #support-btn:hover { color: var(--text); }
 
   #context-panel { flex: 0 0 auto; background: var(--surface); border-bottom: 1px solid var(--rule); display: none; }
@@ -51,9 +53,10 @@
 
   main#surface { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: var(--gap-loose) var(--pad-screen); }
 
-  footer#frame-footer { flex: 0 0 auto; height: var(--footer-h); display: flex; align-items: center; justify-content: space-between; gap: var(--gap-tight); padding: 0 var(--pad-screen); background: var(--bg); border-top: 1px solid var(--rule); }
-  #footer-state { font-size: var(--size-small); color: var(--text-quiet); }
-  #footer-action { font-size: var(--size-small); font-weight: 600; color: var(--surface); background: var(--accent); padding: 10px 18px; border-radius: 999px; transition: opacity 140ms ease; }
+  /* ---- Footer: fixed height, does not move ---- */
+  footer#frame-footer { flex: 0 0 auto; height: var(--footer-h); min-height: var(--footer-h); max-height: var(--footer-h); display: flex; align-items: center; justify-content: space-between; gap: var(--gap-tight); padding: 0 var(--pad-screen); background: var(--bg); border-top: 1px solid var(--rule); overflow: hidden; }
+  #footer-state { font-size: var(--size-small); color: var(--text-quiet); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #footer-action { flex: 0 0 auto; font-size: var(--size-small); font-weight: 600; color: var(--surface); background: var(--accent); padding: 10px 18px; border-radius: 999px; transition: opacity 140ms ease; white-space: nowrap; }
   #footer-action[disabled] { background: var(--skeleton); color: var(--surface); cursor: not-allowed; opacity: 0.7; }
   #footer-action:not([disabled]):hover { opacity: 0.9; }
   #footer-action.hidden { display: none; }
@@ -71,13 +74,23 @@
   .checkbox-row { display: flex; align-items: flex-start; gap: var(--gap-tight); padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); cursor: pointer; margin-top: var(--gap-loose); }
   .checkbox-row input { margin: 3px 0 0 0; width: 18px; height: 18px; accent-color: var(--accent); flex: 0 0 auto; }
   .checkbox-row span { font-size: var(--size-body); }
-  .level-cards, .provider-grid { display: flex; flex-direction: column; gap: var(--gap-tight); margin-top: var(--gap); }
-  .level-card, .provider-card { display: block; width: 100%; text-align: left; padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); transition: border-color 140ms ease; }
-  .level-card:hover, .provider-card:hover { border-color: var(--skeleton); }
-  .level-card[aria-pressed="true"], .provider-card[aria-pressed="true"] { border-color: var(--accent); border-width: 2px; padding: calc(var(--gap) - 1px); }
-  .level-title, .provider-name { display: block; font-size: var(--size-body); font-weight: 600; margin-bottom: 4px; }
-  .level-desc, .provider-desc { display: block; font-size: var(--size-small); color: var(--text-quiet); line-height: 1.45; }
-  .provider-cost { display: block; font-size: var(--size-small); color: var(--text-quiet); font-style: italic; margin-top: 6px; }
+  .level-cards { display: flex; flex-direction: column; gap: var(--gap-tight); margin-top: var(--gap); }
+  .level-card { display: block; width: 100%; text-align: left; padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); transition: border-color 140ms ease; }
+  .level-card:hover { border-color: var(--skeleton); }
+  .level-card[aria-pressed="true"] { border-color: var(--accent); border-width: 2px; padding: calc(var(--gap) - 1px); }
+  .level-title { display: block; font-size: var(--size-body); font-weight: 600; margin-bottom: 4px; }
+  .level-desc { display: block; font-size: var(--size-small); color: var(--text-quiet); line-height: 1.45; }
+
+  /* ---- Provider dropdown (Welcome 4) ---- */
+  .provider-select-block { margin-top: var(--gap); }
+  .pd-label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; }
+  .pd-select { width: 100%; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 40px 12px 14px; line-height: 1.4; box-sizing: border-box; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236E6E68' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+  .pd-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .pd-info { margin-top: var(--gap-tight); padding: var(--gap-tight) var(--gap); background: rgba(185, 183, 176, 0.08); border-left: 2px solid var(--skeleton); border-radius: 0 var(--radius) var(--radius) 0; }
+  .pd-info .pd-name { font-size: var(--size-body); font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .pd-info .pd-desc { font-size: var(--size-small); color: var(--text-quiet); line-height: 1.45; margin: 0 0 4px; }
+  .pd-info .pd-cost { font-size: var(--size-small); color: var(--text-quiet); font-style: italic; margin: 0 0 var(--gap-tight); line-height: 1.45; }
+  .pd-info .pd-link { font-size: var(--size-small); color: var(--accent); background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; text-decoration: underline; }
 
   .api-fields { margin-top: var(--gap-loose); padding-top: var(--gap); border-top: 1px solid var(--rule); }
   .api-fields label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; margin-top: var(--gap-tight); }
@@ -85,6 +98,10 @@
   .api-fields input { width: 100%; font: inherit; font-size: var(--size-small); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; line-height: 1.4; box-sizing: border-box; }
   .api-fields input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
   .api-fields .field-hint { font-size: var(--size-tiny); color: var(--text-quiet); margin-top: 4px; line-height: 1.5; font-style: italic; }
+  details.guide { margin-top: var(--gap-loose); }
+  details.guide summary { font-size: var(--size-small); color: var(--accent); cursor: pointer; padding: 6px 0; font-weight: 600; }
+  details.guide .guide-body { font-size: var(--size-small); color: var(--text-quiet); line-height: 1.55; padding-top: var(--gap-tight); }
+  details.guide .guide-body p { margin: 0 0 var(--gap-tight); }
 
   #setup-view, #phase1-view, #semester-view, #assignment-home { display: none; }
   #setup-view.active, #phase1-view.active, #semester-view.active, #assignment-home.active { display: block; }
@@ -233,25 +250,20 @@
   .p3-section { margin-bottom: var(--gap-loose); }
   .p3-section-title { font-size: var(--size-heading); font-weight: 600; line-height: 1.3; margin: 0 0 var(--gap-tight); letter-spacing: -0.01em; }
   .p3-section-hint { font-size: var(--size-small); color: var(--text-quiet); line-height: 1.55; margin: 0 0 var(--gap); }
-  .structure-picker { display: flex; flex-direction: column; gap: 6px; }
-  .structure-option { display: block; width: 100%; text-align: left; padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); font-family: inherit; cursor: pointer; transition: border-color 140ms ease; }
-  .structure-option:hover { border-color: var(--skeleton); }
-  .structure-option[aria-pressed="true"] { border-color: var(--accent); border-width: 2px; padding: calc(var(--gap) - 1px); }
-  .structure-option .so-name { display: block; font-size: var(--size-body); font-weight: 600; color: var(--text); }
-  .structure-option .so-formal { display: block; font-size: var(--size-tiny); color: var(--text-quiet); margin-top: 2px; font-style: italic; }
-  .structure-option .so-shape { display: block; font-size: var(--size-small); color: var(--text-quiet); margin-top: 6px; line-height: 1.45; }
+
+  /* ---- Structure + thesis frame dropdowns (Build the Argument) ---- */
+  .p3-select-block { margin-bottom: var(--gap-tight); }
+  .p3-select-label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; }
+  .p3-select { width: 100%; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 40px 12px 14px; line-height: 1.4; box-sizing: border-box; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236E6E68' d='M0 0h12L6 8z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+  .p3-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
   .structure-details { margin-top: var(--gap-tight); padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: rgba(185, 183, 176, 0.06); }
   .structure-details .sd-row { margin-bottom: var(--gap-tight); }
   .structure-details .sd-row:last-child { margin-bottom: 0; }
   .structure-details .sd-label { font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 4px; }
   .structure-details .sd-text { font-size: var(--size-small); color: var(--text); line-height: 1.55; }
-  .thesis-frames { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: var(--gap-tight); }
-  .thesis-frame-card { display: block; text-align: left; padding: var(--gap-tight); border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); font-family: inherit; cursor: pointer; transition: border-color 140ms ease; }
-  .thesis-frame-card:hover { border-color: var(--skeleton); }
-  .thesis-frame-card[aria-pressed="true"] { border-color: var(--accent); }
-  .thesis-frame-card .tfc-name { display: block; font-size: var(--size-small); font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .thesis-frame-card .tfc-shape { display: block; font-size: var(--size-tiny); color: var(--text-quiet); line-height: 1.4; font-style: italic; }
-  .thesis-input { width: 100%; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; line-height: 1.5; resize: vertical; min-height: 96px; box-sizing: border-box; }
+
+  .thesis-input { width: 100%; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; line-height: 1.5; resize: vertical; min-height: 96px; box-sizing: border-box; margin-top: var(--gap-tight); }
   .thesis-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
   .thesis-helper-row { display: flex; flex-wrap: wrap; gap: var(--gap); align-items: baseline; margin-top: var(--gap-tight); }
   .quiet-link { font-size: var(--size-small); color: var(--accent); background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; text-decoration: underline; }
@@ -271,8 +283,9 @@
   .outline-field-label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 4px; }
   .outline-input { width: 100%; font: inherit; font-size: var(--size-small); color: var(--text); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; line-height: 1.45; box-sizing: border-box; }
   .outline-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .outline-input::placeholder { color: var(--skeleton); font-style: normal; }
   .outline-targets-row { display: grid; grid-template-columns: 2fr 1fr; gap: 6px; align-items: end; }
-  @media (max-width: 500px) { .outline-targets-row { grid-template-columns: 1fr; } .thesis-frames { grid-template-columns: 1fr; } }
+  @media (max-width: 500px) { .outline-targets-row { grid-template-columns: 1fr; } }
   .source-checklist { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; padding: var(--gap-tight); background: rgba(185, 183, 176, 0.04); border: 1px solid var(--rule); border-radius: 8px; }
   .source-checklist-empty { font-size: var(--size-tiny); color: var(--text-quiet); font-style: italic; line-height: 1.5; }
   .source-checkbox-row { display: flex; align-items: flex-start; gap: 8px; font-size: var(--size-small); color: var(--text); line-height: 1.45; cursor: pointer; padding: 4px 0; }
@@ -320,7 +333,8 @@
   .p4-tools-row { margin-top: var(--gap-loose); padding-top: var(--gap); border-top: 1px solid var(--rule); position: relative; display: flex; gap: var(--gap-tight); flex-wrap: wrap; align-items: center; }
   .p4-tools-btn { font-size: var(--size-small); color: var(--text-quiet); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 14px; font-family: inherit; cursor: pointer; }
   .p4-tools-btn:hover { border-color: var(--skeleton); color: var(--text); }
-  .p4-tools-menu { position: absolute; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(35,34,31,0.08); min-width: 240px; padding: 6px 0; opacity: 0; pointer-events: none; transform: translateY(4px); transition: opacity 140ms ease, transform 140ms ease; z-index: 60; bottom: 100%; margin-bottom: 4px; left: 0; }
+  /* ---- Writing tools menu: opens downward, top of menu visible ---- */
+  .p4-tools-menu { position: absolute; top: calc(100% + 4px); bottom: auto; left: 0; margin-bottom: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(35,34,31,0.08); min-width: 240px; max-height: 60vh; overflow-y: auto; padding: 6px 0; opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 140ms ease, transform 140ms ease; z-index: 60; }
   .p4-tools-menu.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .p4-tools-menu button { display: block; width: 100%; padding: 10px 16px; font-size: var(--size-small); color: var(--text); background: none; border: 0; font-family: inherit; cursor: pointer; text-align: left; }
   .p4-tools-menu button:hover { background: var(--bg); }
@@ -507,7 +521,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     #scrim, .sheet, #support-menu, .p4-surface-menu, .p4-tools-menu,
-    .level-card, .provider-card, #footer-action,
+    .level-card, #footer-action,
     .progress-fill, .progress-inner, .setup-complete-line, #boot-screen { transition: none; }
   }
 </style>
@@ -589,38 +603,18 @@
       <h1>Connect an AI provider.</h1>
       <p>This tool runs in your browser. No account, no server, no data collection. To use the AI features, you bring your own API key from one of the providers below. You pay them directly — usually a few US cents per assignment.</p>
       <p class="quiet">Your key stays on your device. It never passes through any server of ours, because there isn't one.</p>
-      <div class="provider-grid" role="group" aria-label="AI provider">
-        <button class="provider-card" type="button" data-provider="deepseek" aria-pressed="false">
-          <span class="provider-name">DeepSeek</span>
-          <span class="provider-desc">Fast, capable, and the cheapest of the six. Good default if you're not sure where to start.</span>
-          <span class="provider-cost">Typically 1–3 US cents per assignment.</span>
-        </button>
-        <button class="provider-card" type="button" data-provider="openai" aria-pressed="false">
-          <span class="provider-name">OpenAI</span>
-          <span class="provider-desc">The most widely used. Reliable, familiar, and well documented.</span>
-          <span class="provider-cost">Typically 3–6 US cents per assignment.</span>
-        </button>
-        <button class="provider-card" type="button" data-provider="claude" aria-pressed="false">
-          <span class="provider-name">Claude</span>
-          <span class="provider-desc">Careful and thoughtful. Good at nuanced Socratic questions. Slightly slower than the fastest.</span>
-          <span class="provider-cost">Typically 3–7 US cents per assignment.</span>
-        </button>
-        <button class="provider-card" type="button" data-provider="gemini" aria-pressed="false">
-          <span class="provider-name">Gemini</span>
-          <span class="provider-desc">Fast, and often the simplest to get started with.</span>
-          <span class="provider-cost">Google offers a free tier as of this writing — check Google's pricing before you sign up.</span>
-        </button>
-        <button class="provider-card" type="button" data-provider="perplexity" aria-pressed="false">
-          <span class="provider-name">Perplexity</span>
-          <span class="provider-desc">Strong at searching and citing. Useful for Phase 2, less ideal for Socratic conversation.</span>
-          <span class="provider-cost">Typically 4–8 US cents per assignment.</span>
-        </button>
-        <button class="provider-card" type="button" data-provider="groq" aria-pressed="false">
-          <span class="provider-name">Groq</span>
-          <span class="provider-desc">Very fast responses. Slightly less nuanced feedback, but a pleasure to write alongside.</span>
-          <span class="provider-cost">Typically 1–3 US cents per assignment.</span>
-        </button>
+
+      <div class="provider-select-block">
+        <label class="pd-label" for="provider-select">Choose your LLM</label>
+        <select id="provider-select" class="pd-select"></select>
+        <div class="pd-info" id="provider-info">
+          <div class="pd-name" id="provider-info-name"></div>
+          <p class="pd-desc" id="provider-info-desc"></p>
+          <p class="pd-cost" id="provider-info-cost"></p>
+          <a class="pd-link" id="provider-info-link" href="#" target="_blank" rel="noopener noreferrer">Go to provider</a>
+        </div>
       </div>
+
       <div class="api-fields">
         <label for="api-key">Your API key</label>
         <input type="password" id="api-key" autocomplete="off" placeholder="Paste your API key here">
@@ -629,6 +623,7 @@
         <input type="text" id="api-model" autocomplete="off" placeholder="Auto-filled from your provider">
         <div class="field-hint">Model names change. If a call fails, check your provider's current model list.</div>
       </div>
+
       <details class="guide">
         <summary>Never set up an API key before? 2-minute guide.</summary>
         <div class="guide-body">
@@ -745,22 +740,15 @@
 
 <script>
   // ============================================================================
-  // STORAGE LAYER
-  // Per the consolidation summary's data model:
-  //   - Student (level, API config, setupComplete) -> localStorage
-  //   - Course + Assignment -> IndexedDB
-  // The rest of the app calls these functions; it does not touch
-  // localStorage or IndexedDB directly. This is deliberate: when the UI
-  // changes in points 2-4, this layer stays put.
+  // STORAGE LAYER (unchanged from point 1)
   // ============================================================================
-
   var PROVIDERS = {
-    deepseek: { label: 'DeepSeek', defaultModel: 'deepseek-chat', keyHint: 'DeepSeek keys usually start with "sk-".' },
-    openai: { label: 'OpenAI', defaultModel: 'gpt-4o-mini', keyHint: 'OpenAI keys usually start with "sk-".' },
-    claude: { label: 'Claude', defaultModel: 'claude-3-5-sonnet-20241022', keyHint: 'Anthropic keys usually start with "sk-ant-".' },
-    gemini: { label: 'Gemini', defaultModel: 'gemini-2.5-flash', keyHint: 'Gemini keys are issued by Google.' },
-    perplexity: { label: 'Perplexity', defaultModel: 'sonar', keyHint: 'Perplexity keys usually start with "pplx-".' },
-    groq: { label: 'Groq', defaultModel: 'openai/gpt-oss-20b', keyHint: 'Groq keys usually start with "gsk_".' }
+    deepseek: { label: 'DeepSeek', defaultModel: 'deepseek-chat', keyHint: 'DeepSeek keys usually start with "sk-".', url: 'https://www.deepseek.com/', desc: 'Fast, capable, and the cheapest of the six. Good default if you\u2019re not sure where to start.', cost: 'Typically 1\u20133 US cents per assignment.' },
+    openai: { label: 'OpenAI', defaultModel: 'gpt-4o-mini', keyHint: 'OpenAI keys usually start with "sk-".', url: 'https://platform.openai.com/', desc: 'The most widely used. Reliable, familiar, and well documented.', cost: 'Typically 3\u20136 US cents per assignment.' },
+    claude: { label: 'Claude', defaultModel: 'claude-3-5-sonnet-20241022', keyHint: 'Anthropic keys usually start with "sk-ant-".', url: 'https://www.anthropic.com/', desc: 'Careful and thoughtful. Good at nuanced Socratic questions. Slightly slower than the fastest.', cost: 'Typically 3\u20137 US cents per assignment.' },
+    gemini: { label: 'Gemini', defaultModel: 'gemini-2.5-flash', keyHint: 'Gemini keys are issued by Google.', url: 'https://ai.google.dev/', desc: 'Fast, and often the simplest to get started with.', cost: 'Google offers a free tier as of this writing \u2014 check Google\u2019s pricing before you sign up.' },
+    perplexity: { label: 'Perplexity', defaultModel: 'sonar', keyHint: 'Perplexity keys usually start with "pplx-".', url: 'https://www.perplexity.ai/', desc: 'Strong at searching and citing. Useful for Phase 2, less ideal for Socratic conversation.', cost: 'Typically 4\u20138 US cents per assignment.' },
+    groq: { label: 'Groq', defaultModel: 'openai/gpt-oss-20b', keyHint: 'Groq keys usually start with "gsk_".', url: 'https://groq.com/', desc: 'Very fast responses. Slightly less nuanced feedback, but a pleasure to write alongside.', cost: 'Typically 1\u20133 US cents per assignment.' }
   };
 
   var STORAGE_VERSION = 1;
@@ -868,13 +856,12 @@
   function deleteAssignmentRecord(id) {
     return idbDelete(id);
   }
-
   // ============================================================================
   // END STORAGE LAYER
   // ============================================================================
 
 
-  var welcome = { step: 1, integrityAgreed: false, level: null, provider: null, setupComplete: false };
+  var welcome = { step: 1, integrityAgreed: false, level: null, provider: null, setupComplete: false, api: null };
 
   function getApiConfig() {
     var provider = welcome.provider || (welcome.api && welcome.api.provider) || (localStorage.getItem('taf_api_last_provider') || 'deepseek');
@@ -955,18 +942,21 @@
     translation: 'You are a careful translator. Translate the text the user provides into English. Preserve meaning, tone, and sentence structure as far as possible. Do not add commentary, do not add introduction, do not add closing. Return only the translation.'
   };
 
+  // Eleventh + twelfth: "Create your own structure" (twelfth option) has
+  // sections: [] (empty) — it seeds one blank section in chooseStructure().
   var STRUCTURES = [
-    { id: 'dialectic', formal: 'Dialectic', shape: 'Thesis / Antithesis / Synthesis', sections: ['What you\u2019re arguing', 'The strongest objection', 'The better argument', 'Conclusion', 'Introduction'], what: 'Take a position, meet the strongest objection, show why your position survives.', when: 'The topic has a dominant narrative worth challenging.', watchOut: 'Do not present a weak objection.', example: '"[Example opening...]"' },
-    { id: 'argumentative', formal: 'Argumentative', shape: 'Claim, Evidence, Counterclaim, Response, Conclusion, Introduction', sections: ['Your claim', 'Your evidence', 'The counterclaim', 'Your response', 'Conclusion', 'Introduction'], what: 'Claim, evidence, counterclaim, response.', when: 'You have a clear position and want to defend it.', watchOut: 'Give the strongest version of the counterclaim.', example: '"[Example opening...]"' },
-    { id: 'thematic', formal: 'Thematic', shape: 'Theme, Theme, Theme, Conclusion, Introduction', sections: ['Theme 1', 'Theme 2', 'Theme 3', 'Conclusion', 'Introduction'], what: 'Organise by themes that reveal different angles.', when: 'The material resists a single linear argument.', watchOut: 'Themes must build toward a conclusion.', example: '"[Example opening...]"' },
-    { id: 'psi', formal: 'Problem\u2013Solution\u2013Implication', shape: 'Problem, Solution, Implication, Conclusion, Introduction', sections: ['The problem', 'The solution', 'The implication', 'Conclusion', 'Introduction'], what: 'Name a problem, propose a solution, consider the implications.', when: 'The assignment asks you to propose or assess.', watchOut: 'Do not spend all your words on the problem.', example: '"[Example opening...]"' },
-    { id: 'chronological', formal: 'Chronological / Narrative', shape: 'Event, Event, Event, Conclusion, Introduction', sections: ['Event 1', 'Event 2', 'Event 3', 'Conclusion', 'Introduction'], what: 'Build through sequence.', when: 'The topic has a clear before-and-after.', watchOut: 'Chronology is not an argument. The conclusion must interpret.', example: '"[Example opening...]"' },
-    { id: 'compare', formal: 'Compare\u2013Contrast', shape: 'Block or point-by-point', sections: ['Subject A', 'Subject B', 'The comparison', 'Conclusion', 'Introduction'], what: 'Compare two subjects.', when: 'The task verb is "compare" or "contrast".', watchOut: 'The comparison is not the conclusion.', example: '"[Example opening...]"' },
-    { id: 'cause', formal: 'Cause\u2013Effect', shape: 'Cause \u2192 Effect or Effect \u2192 Cause', sections: ['The causes', 'The effects', 'Conclusion', 'Introduction'], what: 'Trace what led to what.', when: 'The task asks "why" or "what was the impact".', watchOut: 'Correlation is not causation.', example: '"[Example opening...]"' },
-    { id: 'irac', formal: 'IRAC', shape: 'Rule, Issue, Application, Conclusion', sections: ['The rule', 'The issue', 'The application', 'The conclusion'], what: 'State the rule, identify the issue, apply to facts, conclude.', when: 'Answering a law problem question.', watchOut: 'Each element depends on the one before.', example: '"[Example opening...]"' },
-    { id: 'imrad', formal: 'IMRaD', shape: 'Intro, Methods, Results, Discussion, Abstract', sections: ['Methods', 'Results', 'Discussion', 'Introduction', 'Abstract'], what: 'The standard form for empirical research.', when: 'Reporting original research.', watchOut: 'Methods come before the results.', example: '"[Example opening...]"' },
-    { id: 'bluf', formal: 'Executive-Summary-First (BLUF)', shape: 'Bottom Line Up Front', sections: ['Body', 'Conclusion', 'Recommendations', 'Introduction', 'Executive summary'], what: 'Put the conclusion first, then support it.', when: 'The reader is busy and senior.', watchOut: 'Executive summary contains the recommendations.', example: '"[Example opening...]"' },
-    { id: 'reflective', formal: 'Reflective', shape: 'Gibbs (default)', sections: ['Description', 'Feelings', 'Evaluation', 'Analysis', 'Conclusion', 'Action plan'], what: 'Reflect on an experience and draw out lessons.', when: 'The assignment is a reflection.', watchOut: 'Analysis is the point.', example: '"[Example opening...]"' }
+    { id: 'dialectic', formal: 'Dialectic', shape: 'Thesis / Antithesis / Synthesis', sections: ['What you\u2019re arguing', 'The strongest objection', 'The better argument', 'Conclusion', 'Introduction'], what: 'Take a position, meet the strongest objection, show why your position survives.', watchOut: 'Do not present a weak objection.' },
+    { id: 'argumentative', formal: 'Argumentative', shape: 'Claim, Evidence, Counterclaim, Response, Conclusion, Introduction', sections: ['Your claim', 'Your evidence', 'The counterclaim', 'Your response', 'Conclusion', 'Introduction'], what: 'Claim, evidence, counterclaim, response.', watchOut: 'Give the strongest version of the counterclaim.' },
+    { id: 'thematic', formal: 'Thematic', shape: 'Theme, Theme, Theme, Conclusion, Introduction', sections: ['Theme 1', 'Theme 2', 'Theme 3', 'Conclusion', 'Introduction'], what: 'Organise by themes that reveal different angles.', watchOut: 'Themes must build toward a conclusion.' },
+    { id: 'psi', formal: 'Problem\u2013Solution\u2013Implication', shape: 'Problem, Solution, Implication, Conclusion, Introduction', sections: ['The problem', 'The solution', 'The implication', 'Conclusion', 'Introduction'], what: 'Name a problem, propose a solution, consider the implications.', watchOut: 'Do not spend all your words on the problem.' },
+    { id: 'chronological', formal: 'Chronological / Narrative', shape: 'Event, Event, Event, Conclusion, Introduction', sections: ['Event 1', 'Event 2', 'Event 3', 'Conclusion', 'Introduction'], what: 'Build through sequence.', watchOut: 'Chronology is not an argument. The conclusion must interpret.' },
+    { id: 'compare', formal: 'Compare\u2013Contrast', shape: 'Block or point-by-point', sections: ['Subject A', 'Subject B', 'The comparison', 'Conclusion', 'Introduction'], what: 'Compare two subjects.', watchOut: 'The comparison is not the conclusion.' },
+    { id: 'cause', formal: 'Cause\u2013Effect', shape: 'Cause \u2192 Effect or Effect \u2192 Cause', sections: ['The causes', 'The effects', 'Conclusion', 'Introduction'], what: 'Trace what led to what.', watchOut: 'Correlation is not causation.' },
+    { id: 'irac', formal: 'IRAC', shape: 'Rule, Issue, Application, Conclusion', sections: ['The rule', 'The issue', 'The application', 'The conclusion'], what: 'State the rule, identify the issue, apply to facts, conclude.', watchOut: 'Each element depends on the one before.' },
+    { id: 'imrad', formal: 'IMRaD', shape: 'Intro, Methods, Results, Discussion, Abstract', sections: ['Methods', 'Results', 'Discussion', 'Introduction', 'Abstract'], what: 'The standard form for empirical research.', watchOut: 'Methods come before the results.' },
+    { id: 'bluf', formal: 'Executive-Summary-First (BLUF)', shape: 'Bottom Line Up Front', sections: ['Body', 'Conclusion', 'Recommendations', 'Introduction', 'Executive summary'], what: 'Put the conclusion first, then support it.', watchOut: 'Executive summary contains the recommendations.' },
+    { id: 'reflective', formal: 'Reflective', shape: 'Gibbs (default)', sections: ['Description', 'Feelings', 'Evaluation', 'Analysis', 'Conclusion', 'Action plan'], what: 'Reflect on an experience and draw out lessons.', watchOut: 'Analysis is the point.' },
+    { id: 'custom', formal: 'Create your own structure', shape: 'You\u2019ll build the sections yourself', sections: [], what: 'You decide the shape. We\u2019ll start you with a single blank section and you add, rename, and remove as you like.', watchOut: 'Without a known shape, the argument still needs to build toward something. Let the outline serve that.' }
   ];
 
   var THESIS_FRAMES = [
@@ -1019,7 +1009,6 @@
   var footerAction = document.getElementById('footer-action');
   var integrityCheck = document.getElementById('integrity-check');
   var levelCards = document.querySelectorAll('.level-card');
-  var providerCards = document.querySelectorAll('.provider-card');
   var surface = document.getElementById('surface');
   var contextPanel = document.getElementById('context-panel');
   var contextCollapsed = document.getElementById('context-collapsed');
@@ -1061,6 +1050,12 @@
   var apiKeyHint = document.getElementById('api-key-hint');
   var changeApiBtn = document.getElementById('change-api-btn');
   var supportDivider = document.getElementById('support-divider');
+
+  var providerSelect = document.getElementById('provider-select');
+  var providerInfoName = document.getElementById('provider-info-name');
+  var providerInfoDesc = document.getElementById('provider-info-desc');
+  var providerInfoCost = document.getElementById('provider-info-cost');
+  var providerInfoLink = document.getElementById('provider-info-link');
 
   var scrim = document.getElementById('scrim');
   var sheet = document.getElementById('sheet');
@@ -1110,13 +1105,33 @@
     welcome.setupComplete = true;
   }
 
+  // ---- Provider dropdown (Welcome 4) ----
+  function populateProviderSelect() {
+    if (!providerSelect) return;
+    providerSelect.innerHTML = '';
+    Object.keys(PROVIDERS).forEach(function (key) {
+      var opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = PROVIDERS[key].label;
+      providerSelect.appendChild(opt);
+    });
+  }
+  function refreshProviderInfo(provider) {
+    var meta = PROVIDERS[provider] || {};
+    if (providerInfoName) providerInfoName.textContent = meta.label || '';
+    if (providerInfoDesc) providerInfoDesc.textContent = meta.desc || '';
+    if (providerInfoCost) providerInfoCost.textContent = meta.cost || '';
+    if (providerInfoLink) { providerInfoLink.textContent = 'Go to ' + (meta.label || 'provider'); providerInfoLink.href = meta.url || '#'; }
+  }
+
   function setSelectedProvider(provider) {
     welcome.provider = provider;
-    providerCards.forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-provider') === provider ? 'true' : 'false'); });
+    if (providerSelect) providerSelect.value = provider;
     var meta = PROVIDERS[provider] || {};
     if (apiModelInput) { apiModelInput.value = (welcome.api && welcome.api.provider === provider && welcome.api.model) ? welcome.api.model : (meta.defaultModel || ''); apiModelInput.placeholder = meta.defaultModel || ''; }
     if (apiKeyHint) apiKeyHint.textContent = meta.keyHint || 'Choose a provider above, then paste the key it gave you.';
     if (apiKeyInput) apiKeyInput.value = (welcome.api && welcome.api.provider === provider && welcome.api.key) ? welcome.api.key : '';
+    refreshProviderInfo(provider);
     if (welcome.step === 4) updateWelcomeFooter();
   }
 
@@ -1151,7 +1166,7 @@
       if (welcome.step === 3) updateWelcomeFooter();
     });
   });
-  providerCards.forEach(function (card) { card.addEventListener('click', function () { setSelectedProvider(card.getAttribute('data-provider')); }); });
+  if (providerSelect) providerSelect.addEventListener('change', function () { setSelectedProvider(providerSelect.value); });
   if (apiKeyInput) apiKeyInput.addEventListener('input', function () { if (welcome.step === 4) updateWelcomeFooter(); });
 
   footerAction.addEventListener('click', function () {
@@ -1873,12 +1888,15 @@
     var approvedSources = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }) : [];
     var html = '';
     html += '<p class="p3-lede">No prose in this phase. We\u2019re choosing the shape, not writing it.</p>';
-    html += '<div class="p3-section"><h2 class="p3-section-title">The structure</h2><p class="p3-section-hint">Pick the one that fits your argument.</p><div class="structure-picker">';
+
+    // Structure dropdown
+    html += '<div class="p3-section"><h2 class="p3-section-title">The structure</h2><p class="p3-section-hint">Pick the one that fits your argument.</p>';
+    html += '<div class="p3-select-block"><label class="p3-select-label" for="p3-structure-select">Choose a structure</label><select id="p3-structure-select" class="p3-select">';
+    html += '<option value="">Choose a structure…</option>';
     STRUCTURES.forEach(function (s) {
-      var pressed = (st.structure === s.id) ? 'true' : 'false';
-      html += '<button type="button" class="structure-option" data-struct-id="' + s.id + '" aria-pressed="' + pressed + '"><span class="so-name">' + escapeHtml(s.formal) + '</span><span class="so-formal">' + escapeHtml(s.shape) + '</span></button>';
+      html += '<option value="' + s.id + '"' + (st.structure === s.id ? ' selected' : '') + '>' + escapeHtml(s.formal) + '</option>';
     });
-    html += '</div>';
+    html += '</select></div>';
     if (st.structure) {
       var s = STRUCTURES.find(function (x) { return x.id === st.structure; });
       if (s) {
@@ -1886,17 +1904,22 @@
       }
     }
     html += '</div>';
-    html += '<div class="p3-section"><h2 class="p3-section-title">The thesis</h2><div class="thesis-frames">';
+
+    // Thesis: dropdown for frame + textarea
+    html += '<div class="p3-section"><h2 class="p3-section-title">The thesis</h2>';
+    html += '<div class="p3-select-block"><label class="p3-select-label" for="p3-thesis-frame-select">Common thesis structures</label><select id="p3-thesis-frame-select" class="p3-select">';
+    html += '<option value="">Choose a frame (optional)</option>';
     THESIS_FRAMES.forEach(function (f) {
-      var pressed = (a.p3.thesisFrame === f.id) ? 'true' : 'false';
-      html += '<button type="button" class="thesis-frame-card" data-frame-id="' + f.id + '" aria-pressed="' + pressed + '"><span class="tfc-name">' + escapeHtml(f.name) + '</span><span class="tfc-shape">' + escapeHtml(f.shape) + '</span></button>';
+      html += '<option value="' + f.id + '"' + (a.p3.thesisFrame === f.id ? ' selected' : '') + '>' + escapeHtml(f.name) + ' — ' + escapeHtml(f.shape) + '</option>';
     });
-    html += '</div>';
+    html += '</select></div>';
     html += '<textarea class="thesis-input" id="p3-thesis" placeholder="Write your thesis. One or two sentences.">' + escapeHtml(st.thesis || '') + '</textarea>';
     html += '<div class="thesis-helper-row"><button type="button" class="quiet-link" id="p3-angle-btn">Can\u2019t find your angle? →</button><button type="button" class="quiet-link" id="p3-socratic-btn">Ask me about this thesis</button></div>';
     html += '<div class="socratic-box' + (p3UI.thesisSocraticVisible ? ' visible' : '') + (p3UI.thesisSocraticStatus === 'busy' ? ' busy' : '') + (p3UI.thesisSocraticStatus === 'error' ? ' error' : '') + '" id="p3-socratic-box">';
     if (p3UI.thesisSocraticVisible) html += '<div class="sb-title">Questions on your thesis</div>' + escapeHtml(p3UI.thesisSocraticText || '');
     html += '</div></div>';
+
+    // Outline
     html += '<div class="p3-section"><h2 class="p3-section-title">The outline</h2>';
     if (st.outline.length === 0) html += '<p class="p3-section-hint" style="font-style:italic;">Pick a structure above to seed the outline.</p>';
     st.outline.forEach(function (sec, idx) { html += renderOutlineSectionCard(sec, idx, approvedSources); });
@@ -1924,8 +1947,11 @@
     }
     html += '</div>';
     phase3Body.innerHTML = html;
-    phase3Body.querySelectorAll('.structure-option').forEach(function (btn) { btn.addEventListener('click', function () { chooseStructure(a.id, btn.getAttribute('data-struct-id')); }); });
-    phase3Body.querySelectorAll('.thesis-frame-card').forEach(function (btn) { btn.addEventListener('click', function () { chooseThesisFrame(a.id, btn.getAttribute('data-frame-id')); }); });
+
+    var structSelect = document.getElementById('p3-structure-select');
+    if (structSelect) structSelect.addEventListener('change', function () { if (structSelect.value) chooseStructure(a.id, structSelect.value); });
+    var frameSelect = document.getElementById('p3-thesis-frame-select');
+    if (frameSelect) frameSelect.addEventListener('change', function () { chooseThesisFrame(a.id, frameSelect.value); });
     var thesisEl = document.getElementById('p3-thesis');
     if (thesisEl) thesisEl.addEventListener('input', function () { a.p3.thesis = thesisEl.value; });
     var angleBtn = document.getElementById('p3-angle-btn');
@@ -1978,7 +2004,8 @@
       });
       sourcesHTML += '</div>';
     }
-    return '<div class="outline-section-card"><div class="outline-section-heading"><span class="outline-section-index">Section ' + (idx + 1) + '</span><button type="button" class="outline-section-remove" data-idx="' + idx + '">Remove</button></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-heading">Heading</label><input type="text" class="outline-input" id="sec-' + idx + '-heading" data-idx="' + idx + '" data-field="heading" value="' + escapeHtml(sec.heading || '') + '"></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-purpose">Purpose</label><input type="text" class="outline-input" id="sec-' + idx + '-purpose" data-idx="' + idx + '" data-field="purpose" value="' + escapeHtml(sec.purpose || '') + '"></div><div class="outline-targets-row"><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-target">Word target</label><input type="text" class="outline-input" id="sec-' + idx + '-target" data-idx="' + idx + '" data-field="target" value="' + escapeHtml(sec.target || '') + '"></div></div><div class="outline-field"><label class="outline-field-label">Which sources?</label>' + sourcesHTML + '</div></div>';
+    var headingPlaceholder = (sec.heading && sec.heading.trim()) ? '' : 'placeholder="Section 1"';
+    return '<div class="outline-section-card"><div class="outline-section-heading"><span class="outline-section-index">Section ' + (idx + 1) + '</span><button type="button" class="outline-section-remove" data-idx="' + idx + '">Remove</button></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-heading">Heading</label><input type="text" class="outline-input" id="sec-' + idx + '-heading" data-idx="' + idx + '" data-field="heading" ' + headingPlaceholder + ' value="' + escapeHtml(sec.heading || '') + '"></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-purpose">Purpose</label><input type="text" class="outline-input" id="sec-' + idx + '-purpose" data-idx="' + idx + '" data-field="purpose" value="' + escapeHtml(sec.purpose || '') + '"></div><div class="outline-targets-row"><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-target">Word target</label><input type="text" class="outline-input" id="sec-' + idx + '-target" data-idx="' + idx + '" data-field="target" value="' + escapeHtml(sec.target || '') + '"></div></div><div class="outline-field"><label class="outline-field-label">Which sources?</label>' + sourcesHTML + '</div></div>';
   }
   function chooseStructure(assignmentId, structId) {
     var a = assignments.find(function (x) { return x.id === assignmentId; });
@@ -1987,21 +2014,30 @@
     a.p3.structure = structId;
     var s = STRUCTURES.find(function (x) { return x.id === structId; });
     var allEmpty = a.p3.outline.length === 0 || a.p3.outline.every(function (sec) { return (!sec.purpose || sec.purpose === '') && (!sec.target || sec.target === '') && (!sec.sources || sec.sources.length === 0); });
-    if (s && allEmpty && previous !== structId) a.p3.outline = s.sections.map(function (name) { return { heading: name, purpose: '', target: '', sources: [] }; });
+    if (s && allEmpty && previous !== structId) {
+      if (s.id === 'custom') {
+        a.p3.outline = [{ heading: '', purpose: '', target: '', sources: [] }];
+      } else {
+        a.p3.outline = s.sections.map(function (name) { return { heading: name, purpose: '', target: '', sources: [] }; });
+      }
+    }
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase3();
   }
   function chooseThesisFrame(assignmentId, frameId) {
     var a = assignments.find(function (x) { return x.id === assignmentId; });
     if (!a || !a.p3) return;
-    a.p3.thesisFrame = frameId;
+    a.p3.thesisFrame = frameId || null;
     var t = document.getElementById('p3-thesis');
     if (t) a.p3.thesis = t.value;
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase3();
   }
   function addOutlineSection(assignmentId) {
     var a = assignments.find(function (x) { return x.id === assignmentId; });
     if (!a || !a.p3) return;
     a.p3.outline.push({ heading: '', purpose: '', target: '', sources: [] });
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase3();
   }
   function removeOutlineSection(assignmentId, idx) {
@@ -2009,6 +2045,7 @@
     if (!a || !a.p3) return;
     if (isNaN(idx) || idx < 0 || idx >= a.p3.outline.length) return;
     a.p3.outline.splice(idx, 1);
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     renderPhase3();
   }
   function openAngleSheet() {
@@ -3223,6 +3260,7 @@
   // ============================================================================
   function boot() {
     bootLine.textContent = 'Getting things ready…';
+    populateProviderSelect();
     var student = readStudent();
     if (student) {
       welcome.setupComplete = !!student.setupComplete;
@@ -3238,17 +3276,13 @@
       assignments = Array.isArray(rows) ? rows : [];
       if (assignments.length > 0) bootLine.textContent = 'Opening your semester…';
 
-      // Decide the entry point.
       if (welcome.setupComplete) {
-        // The welcome flow is closed. The student is set up. They land either
-        // in setup (to add another assignment) or in the semester view.
         setTimeout(function () {
           hideBoot();
           if (assignments.length > 0) enterSemester(false);
           else enterSetup(false);
         }, 50);
       } else {
-        // First visit: welcome flow as before.
         setTimeout(function () {
           hideBoot();
           currentView = 'welcome';
@@ -3257,8 +3291,7 @@
             levelCards.forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-level') === welcome.level ? 'true' : 'false'); });
           }
           if (welcome.integrityAgreed) { integrityCheck.checked = true; }
-          if (welcome.provider) { setSelectedProvider(welcome.provider); }
-          else { setSelectedProvider('deepseek'); }
+          setSelectedProvider(welcome.provider || 'deepseek');
           showWelcomeScreen(1);
           updateWelcomeFooter();
           updateSupportMenuVisibility();
