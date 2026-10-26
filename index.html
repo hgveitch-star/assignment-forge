@@ -27,7 +27,6 @@
 
   #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 720px; margin: 0 auto; }
 
-  /* ---- Header: wordmark one line, truncates with ellipsis if narrow ---- */
   header#frame-header { flex: 0 0 auto; height: var(--header-h); display: flex; align-items: center; gap: var(--gap-tight); padding: 0 var(--pad-screen); background: var(--bg); border-bottom: 1px solid var(--rule); position: relative; z-index: 30; }
   #header-left { flex: 0 0 auto; display: flex; align-items: center; }
   #back-btn { font-size: var(--size-small); color: var(--text-quiet); padding: 6px 2px; visibility: hidden; white-space: nowrap; }
@@ -53,7 +52,6 @@
 
   main#surface { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: var(--gap-loose) var(--pad-screen); }
 
-  /* ---- Footer: fixed height, does not move ---- */
   footer#frame-footer { flex: 0 0 auto; height: var(--footer-h); min-height: var(--footer-h); max-height: var(--footer-h); display: flex; align-items: center; justify-content: space-between; gap: var(--gap-tight); padding: 0 var(--pad-screen); background: var(--bg); border-top: 1px solid var(--rule); overflow: hidden; }
   #footer-state { font-size: var(--size-small); color: var(--text-quiet); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #footer-action { flex: 0 0 auto; font-size: var(--size-small); font-weight: 600; color: var(--surface); background: var(--accent); padding: 10px 18px; border-radius: 999px; transition: opacity 140ms ease; white-space: nowrap; }
@@ -81,7 +79,6 @@
   .level-title { display: block; font-size: var(--size-body); font-weight: 600; margin-bottom: 4px; }
   .level-desc { display: block; font-size: var(--size-small); color: var(--text-quiet); line-height: 1.45; }
 
-  /* ---- Provider dropdown (Welcome 4) ---- */
   .provider-select-block { margin-top: var(--gap); }
   .pd-label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; }
   .pd-select { width: 100%; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 40px 12px 14px; line-height: 1.4; box-sizing: border-box; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236E6E68' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
@@ -251,7 +248,6 @@
   .p3-section-title { font-size: var(--size-heading); font-weight: 600; line-height: 1.3; margin: 0 0 var(--gap-tight); letter-spacing: -0.01em; }
   .p3-section-hint { font-size: var(--size-small); color: var(--text-quiet); line-height: 1.55; margin: 0 0 var(--gap); }
 
-  /* ---- Structure + thesis frame dropdowns (Build the Argument) ---- */
   .p3-select-block { margin-bottom: var(--gap-tight); }
   .p3-select-label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; }
   .p3-select { width: 100%; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 40px 12px 14px; line-height: 1.4; box-sizing: border-box; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236E6E68' d='M0 0h12L6 8z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
@@ -333,7 +329,6 @@
   .p4-tools-row { margin-top: var(--gap-loose); padding-top: var(--gap); border-top: 1px solid var(--rule); position: relative; display: flex; gap: var(--gap-tight); flex-wrap: wrap; align-items: center; }
   .p4-tools-btn { font-size: var(--size-small); color: var(--text-quiet); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 14px; font-family: inherit; cursor: pointer; }
   .p4-tools-btn:hover { border-color: var(--skeleton); color: var(--text); }
-  /* ---- Writing tools menu: opens downward, top of menu visible ---- */
   .p4-tools-menu { position: absolute; top: calc(100% + 4px); bottom: auto; left: 0; margin-bottom: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(35,34,31,0.08); min-width: 240px; max-height: 60vh; overflow-y: auto; padding: 6px 0; opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 140ms ease, transform 140ms ease; z-index: 60; }
   .p4-tools-menu.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .p4-tools-menu button { display: block; width: 100%; padding: 10px 16px; font-size: var(--size-small); color: var(--text); background: none; border: 0; font-family: inherit; cursor: pointer; text-align: left; }
@@ -740,7 +735,7 @@
 
 <script>
   // ============================================================================
-  // STORAGE LAYER (unchanged from point 1)
+  // STORAGE LAYER
   // ============================================================================
   var PROVIDERS = {
     deepseek: { label: 'DeepSeek', defaultModel: 'deepseek-chat', keyHint: 'DeepSeek keys usually start with "sk-".', url: 'https://www.deepseek.com/', desc: 'Fast, capable, and the cheapest of the six. Good default if you\u2019re not sure where to start.', cost: 'Typically 1\u20133 US cents per assignment.' },
@@ -942,8 +937,6 @@
     translation: 'You are a careful translator. Translate the text the user provides into English. Preserve meaning, tone, and sentence structure as far as possible. Do not add commentary, do not add introduction, do not add closing. Return only the translation.'
   };
 
-  // Eleventh + twelfth: "Create your own structure" (twelfth option) has
-  // sections: [] (empty) — it seeds one blank section in chooseStructure().
   var STRUCTURES = [
     { id: 'dialectic', formal: 'Dialectic', shape: 'Thesis / Antithesis / Synthesis', sections: ['What you\u2019re arguing', 'The strongest objection', 'The better argument', 'Conclusion', 'Introduction'], what: 'Take a position, meet the strongest objection, show why your position survives.', watchOut: 'Do not present a weak objection.' },
     { id: 'argumentative', formal: 'Argumentative', shape: 'Claim, Evidence, Counterclaim, Response, Conclusion, Introduction', sections: ['Your claim', 'Your evidence', 'The counterclaim', 'Your response', 'Conclusion', 'Introduction'], what: 'Claim, evidence, counterclaim, response.', watchOut: 'Give the strongest version of the counterclaim.' },
@@ -1105,7 +1098,7 @@
     welcome.setupComplete = true;
   }
 
-  // ---- Provider dropdown (Welcome 4) ----
+  // ---- Provider dropdown ----
   function populateProviderSelect() {
     if (!providerSelect) return;
     providerSelect.innerHTML = '';
@@ -1718,9 +1711,40 @@
     contextCaret.textContent = expanded ? '▴' : '▾';
   });
 
+  // ============================================================================
+  // ANCHORED RE-RENDER
+  // Used by Phase 2 source approval and Phase 3 thesis Socratic so the page
+  // does not jump to the top when something within the phase changes.
+  // The anchor is an element ID. Before re-render, we measure its position
+  // relative to the viewport top. After re-render, we measure again and
+  // adjust surface.scrollTop by the difference, so the element ends up in
+  // the same place on screen as it was before.
+  // ============================================================================
+  function renderAnchored(anchorId, renderFn) {
+    var anchorEl = anchorId ? document.getElementById(anchorId) : null;
+    var beforeTop = null;
+    if (anchorEl) {
+      var surfaceRect = surface.getBoundingClientRect();
+      var anchorRect = anchorEl.getBoundingClientRect();
+      beforeTop = anchorRect.top - surfaceRect.top;
+    }
+    renderFn();
+    if (anchorId && beforeTop !== null) {
+      var newAnchorEl = document.getElementById(anchorId);
+      if (newAnchorEl) {
+        var newSurfaceRect = surface.getBoundingClientRect();
+        var newAnchorRect = newAnchorEl.getBoundingClientRect();
+        var newTop = newAnchorRect.top - newSurfaceRect.top;
+        var delta = newTop - beforeTop;
+        if (delta !== 0) surface.scrollTop += delta;
+      }
+    }
+  }
+
   // ============ Phase 2 ============
   function renderPhase2() {
-    surface.scrollTop = 0;
+    // No scrollTop reset here — the caller decides. On phase change, the
+    // caller resets; on in-phase changes, the caller anchors.
     var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
     if (!a) return;
     if (!a.p2) a.p2 = { topic: '', sources: [] };
@@ -1763,7 +1787,7 @@
     });
   }
   function renderSourceCard(src, notePrompt) {
-    var html = '<div class="source-card' + (src.approved ? ' approved' : '') + '">';
+    var html = '<div class="source-card' + (src.approved ? ' approved' : '') + '" data-src-id="' + src.id + '">';
     html += '<div class="source-status ' + (src.approved ? 'approved' : 'pending') + '">' + (src.approved ? 'Approved' : 'Pending') + '</div>';
     html += '<p class="source-title">' + escapeHtml(src.title) + '</p>';
     var metaParts = [];
@@ -1813,6 +1837,8 @@
         });
         saveAssignmentRecord(a).catch(function (e) { console.error(e); });
         if (statusEl) { statusEl.className = 'p2-status ok'; statusEl.textContent = '✓ ' + parsed.length + ' source' + (parsed.length === 1 ? '' : 's') + ' found. Review below.'; }
+        // After a search, the new sources appear below. No anchor; the
+        // search action was initiated from the top, so top is fine.
         renderPhase2();
       }
     } catch (e) {
@@ -1856,12 +1882,16 @@
       updatePhaseTabsForAssignment();
     }
     saveAssignmentRecord(a).catch(function (e) { console.error(e); });
-    renderPhase2();
+    // Anchored re-render: the approved source card stays where the student
+    // tapped, so the surrounding content shifts around it, not under their
+    // finger.
+    renderAnchored('src-' + srcId, renderPhase2);
   }
   function removeSource(assignmentId, srcId) {
     var a = assignments.find(function (x) { return x.id === assignmentId; });
     if (!a || !a.p2) return;
-    a.p2.sources = a.p2.sources.filter(function (s) { return s.id !== srcId; });
+    var removedIndex = -1;
+    a.p2.sources = a.p2.sources.filter(function (s, i) { if (s.id === srcId) { removedIndex = i; return false; } return true; });
     if (a.p3 && a.p3.outline) {
       a.p3.outline.forEach(function (sec) {
         if (Array.isArray(sec.sources)) sec.sources = sec.sources.filter(function (id) { return id !== srcId; });
@@ -1874,12 +1904,20 @@
       updatePhaseTabsForAssignment();
     }
     saveAssignmentRecord(a).catch(function (e) { console.error(e); });
-    renderPhase2();
+    // Anchor on the source that is now at the removed card's index, or on
+    // the previous one if we removed the last. If neither exists, fall back
+    // to a simple render.
+    var nextSrc = a.p2.sources[removedIndex] || a.p2.sources[removedIndex - 1];
+    if (nextSrc) {
+      renderAnchored('src-' + nextSrc.id, renderPhase2);
+    } else {
+      renderPhase2();
+    }
   }
 
   // ============ Phase 3 ============
   function renderPhase3() {
-    surface.scrollTop = 0;
+    // No scrollTop reset here either.
     var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
     if (!a) return;
     if (!a.p3) a.p3 = { structure: null, thesis: '', outline: [] };
@@ -1889,7 +1927,6 @@
     var html = '';
     html += '<p class="p3-lede">No prose in this phase. We\u2019re choosing the shape, not writing it.</p>';
 
-    // Structure dropdown
     html += '<div class="p3-section"><h2 class="p3-section-title">The structure</h2><p class="p3-section-hint">Pick the one that fits your argument.</p>';
     html += '<div class="p3-select-block"><label class="p3-select-label" for="p3-structure-select">Choose a structure</label><select id="p3-structure-select" class="p3-select">';
     html += '<option value="">Choose a structure…</option>';
@@ -1905,7 +1942,6 @@
     }
     html += '</div>';
 
-    // Thesis: dropdown for frame + textarea
     html += '<div class="p3-section"><h2 class="p3-section-title">The thesis</h2>';
     html += '<div class="p3-select-block"><label class="p3-select-label" for="p3-thesis-frame-select">Common thesis structures</label><select id="p3-thesis-frame-select" class="p3-select">';
     html += '<option value="">Choose a frame (optional)</option>';
@@ -1915,11 +1951,10 @@
     html += '</select></div>';
     html += '<textarea class="thesis-input" id="p3-thesis" placeholder="Write your thesis. One or two sentences.">' + escapeHtml(st.thesis || '') + '</textarea>';
     html += '<div class="thesis-helper-row"><button type="button" class="quiet-link" id="p3-angle-btn">Can\u2019t find your angle? →</button><button type="button" class="quiet-link" id="p3-socratic-btn">Ask me about this thesis</button></div>';
-    html += '<div class="socratic-box' + (p3UI.thesisSocraticVisible ? ' visible' : '') + (p3UI.thesisSocraticStatus === 'busy' ? ' busy' : '') + (p3UI.thesisSocraticStatus === 'error' ? ' error' : '') + '" id="p3-socratic-box">';
+    html += '<div id="p3-socratic-anchor" class="socratic-box' + (p3UI.thesisSocraticVisible ? ' visible' : '') + (p3UI.thesisSocraticStatus === 'busy' ? ' busy' : '') + (p3UI.thesisSocraticStatus === 'error' ? ' error' : '') + '" id="p3-socratic-box">';
     if (p3UI.thesisSocraticVisible) html += '<div class="sb-title">Questions on your thesis</div>' + escapeHtml(p3UI.thesisSocraticText || '');
     html += '</div></div>';
 
-    // Outline
     html += '<div class="p3-section"><h2 class="p3-section-title">The outline</h2>';
     if (st.outline.length === 0) html += '<p class="p3-section-hint" style="font-style:italic;">Pick a structure above to seed the outline.</p>';
     st.outline.forEach(function (sec, idx) { html += renderOutlineSectionCard(sec, idx, approvedSources); });
@@ -2057,19 +2092,20 @@
     if (!a.p3.thesis || a.p3.thesis.trim().length < 20) {
       p3UI.thesisSocraticVisible = true; p3UI.thesisSocraticStatus = 'error';
       p3UI.thesisSocraticText = 'Write a thesis first.';
-      renderPhase3(); return;
+      renderAnchored('p3-socratic-anchor', renderPhase3); return;
     }
     p3UI.thesisSocraticVisible = true; p3UI.thesisSocraticStatus = 'busy'; p3UI.thesisSocraticText = 'Thinking…';
-    renderPhase3();
+    renderAnchored('p3-socratic-anchor', renderPhase3);
     var systemPrompt = 'You are a warm, patient senior student \u2014 the older-brother voice. You do NOT write prose. You do NOT correct the thesis. You do NOT suggest a new thesis. You ask two or three short questions that help the student test the thesis themselves. Keep the whole reply under 120 words.';
     var userPrompt = 'Assignment: "' + a.title + '".\nThesis: "' + a.p3.thesis + '"\n\nAsk two or three questions to help them test this thesis. Only questions.';
     try {
       var reply = await callAI(userPrompt, { systemPrompt: systemPrompt, maxTokens: 400 });
-      p3UI.thesisSocraticStatus = 'done'; p3UI.thesisSocraticText = (reply || '').trim(); renderPhase3();
+      p3UI.thesisSocraticStatus = 'done'; p3UI.thesisSocraticText = (reply || '').trim();
+      renderAnchored('p3-socratic-anchor', renderPhase3);
     } catch (e) {
       p3UI.thesisSocraticStatus = 'error';
       p3UI.thesisSocraticText = 'Could not reach the AI: ' + (e && e.message ? e.message : String(e));
-      renderPhase3();
+      renderAnchored('p3-socratic-anchor', renderPhase3);
     }
   }
 
