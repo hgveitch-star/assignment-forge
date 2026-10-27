@@ -377,6 +377,18 @@
   .stuck-option { display: block; width: 100%; text-align: left; padding: var(--gap-tight); border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); font-family: inherit; cursor: pointer; font-size: var(--size-small); color: var(--text); line-height: 1.5; }
   .stuck-option:hover { border-color: var(--accent); }
 
+  .support-body { color: var(--text); font-size: var(--size-body); line-height: 1.6; }
+  .support-body p { margin: 0 0 var(--gap-tight); color: var(--text); }
+  .support-body p.quiet { color: var(--text-quiet); font-size: var(--size-small); }
+  .support-body h3 { font-size: var(--size-small); font-weight: 600; color: var(--text); margin: var(--gap) 0 var(--gap-tight); letter-spacing: 0; }
+  .support-body h3:first-child { margin-top: 0; }
+  .support-body .sp-quiet-line { font-size: var(--size-small); color: var(--text-quiet); font-style: italic; line-height: 1.55; }
+  .support-body .sp-options { display: flex; flex-direction: column; gap: 8px; margin-top: var(--gap); }
+  .support-body .sp-option { display: block; width: 100%; text-align: left; padding: var(--gap-tight); border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); font-family: inherit; cursor: pointer; font-size: var(--size-small); color: var(--text); line-height: 1.5; }
+  .support-body .sp-option:hover { border-color: var(--accent); }
+  .support-body .sp-answer { color: var(--text-quiet); font-style: italic; margin-top: var(--gap-tight); padding: var(--gap-tight) var(--gap); background: rgba(185, 183, 176, 0.06); border-left: 2px solid var(--skeleton); border-radius: 0 var(--radius) var(--radius) 0; font-size: var(--size-small); line-height: 1.55; }
+  .support-body .sp-where { margin-top: var(--gap); font-size: var(--size-small); color: var(--text); line-height: 1.55; }
+
   .refusal-copy { font-size: var(--size-body); color: var(--text); line-height: 1.65; font-style: italic; }
   .refusal-copy p { margin: 0 0 var(--gap-tight); }
   .refusal-copy p:last-child { margin-bottom: 0; }
@@ -508,6 +520,13 @@
   .cap-test-link:hover { color: var(--text); }
   .cap-test-link[disabled] { color: var(--text-quiet); cursor: not-allowed; }
 
+  .cap-level { display: flex; flex-direction: column; gap: 6px; margin-top: var(--gap-tight); }
+  .cap-level-btn { display: block; width: 100%; text-align: left; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); font-family: inherit; cursor: pointer; font-size: var(--size-small); transition: border-color 140ms ease; }
+  .cap-level-btn:hover { border-color: var(--skeleton); }
+  .cap-level-btn[aria-pressed="true"] { border-color: var(--accent); border-width: 2px; padding: 9px 11px; }
+  .cap-level-btn .cl-name { font-weight: 600; color: var(--text); }
+  .cap-level-btn .cl-desc { display: block; font-size: var(--size-tiny); color: var(--text-quiet); margin-top: 2px; }
+
   #support-menu { position: absolute; top: calc(var(--header-h) - 6px); right: var(--pad-screen); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); box-shadow: 0 6px 24px rgba(35, 34, 31, 0.08); min-width: 220px; padding: 6px 0; opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 140ms ease, transform 140ms ease; z-index: 60; }
   #support-menu.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
   #support-menu button { display: block; width: 100%; padding: 10px 16px; font-size: var(--size-small); color: var(--text); background: none; border: 0; font-family: inherit; cursor: pointer; text-align: left; }
@@ -538,9 +557,9 @@
     <span id="wordmark">The Assignment Forge</span>
     <button id="support-btn" type="button" aria-haspopup="true" aria-expanded="false">Support</button>
     <div id="support-menu" role="menu" aria-label="Support">
-      <button role="menuitem" type="button">What's this phase for?</button>
-      <button role="menuitem" type="button">I'm stressed</button>
-      <button role="menuitem" type="button">Check my thinking</button>
+      <button role="menuitem" type="button" id="support-phase-help">What's this phase for?</button>
+      <button role="menuitem" type="button" id="support-stressed">I'm stressed</button>
+      <button role="menuitem" type="button" id="support-thinking">Check my thinking</button>
       <div class="menu-divider" id="support-divider" style="display:none;"></div>
       <button role="menuitem" type="button" id="change-api-btn" style="display:none;">Change AI provider</button>
     </div>
@@ -557,19 +576,19 @@
 
   <main id="surface">
     <section class="screen active" id="screen-1">
-      <p class="pitch-quote">You've probably tried using AI for an essay. That's not this.</p>
-      <p>This tool doesn't write your essay. You do. What it does is help you think like a member of your discipline — to read carefully, argue clearly, and know why you're saying what you're saying.</p>
-      <p>The world you're graduating into has AI in it. Everywhere. The question is no longer whether you'll use it. It's whether you'll still know how to think when it's at your elbow.</p>
+      <p class="pitch-quote">The tool that coaches you to become a respected thinker in your field.</p>
+      <p>The world has changed. It used to be that knowledge work was done alone — one person, one desk, one long night. Now it's a collaboration between humans and AI. That's not going away. The question is who's in charge.</p>
+      <p>This tool develops your thinking. It will not write anything for you.</p>
       <hr class="pitch-rule">
       <p>We're not here to help you pass. We're here to help you learn how to work in a world where AI is everywhere, and you're still the one whose name goes on the work.</p>
     </section>
 
     <section class="screen" id="screen-2">
-      <h1>Before we start, the rule.</h1>
-      <p>The rule is simple, and it doesn't move: <strong>you write it.</strong> The tool helps you think. It does not produce the prose. When you ask it to write your essay, it will say no — kindly, but firmly.</p>
+      <h1>Before we start, one rule.</h1>
+      <p>The rule is simple: <strong>you write your own work.</strong> This tool helps you think; it does not produce prose.</p>
       <h2>Why it matters — three reasons.</h2>
       <ol class="integrity-reasons">
-        <li><strong>It's how thinking develops.</strong> An argument you build yourself becomes yours. An argument you copy becomes someone else's, and you carry it like borrowed clothing.</li>
+        <li><strong>This is how thinking develops.</strong> An argument you build yourself becomes yours. An argument you copy becomes someone else's, and you carry it like borrowed clothing.</li>
         <li><strong>Your institution's rules apply.</strong> Whatever your university says about AI use in assignments, that's the rule. This tool works within it.</li>
         <li><strong>You should be able to defend every word.</strong> If a lecturer asked you "why did you say this?", you should have an answer that's yours.</li>
       </ol>
@@ -580,8 +599,7 @@
     </section>
 
     <section class="screen" id="screen-3">
-      <h1>What are you studying at the moment?</h1>
-      <p>This changes the prompts the tool uses, the reading note frames, and the level of the Socratic questions. Both levels are equally respected. You can change this later.</p>
+      <h1>Are you:</h1>
       <div class="level-cards" role="group" aria-label="Level">
         <button class="level-card" type="button" data-level="undergrad" aria-pressed="false">
           <span class="level-title">Undergraduate</span>
@@ -662,7 +680,7 @@
           <div id="assigned-list"></div>
         </div>
         <div class="chosen-summary" id="chosen-summary">You haven't added anything yet.</div>
-        <p class="setup-closing-line hidden" id="setup-closing-line">That's one. Add another, or go back to your semester when you're ready.</p>
+        <p class="setup-closing-line hidden" id="setup-closing-line">Add another, or go back to your semester when you're ready.</p>
         <div class="simulated-note">This build uses sample data to preview the flow. Real parsing arrives in Block 10.</div>
       </div>
       <div class="setup-screen" id="setup-b">
@@ -934,7 +952,12 @@
     sentence_feedback: 'You are a warm, patient senior student \u2014 the older-brother voice. You help the student look at a specific sentence they have written.\n\nHARD RULES:\n- You do NOT correct the sentence.\n- You do NOT supply a corrected version.\n- You do NOT mark anything as wrong.\n- You DO name a pattern you notice.\n- You DO ask about a choice.\n- You DO name a strength if there is one.\n\nTONE: warm, direct, plain language. Second person. Under 100 words.\n\nReturn only the feedback.',
     seeds: 'You are a warm, patient senior student \u2014 the older-brother voice. You are offering SEED questions to help the student get started on a section they are staring at.\n\nHARD RULES:\n- You do NOT write prose.\n- You do NOT suggest what the section should say.\n- You offer between 3 and 5 short questions, each one sentence.\n- Each question should open a door, not prescribe an answer.\n- Each question should be answerable by the student in their own words.\n\nFORMAT: a bulleted list, one question per bullet. No preamble, no closing line.',
     walkthrough: 'You are a warm, patient senior student \u2014 the older-brother voice. You are guiding the student through a section they cannot start. You ask ONE question at a time, and only one.\n\nHARD RULES:\n- You do NOT write prose.\n- You do NOT supply content.\n- You ask exactly one question in each reply.\n- Your question should follow naturally from the student\u2019s last answer.\n- If the student has not yet answered, ask the opening question.\n- If the student says "I don\u2019t know", accept it, and ask a smaller question.\n\nTONE: warm, patient, plain language. Second person. Each question under 30 words.\n\nReturn only the question. No preamble.',
-    translation: 'You are a careful translator. Translate the text the user provides into English. Preserve meaning, tone, and sentence structure as far as possible. Do not add commentary, do not add introduction, do not add closing. Return only the translation.'
+    translation: 'You are a careful translator. Translate the text the user provides into English. Preserve meaning, tone, and sentence structure as far as possible. Do not add commentary, do not add introduction, do not add closing. Return only the translation.',
+    thinking_claim: 'You are a warm, patient senior student \u2014 the older-brother voice. You are helping the student test their claim. You ask Socratic questions, one at a time. You never supply an answer. You never evaluate. If the student says "I don\u2019t know", you accept it and say: "That\u2019s worth sitting with. Come back to it when you\u2019ve got something." Then stop. Plain language. Second person. One question per reply, under 30 words.',
+    thinking_structure: 'You are a warm, patient senior student \u2014 the older-brother voice. You are helping the student test the shape of their argument. You ask Socratic questions, one at a time. You never supply an answer. You never evaluate. Plain language. Second person. One question per reply, under 30 words.',
+    thinking_sources: 'You are a warm, patient senior student \u2014 the older-brother voice. You are helping the student check whether their sources support what they think they support. You ask Socratic questions, one at a time. You never supply an answer. You never evaluate. Plain language. Second person. One question per reply, under 30 words.',
+    thinking_reasoning: 'You are a warm, patient senior student \u2014 the older-brother voice. You are helping the student check the link between evidence and claim in their argument. You ask Socratic questions, one at a time. You never supply an answer. You never evaluate. Plain language. Second person. One question per reply, under 30 words.',
+    thinking_honesty: 'You are a warm, patient senior student \u2014 the older-brother voice. You are helping the student check whether they can defend what they\u2019ve written. You ask Socratic questions, one at a time. You never supply an answer. You never evaluate. Plain language. Second person. One question per reply, under 30 words.'
   };
 
   var STRUCTURES = [
@@ -976,9 +999,53 @@
     'Chicago': 'Chicago: cite AI-generated material in a footnote with the tool name, version, and access date. If the material is not quoted but used, describe the use in the appropriate note.'
   };
 
+  var PHASE_HELP = {
+    1: {
+      title: 'Semester view',
+      whatFor: 'Here you can see all your upcoming assignments at a glance.',
+      needs: 'At least one assignment. If you haven\u2019t added one yet, go to setup and add one.',
+      walkAway: 'A clear view of what\u2019s due, and when.',
+      wontDo: 'It won\u2019t nag you. It won\u2019t rank your assignments. It won\u2019t tell you what to do first.',
+      why: 'Assignments don\u2019t come one at a time. They come in clusters. Seeing them together, sorted by what\u2019s actually due soonest, is how you avoid being surprised by three deadlines landing in the same week.'
+    },
+    2: {
+      title: 'Find Sources',
+      whatFor: 'This phase is for gathering the sources that answer your assignment question, and reading them well enough to use them.',
+      needs: 'A working question, and a willingness to read. You\u2019ll need to write a short reading note for each source before you can approve it \u2014 that\u2019s the rule.',
+      walkAway: 'A set of approved sources, each with a reading note in your own words, ready to support the argument you build next.',
+      wontDo: 'It won\u2019t read for you. It won\u2019t summarise for you. It won\u2019t decide which sources are good enough \u2014 you decide that when you write the note.',
+      why: 'Sources are the ground your argument stands on. If you can\u2019t say, in your own words, what a source argues, you can\u2019t use it in an argument. The reading note is how you find out whether you actually understand it, and it\u2019s how you avoid borrowing someone else\u2019s words without knowing it.'
+    },
+    3: {
+      title: 'Build the Argument',
+      whatFor: 'This phase is for deciding what you\u2019re arguing and how the argument will be shaped.',
+      needs: 'A working question, and a willingness to commit to a shape. It needs a thesis \u2014 one or two sentences that say what you\u2019ll prove \u2014 and an outline with at least two sections.',
+      walkAway: 'A thesis you can defend, a structure that fits the argument, and an outline with purposes and word targets.',
+      wontDo: 'It won\u2019t write prose. Not one sentence. The thesis and the outline are yours.',
+      why: 'An argument without a shape is a pile of good paragraphs. The shape is what turns them into an argument. Choosing the shape before you write is what saves you from rewriting the whole thing later \u2014 and the thesis is what you\u2019ll come back to when you\u2019ve lost the thread mid-draft.'
+    },
+    4: {
+      title: 'Write',
+      whatFor: 'This phase is for writing the draft. Section by section. The words on the page are yours.',
+      needs: 'A thesis and an outline. Beyond that, it needs you to write. The tool can ask questions and give feedback, but it cannot produce the prose.',
+      walkAway: 'A full draft \u2014 body, conclusion, introduction \u2014 with every section at least drafted.',
+      wontDo: 'It won\u2019t write for you. It won\u2019t rewrite your prose. It won\u2019t supply transitions, topic sentences, or concluding sentences. It won\u2019t tell you what a section should say.',
+      why: 'The point of an assignment is not the words on the page. It\u2019s the thinking that produces them. If the tool wrote it, you couldn\u2019t defend it \u2014 and you\u2019d have learned nothing except how to ask. The tool is here to help you think, not to think for you. The writing order (body first, then landing, then boarding) follows the same principle: you can\u2019t introduce what you haven\u2019t yet introduced.'
+    },
+    5: {
+      title: 'Complete',
+      whatFor: 'This phase is for checking what you\u2019ve built, declaring how you built it, and exporting it.',
+      needs: 'A finished draft, with every section at least drafted. Then your honesty: the checks, the declaration, and the export.',
+      walkAway: 'A checked, declared, formatted document ready to submit.',
+      wontDo: 'It won\u2019t rewrite anything. It won\u2019t check for plagiarism. It won\u2019t predict your grade. It won\u2019t submit for you.',
+      why: 'Submitting is its own skill, and it\u2019s not a small one. Citations that don\u2019t match, word counts that are over, formatting that\u2019s wrong \u2014 none of those are about whether your argument is good, but they all cost marks. And the declaration is a pause: a moment to be honest about how you worked, before you put your name on it.'
+    }
+  };
+
   var assignments = [];
   var currentView = 'boot';
   var currentAssignmentId = null;
+  var currentActivePhaseTab = null;
   var setupState = { syllabusFiles: [], briefFiles: [], manualEntries: [], completed: false, inProgress: false, isEditMode: false };
   var phase1State = { mode: 'create', targetId: null, sourceEntry: '', fields: { purpose: '', skills: '', knowledge: '', task: '', criteria: '', logistics: '' } };
   var p3UI = { thesisSocraticVisible: false, thesisSocraticStatus: 'idle', thesisSocraticText: '' };
@@ -1043,6 +1110,9 @@
   var apiKeyHint = document.getElementById('api-key-hint');
   var changeApiBtn = document.getElementById('change-api-btn');
   var supportDivider = document.getElementById('support-divider');
+  var supportPhaseHelpBtn = document.getElementById('support-phase-help');
+  var supportStressedBtn = document.getElementById('support-stressed');
+  var supportThinkingBtn = document.getElementById('support-thinking');
 
   var providerSelect = document.getElementById('provider-select');
   var providerInfoName = document.getElementById('provider-info-name');
@@ -1098,7 +1168,6 @@
     welcome.setupComplete = true;
   }
 
-  // ---- Provider dropdown ----
   function populateProviderSelect() {
     if (!providerSelect) return;
     providerSelect.innerHTML = '';
@@ -1133,7 +1202,7 @@
     surface.scrollTop = 0;
   }
   function updateWelcomeFooter() {
-    if (welcome.step >= 1 && welcome.step <= 4) footerState.textContent = 'Welcome · ' + welcome.step + ' of 4';
+    if (welcome.step >= 1 && welcome.step <= 4) footerState.textContent = 'Welcome \u00b7 ' + welcome.step + ' of 4';
     footerAction.classList.remove('hidden');
     footerAction.disabled = false;
     switch (welcome.step) {
@@ -1177,17 +1246,18 @@
 
   function enterSetup(isEdit) {
     currentView = 'setup';
+    currentActivePhaseTab = null;
     setupState.isEditMode = !!isEdit;
     hideAllViews();
     setupView.classList.add('active');
     surface.scrollTop = 0;
-    footerState.textContent = 'Set up · 1 of 2';
+    footerState.textContent = 'Set up \u00b7 1 of 2';
     footerAction.classList.remove('hidden');
     footerAction.disabled = !hasAnyPendingInput();
     footerAction.textContent = 'Set Up Semester';
     setupHeading.textContent = isEdit ? 'Edit your semester.' : "Let's set up your semester.";
     backBtn.classList.toggle('visible', !!isEdit);
-    backBtn.textContent = '← Back';
+    backBtn.textContent = '\u2190 Back';
     showSetupScreen('a');
     renderChosenSummary();
     renderManualEntries();
@@ -1210,11 +1280,11 @@
     document.getElementById('setup-' + which).classList.add('active');
     surface.scrollTop = 0;
     if (which === 'a') {
-      footerState.textContent = 'Set up · 1 of 2';
+      footerState.textContent = 'Set up \u00b7 1 of 2';
       footerAction.classList.remove('hidden');
       footerAction.disabled = !hasAnyPendingInput();
     } else {
-      footerState.textContent = 'Set up · 2 of 2';
+      footerState.textContent = 'Set up \u00b7 2 of 2';
       footerAction.classList.add('hidden');
     }
   }
@@ -1261,7 +1331,7 @@
     files.forEach(function (f, idx) {
       var li = document.createElement('li');
       var name = document.createElement('span'); name.className = 'fl-name'; name.textContent = f.name;
-      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fl-remove'; btn.textContent = '×'; btn.setAttribute('aria-label', 'Remove ' + f.name);
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fl-remove'; btn.textContent = '\u00d7'; btn.setAttribute('aria-label', 'Remove ' + f.name);
       btn.addEventListener('click', function () { removeFile(which, idx); });
       li.appendChild(name); li.appendChild(btn); listEl.appendChild(li);
     });
@@ -1281,10 +1351,10 @@
     setupState.manualEntries.forEach(function (text, idx) {
       var row = document.createElement('div'); row.className = 'manual-entry-row';
       var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'manual-entry-text';
-      var preview = text.length > 60 ? text.substring(0, 60) + '…' : text;
+      var preview = text.length > 60 ? text.substring(0, 60) + '\u2026' : text;
       btn.textContent = 'Manual entry: "' + preview + '"';
       btn.addEventListener('click', function () { openManualSheet(idx); });
-      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'manual-entry-remove'; rm.textContent = '×';
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'manual-entry-remove'; rm.textContent = '\u00d7';
       rm.addEventListener('click', function () {
         setupState.manualEntries.splice(idx, 1);
         renderManualEntries(); renderChosenSummary(); footerAction.disabled = !hasAnyPendingInput();
@@ -1303,7 +1373,7 @@
       var title = document.createElement('span'); title.className = 'assigned-title'; title.textContent = a.title;
       main.appendChild(code); main.appendChild(title);
       main.addEventListener('click', function () { enterPhase1('edit', a.id); });
-      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'assigned-remove'; rm.textContent = '×';
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'assigned-remove'; rm.textContent = '\u00d7';
       rm.addEventListener('click', function () { openDeleteConfirm(a.id); });
       row.appendChild(main); row.appendChild(rm); assignedListEl.appendChild(row);
     });
@@ -1365,7 +1435,7 @@
     setupState.inProgress = true;
     var pct = 0;
     progressInner.style.width = '0%';
-    document.getElementById('progress-label').textContent = 'Reading…';
+    document.getElementById('progress-label').textContent = 'Reading\u2026';
     if (parseTimer) clearInterval(parseTimer);
     parseTimer = setInterval(function () {
       pct += 4 + Math.random() * 3;
@@ -1375,12 +1445,11 @@
         clearInterval(parseTimer); parseTimer = null;
         setTimeout(function () {
           setupState.inProgress = false; setupState.completed = true;
-          if (setupState.manualEntries.length > 0) enterPhase1('create');
-          else enterSemester(true);
+          askAfterSetup();
         }, 300);
       } else {
         progressInner.style.width = pct + '%';
-        if (pct > 70) document.getElementById('progress-label').textContent = 'Almost there…';
+        if (pct > 70) document.getElementById('progress-label').textContent = 'Almost there\u2026';
       }
     }, 120);
   }
@@ -1390,13 +1459,43 @@
     showSetupScreen('a');
   });
 
+  function askAfterSetup() {
+    var existing = assignments.length;
+    var summaryParts = [];
+    if (setupState.manualEntries.length > 0) summaryParts.push(setupState.manualEntries.length + ' manual entr' + (setupState.manualEntries.length === 1 ? 'y' : 'ies'));
+    if (setupState.syllabusFiles.length > 0) summaryParts.push(setupState.syllabusFiles.length + ' syllabu' + (setupState.syllabusFiles.length === 1 ? 's' : 'ses'));
+    if (setupState.briefFiles.length > 0) summaryParts.push(setupState.briefFiles.length + ' brief' + (setupState.briefFiles.length === 1 ? '' : 's'));
+    var summaryLine;
+    if (summaryParts.length > 0) {
+      summaryLine = 'You\u2019ve added ' + summaryParts.join(', ') + '. Your semester has ' + existing + ' assignment' + (existing === 1 ? '' : 's') + '.';
+    } else {
+      summaryLine = 'Your semester has ' + existing + ' assignment' + (existing === 1 ? '' : 's') + '.';
+    }
+    var body = '<p>Do you want to add something else, or view your semester?</p><p style="font-size:var(--size-small);color:var(--text-quiet);margin-top:var(--gap-tight);">' + summaryLine + '</p>';
+    openSheet({
+      title: 'Setup complete',
+      body: body,
+      actions: [
+        { label: 'Add another', onClick: function () {
+          if (setupState.manualEntries.length > 0) enterPhase1('create');
+          else enterSetup(false);
+        } },
+        { label: 'View semester', primary: true, onClick: function () {
+          if (setupState.manualEntries.length > 0) enterPhase1('create');
+          else enterSemester(true);
+        } }
+      ]
+    });
+  }
+
   var currentP1Screen = 'extract';
   function enterPhase1(mode, assignmentId) {
     currentView = 'phase1';
+    currentActivePhaseTab = null;
     hideAllViews();
     phase1View.classList.add('active');
     surface.scrollTop = 0;
-    backBtn.classList.add('visible'); backBtn.textContent = '← Back';
+    backBtn.classList.add('visible'); backBtn.textContent = '\u2190 Back';
     if (mode === 'edit') {
       var a = assignments.find(function (x) { return x.id === assignmentId; });
       if (!a) { enterSetup(true); return; }
@@ -1417,12 +1516,12 @@
     document.getElementById('p1-' + which).classList.add('active');
     surface.scrollTop = 0;
     if (which === 'extract') {
-      footerState.textContent = 'Extraction · 1 of 2';
+      footerState.textContent = 'Extraction \u00b7 1 of 2';
       footerAction.classList.remove('hidden');
       footerAction.disabled = !phase1State.sourceEntry;
-      footerAction.textContent = 'Continue to specification →';
+      footerAction.textContent = 'Continue to specification \u2192';
     } else if (which === 'spec') {
-      footerState.textContent = 'Specification · 2 of 2';
+      footerState.textContent = 'Specification \u00b7 2 of 2';
       footerAction.classList.remove('hidden');
       footerAction.disabled = false;
       footerAction.textContent = phase1State.mode === 'edit' ? 'Confirm changes' : 'Confirm specification';
@@ -1441,7 +1540,7 @@
       p1Lede.textContent = "Here's the specification as you last confirmed it.";
     }
     var f = phase1State.fields;
-    var ownAnswerHTML = '<div class="p1-field p1-own-answer"><label for="p1-field-own-answer">Your answer — what you said the assignment is asking</label><textarea id="p1-field-own-answer">' + escapeHtml(phase1State.sourceEntry) + '</textarea></div>';
+    var ownAnswerHTML = '<div class="p1-field p1-own-answer"><label for="p1-field-own-answer">Your answer \u2014 what you said the assignment is asking</label><textarea id="p1-field-own-answer">' + escapeHtml(phase1State.sourceEntry) + '</textarea></div>';
     p1ExtractBody.innerHTML = ownAnswerHTML +
       fieldHTML('purpose', 'Purpose', f.purpose) + fieldHTML('skills', 'Skills', f.skills) +
       fieldHTML('knowledge', 'Knowledge', f.knowledge) + fieldHTML('task', 'Task', f.task) +
@@ -1471,7 +1570,7 @@
       reviewItem('Purpose', f.purpose) + reviewItem('Skills', f.skills) +
       reviewItem('Knowledge', f.knowledge) + reviewItem('Task', f.task) +
       reviewItem('Criteria for Success', f.criteria) + reviewItem('Logistics', f.logistics) +
-      '<div class="spec-review-item student-answer"><div class="sr-label">Your answer — what you said the assignment is asking</div><div class="sr-value">' + escapeHtml(phase1State.sourceEntry) + '</div></div>';
+      '<div class="spec-review-item student-answer"><div class="sr-label">Your answer \u2014 what you said the assignment is asking</div><div class="sr-value">' + escapeHtml(phase1State.sourceEntry) + '</div></div>';
   }
   function reviewItem(label, value) {
     return '<div class="spec-review-item"><div class="sr-label">' + label + '</div><div class="sr-value">' + (escapeHtml(value) || '<em>Not filled in.</em>') + '</div></div>';
@@ -1496,7 +1595,7 @@
       courseCode: 'ASGN ' + String(assignments.length + 1).padStart(3, '0'),
       courseName: 'Unassigned course', title: title,
       dueInDays: deriveDueInDays(f.logistics), wordCount: deriveWordCount(f.task + ' ' + entryText),
-      estimatedHours: 8, phase: 2, phaseLabel: 'Phase 2 — Find Sources',
+      estimatedHours: 8, phase: 2, phaseLabel: 'Phase 2 \u2014 Find Sources',
       progressPercent: 30, sections: [], quietLine: 'Phase 1 complete. Ready for Phase 2.',
       canDeadlineMode: false,
       spec: { purpose: f.purpose, skills: f.skills, knowledge: f.knowledge, task: f.task, criteria: f.criteria, logistics: f.logistics, studentAnswer: entryText },
@@ -1506,7 +1605,7 @@
     saveAssignmentRecord(newAssignment).catch(function (e) { console.error('Could not save assignment:', e); });
     setupState.manualEntries.shift();
     if (setupState.manualEntries.length > 0) { enterPhase1('create'); return; }
-    enterSetup(true);
+    enterSemester(true);
   }
   function generateFirstPass(text) {
     var lower = (text || '').toLowerCase();
@@ -1541,7 +1640,7 @@
     if (!text) return 'Untitled assignment';
     var m = text.match(/^([^\.\n]+)/);
     var t = m ? m[1].trim() : text.trim();
-    if (t.length > 60) t = t.substring(0, 60).trim() + '…';
+    if (t.length > 60) t = t.substring(0, 60).trim() + '\u2026';
     return t || 'Untitled assignment';
   }
   function deriveDueInDays(logistics) {
@@ -1566,7 +1665,7 @@
   });
 
   function enterSemester(showConfirmation) {
-    currentView = 'semester'; currentAssignmentId = null;
+    currentView = 'semester'; currentAssignmentId = null; currentActivePhaseTab = null;
     hideAllViews(); renderSemester(); semesterView.classList.add('active');
     surface.scrollTop = 0; backBtn.classList.remove('visible');
     footerState.textContent = 'Semester';
@@ -1582,7 +1681,7 @@
   function renderSemester() {
     if (assignments.length === 0) {
       pvSubtitle.textContent = '';
-      pvBody.innerHTML = '<div class="pv-empty"><p>No assignments yet.</p><p class="quiet">Add one to begin.</p><p><button type="button" class="pv-empty-link" id="pv-empty-link">Go to setup →</button></p></div>';
+      pvBody.innerHTML = '<div class="pv-empty"><p>No assignments yet.</p><p class="quiet">Add one to begin.</p><p><button type="button" class="pv-empty-link" id="pv-empty-link">Go to setup \u2192</button></p></div>';
       var link = document.getElementById('pv-empty-link');
       if (link) link.addEventListener('click', function () { enterSetup(false); });
       return;
@@ -1622,7 +1721,7 @@
   }
   function renderCard(a) {
     var dueLine = a.dueInDays > 0 ? 'Due in ' + a.dueInDays + ' day' + (a.dueInDays === 1 ? '' : 's') : 'No due date set';
-    var wcLine = a.wordCount > 0 ? ' · ' + a.wordCount + ' words' : '';
+    var wcLine = a.wordCount > 0 ? ' \u00b7 ' + a.wordCount + ' words' : '';
     return '<div class="pv-card" data-id="' + a.id + '"><div class="card-course">' + escapeHtml(a.courseCode) + '</div><div class="card-title">' + escapeHtml(a.title) + '</div><div class="card-progress"><div class="progress-bar"><div class="progress-fill" style="width:' + a.progressPercent + '%"></div></div><span class="phase-label">' + escapeHtml(a.phaseLabel) + '</span></div><div class="card-meta">' + dueLine + wcLine + '</div><div class="card-quiet-line">' + escapeHtml(a.quietLine) + '</div></div>';
   }
 
@@ -1632,7 +1731,7 @@
     hideAllViews();
     assignmentHome.classList.add('active');
     surface.scrollTop = 0;
-    backBtn.classList.add('visible'); backBtn.textContent = '← Semester';
+    backBtn.classList.add('visible'); backBtn.textContent = '\u2190 Semester';
     updateSupportMenuVisibility();
     updateContextPanel();
     updatePhaseTabsForAssignment();
@@ -1668,17 +1767,19 @@
     if (!a) return;
     if (phaseNum > a.phase && phaseNum < 5) phaseNum = a.phase;
     if (phaseNum < 2) phaseNum = 2;
+    currentActivePhaseTab = phaseNum;
     phaseTabs.forEach(function (tab) { tab.classList.toggle('active', Number(tab.getAttribute('data-phase')) === phaseNum); });
     document.getElementById('phase2-body').style.display = (phaseNum === 2) ? 'block' : 'none';
     document.getElementById('phase3-body').style.display = (phaseNum === 3) ? 'block' : 'none';
     document.getElementById('phase4-body').style.display = (phaseNum === 4) ? 'block' : 'none';
     document.getElementById('phase5-body').style.display = (phaseNum === 5) ? 'block' : 'none';
-    if (phaseNum === 2) { p5UI.screen = 'inactive'; footerState.textContent = 'Find Sources'; footerAction.classList.add('hidden'); renderPhase2(); }
-    else if (phaseNum === 3) { p5UI.screen = 'inactive'; footerState.textContent = 'Build the Argument'; footerAction.classList.add('hidden'); renderPhase3(); }
-    else if (phaseNum === 4) { p5UI.screen = 'inactive'; renderPhase4(); }
+    if (phaseNum === 2) { p5UI.screen = 'inactive'; footerState.textContent = 'Find Sources'; footerAction.classList.add('hidden'); surface.scrollTop = 0; renderPhase2(); }
+    else if (phaseNum === 3) { p5UI.screen = 'inactive'; footerState.textContent = 'Build the Argument'; footerAction.classList.add('hidden'); surface.scrollTop = 0; renderPhase3(); }
+    else if (phaseNum === 4) { p5UI.screen = 'inactive'; surface.scrollTop = 0; renderPhase4(); }
     else if (phaseNum === 5) {
-      if (a.phase < 5) { a.phase = 5; a.phaseLabel = 'Phase 5 — Complete'; a.progressPercent = 90; a.quietLine = 'Draft complete. Ready to submit.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
+      if (a.phase < 5) { a.phase = 5; a.phaseLabel = 'Phase 5 \u2014 Complete'; a.progressPercent = 90; a.quietLine = 'Draft complete. Ready to submit.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
       p5UI.screen = 'arrival';
+      surface.scrollTop = 0;
       renderPhase5();
     }
   }
@@ -1695,7 +1796,7 @@
     if (!a) { hideContextPanel(); return; }
     contextPanel.classList.add('visible');
     contextLine1.textContent = a.title;
-    contextLine2.textContent = a.courseCode + ' · Due in ' + a.dueInDays + ' days · ' + a.phaseLabel;
+    contextLine2.textContent = a.courseCode + ' \u00b7 Due in ' + a.dueInDays + ' days \u00b7 ' + a.phaseLabel;
     var s = a.spec;
     contextSpec.innerHTML =
       specItemHTML('Purpose', s.purpose) + specItemHTML('Skills', s.skills) +
@@ -1708,18 +1809,9 @@
     contextPanel.classList.toggle('expanded');
     var expanded = contextPanel.classList.contains('expanded');
     contextCollapsed.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-    contextCaret.textContent = expanded ? '▴' : '▾';
+    contextCaret.textContent = expanded ? '\u25b4' : '\u25be';
   });
 
-  // ============================================================================
-  // ANCHORED RE-RENDER
-  // Used by Phase 2 source approval and Phase 3 thesis Socratic so the page
-  // does not jump to the top when something within the phase changes.
-  // The anchor is an element ID. Before re-render, we measure its position
-  // relative to the viewport top. After re-render, we measure again and
-  // adjust surface.scrollTop by the difference, so the element ends up in
-  // the same place on screen as it was before.
-  // ============================================================================
   function renderAnchored(anchorId, renderFn) {
     var anchorEl = anchorId ? document.getElementById(anchorId) : null;
     var beforeTop = null;
@@ -1743,8 +1835,6 @@
 
   // ============ Phase 2 ============
   function renderPhase2() {
-    // No scrollTop reset here — the caller decides. On phase change, the
-    // caller resets; on in-phase changes, the caller anchors.
     var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
     if (!a) return;
     if (!a.p2) a.p2 = { topic: '', sources: [] };
@@ -1760,9 +1850,9 @@
     var approvedCount = st.sources.filter(function (s) { return s.approved; }).length;
     html += '<div class="p2-section">';
     if (approvedCount >= 3) {
-      html += '<p style="font-size:var(--size-small);color:var(--success);font-weight:600;margin:0 0 var(--gap-tight);">✓ ' + approvedCount + ' sources approved. Phase 2 complete.</p><button type="button" class="p2-search-btn" id="p2-continue-btn">Continue to Build the Argument →</button>';
+      html += '<p style="font-size:var(--size-small);color:var(--success);font-weight:600;margin:0 0 var(--gap-tight);">\u2713 ' + approvedCount + ' sources approved. Phase 2 complete.</p><button type="button" class="p2-search-btn" id="p2-continue-btn">Continue to Build the Argument \u2192</button>';
     } else {
-      html += '<p style="font-size:var(--size-small);color:var(--text-quiet);margin:0;">Approve at least ' + (3 - approvedCount) + ' more source' + (3 - approvedCount === 1 ? '' : 's') + ' to complete this phase.</p>';
+      html += '<p style="font-size:var(--size-small);color:var(--text-quiet);margin:0;">Approve at least 3 or more sources to complete this phase.</p>';
     }
     html += '</div>';
     phase2Body.innerHTML = html;
@@ -1794,7 +1884,7 @@
     if (src.author) metaParts.push(escapeHtml(src.author));
     if (src.year) metaParts.push(escapeHtml(src.year));
     if (src.journal) metaParts.push(escapeHtml(src.journal));
-    if (metaParts.length) html += '<p class="source-meta">' + metaParts.join(' · ') + '</p>';
+    if (metaParts.length) html += '<p class="source-meta">' + metaParts.join(' \u00b7 ') + '</p>';
     if (src.doi) html += '<p class="source-meta"><span class="sm-doi">DOI: ' + escapeHtml(src.doi) + '</span></p>';
     if (!src.approved) {
       html += '<label class="reading-note-label" for="rn-' + src.id + '">Reading note</label><p class="reading-note-prompt">' + notePrompt + '</p>';
@@ -1822,7 +1912,7 @@
     st.searchInProgress = true;
     var statusEl = document.getElementById('p2-status');
     var searchBtn = document.getElementById('p2-search-btn');
-    if (statusEl) { statusEl.className = 'p2-status busy'; statusEl.textContent = 'Searching…'; }
+    if (statusEl) { statusEl.className = 'p2-status busy'; statusEl.textContent = 'Searching\u2026'; }
     if (searchBtn) searchBtn.disabled = true;
     var systemPrompt = 'You are a careful research assistant. You suggest real, existing academic sources only. You never invent sources, DOIs, or journals. If you are unsure whether a source exists, do not list it.';
     var userPrompt = 'Suggest 4-6 academic sources on the following topic. For each source, give these fields on separate lines:\nTitle: <full title>\nAuthor: <first author surname, or "Unknown">\nYear: <four-digit year>\nJournal: <journal or publisher>\nDOI: <DOI if known, else "none">\n---\nTopic: ' + st.topic + '\nFormat each source starting with "SOURCE:" on its own line.';
@@ -1836,13 +1926,11 @@
           st.sources.push({ id: 'src-' + Date.now() + '-' + Math.floor(Math.random() * 10000), title: src.title, author: src.author, year: src.year, journal: src.journal, doi: src.doi, readingNote: '', approved: false });
         });
         saveAssignmentRecord(a).catch(function (e) { console.error(e); });
-        if (statusEl) { statusEl.className = 'p2-status ok'; statusEl.textContent = '✓ ' + parsed.length + ' source' + (parsed.length === 1 ? '' : 's') + ' found. Review below.'; }
-        // After a search, the new sources appear below. No anchor; the
-        // search action was initiated from the top, so top is fine.
+        if (statusEl) { statusEl.className = 'p2-status ok'; statusEl.textContent = '\u2713 ' + parsed.length + ' source' + (parsed.length === 1 ? '' : 's') + ' found. Review below.'; }
         renderPhase2();
       }
     } catch (e) {
-      if (statusEl) { statusEl.className = 'p2-status error'; statusEl.textContent = '✗ ' + (e && e.message ? e.message : String(e)); }
+      if (statusEl) { statusEl.className = 'p2-status error'; statusEl.textContent = '\u2717 ' + (e && e.message ? e.message : String(e)); }
     } finally {
       st.searchInProgress = false;
       if (searchBtn) searchBtn.disabled = false;
@@ -1877,14 +1965,11 @@
     src.approved = true;
     var approvedCount = a.p2.sources.filter(function (s) { return s.approved; }).length;
     if (approvedCount >= 3 && a.phase < 3) {
-      a.phase = 3; a.phaseLabel = 'Phase 3 — Build the Argument';
+      a.phase = 3; a.phaseLabel = 'Phase 3 \u2014 Build the Argument';
       a.progressPercent = 50; a.quietLine = 'Phase 2 complete. Ready for Phase 3.';
       updatePhaseTabsForAssignment();
     }
     saveAssignmentRecord(a).catch(function (e) { console.error(e); });
-    // Anchored re-render: the approved source card stays where the student
-    // tapped, so the surrounding content shifts around it, not under their
-    // finger.
     renderAnchored('src-' + srcId, renderPhase2);
   }
   function removeSource(assignmentId, srcId) {
@@ -1899,14 +1984,11 @@
     }
     var approvedCount = a.p2.sources.filter(function (s) { return s.approved; }).length;
     if (approvedCount < 3 && a.phase > 2) {
-      a.phase = 2; a.phaseLabel = 'Phase 2 — Find Sources';
+      a.phase = 2; a.phaseLabel = 'Phase 2 \u2014 Find Sources';
       a.progressPercent = 30; a.quietLine = 'Phase 2 in progress.';
       updatePhaseTabsForAssignment();
     }
     saveAssignmentRecord(a).catch(function (e) { console.error(e); });
-    // Anchor on the source that is now at the removed card's index, or on
-    // the previous one if we removed the last. If neither exists, fall back
-    // to a simple render.
     var nextSrc = a.p2.sources[removedIndex] || a.p2.sources[removedIndex - 1];
     if (nextSrc) {
       renderAnchored('src-' + nextSrc.id, renderPhase2);
@@ -1917,7 +1999,6 @@
 
   // ============ Phase 3 ============
   function renderPhase3() {
-    // No scrollTop reset here either.
     var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
     if (!a) return;
     if (!a.p3) a.p3 = { structure: null, thesis: '', outline: [] };
@@ -1925,11 +2006,11 @@
     st.outline.forEach(function (sec) { if (!Array.isArray(sec.sources)) sec.sources = []; });
     var approvedSources = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }) : [];
     var html = '';
-    html += '<p class="p3-lede">No prose in this phase. We\u2019re choosing the shape, not writing it.</p>';
+    html += '<p class="p3-lede">Before we write anything, let\u2019s plan what we are going to write. We start by choosing the shape of our assignment.</p>';
 
     html += '<div class="p3-section"><h2 class="p3-section-title">The structure</h2><p class="p3-section-hint">Pick the one that fits your argument.</p>';
     html += '<div class="p3-select-block"><label class="p3-select-label" for="p3-structure-select">Choose a structure</label><select id="p3-structure-select" class="p3-select">';
-    html += '<option value="">Choose a structure…</option>';
+    html += '<option value="">Choose a structure\u2026</option>';
     STRUCTURES.forEach(function (s) {
       html += '<option value="' + s.id + '"' + (st.structure === s.id ? ' selected' : '') + '>' + escapeHtml(s.formal) + '</option>';
     });
@@ -1943,19 +2024,21 @@
     html += '</div>';
 
     html += '<div class="p3-section"><h2 class="p3-section-title">The thesis</h2>';
+    html += '<p class="p3-section-hint">Your thesis is the central idea and argument you try to prove. It acts as a roadmap for the reader, telling them what the paper will prove and why the topic matters.</p>';
     html += '<div class="p3-select-block"><label class="p3-select-label" for="p3-thesis-frame-select">Common thesis structures</label><select id="p3-thesis-frame-select" class="p3-select">';
     html += '<option value="">Choose a frame (optional)</option>';
     THESIS_FRAMES.forEach(function (f) {
-      html += '<option value="' + f.id + '"' + (a.p3.thesisFrame === f.id ? ' selected' : '') + '>' + escapeHtml(f.name) + ' — ' + escapeHtml(f.shape) + '</option>';
+      html += '<option value="' + f.id + '"' + (a.p3.thesisFrame === f.id ? ' selected' : '') + '>' + escapeHtml(f.name) + ' \u2014 ' + escapeHtml(f.shape) + '</option>';
     });
     html += '</select></div>';
     html += '<textarea class="thesis-input" id="p3-thesis" placeholder="Write your thesis. One or two sentences.">' + escapeHtml(st.thesis || '') + '</textarea>';
-    html += '<div class="thesis-helper-row"><button type="button" class="quiet-link" id="p3-angle-btn">Can\u2019t find your angle? →</button><button type="button" class="quiet-link" id="p3-socratic-btn">Ask me about this thesis</button></div>';
-    html += '<div id="p3-socratic-anchor" class="socratic-box' + (p3UI.thesisSocraticVisible ? ' visible' : '') + (p3UI.thesisSocraticStatus === 'busy' ? ' busy' : '') + (p3UI.thesisSocraticStatus === 'error' ? ' error' : '') + '" id="p3-socratic-box">';
+    html += '<div class="thesis-helper-row"><button type="button" class="quiet-link" id="p3-angle-btn">Can\u2019t find your angle? \u2192</button><button type="button" class="quiet-link" id="p3-socratic-btn">Ask me about this thesis</button></div>';
+    html += '<div id="p3-socratic-anchor" class="socratic-box' + (p3UI.thesisSocraticVisible ? ' visible' : '') + (p3UI.thesisSocraticStatus === 'busy' ? ' busy' : '') + (p3UI.thesisSocraticStatus === 'error' ? ' error' : '') + '">';
     if (p3UI.thesisSocraticVisible) html += '<div class="sb-title">Questions on your thesis</div>' + escapeHtml(p3UI.thesisSocraticText || '');
     html += '</div></div>';
 
     html += '<div class="p3-section"><h2 class="p3-section-title">The outline</h2>';
+    html += '<p class="p3-section-hint">Next, write the heading, what you want to achieve under this heading, the estimated word count and which sources you think are relevant. This is just an outline; you can change it anytime later.</p>';
     if (st.outline.length === 0) html += '<p class="p3-section-hint" style="font-style:italic;">Pick a structure above to seed the outline.</p>';
     st.outline.forEach(function (sec, idx) { html += renderOutlineSectionCard(sec, idx, approvedSources); });
     html += '<button type="button" class="add-section-btn" id="p3-add-section">+ Add a section</button></div>';
@@ -1973,7 +2056,7 @@
     var gateMet = (st.thesis.trim().length >= 20) && (st.outline.length >= 2);
     html += '<div class="p2-section" style="margin-top:var(--gap-loose);">';
     if (gateMet) {
-      html += '<p style="font-size:var(--size-small);color:var(--success);font-weight:600;margin:0 0 var(--gap-tight);">✓ Phase 3 complete.</p><button type="button" class="p2-search-btn" id="p3-continue-btn">Continue to Write →</button>';
+      html += '<p style="font-size:var(--size-small);color:var(--success);font-weight:600;margin:0 0 var(--gap-tight);">\u2713 Phase 3 complete.</p><button type="button" class="p2-search-btn" id="p3-continue-btn">Continue to Write \u2192</button>';
     } else {
       var needs = [];
       if (st.thesis.trim().length < 20) needs.push('a thesis');
@@ -2022,7 +2105,7 @@
     phase3Body.querySelectorAll('.outline-section-remove').forEach(function (btn) { btn.addEventListener('click', function () { removeOutlineSection(a.id, parseInt(btn.getAttribute('data-idx'), 10)); }); });
     var continueBtn = document.getElementById('p3-continue-btn');
     if (continueBtn) continueBtn.addEventListener('click', function () {
-      if (a.phase < 4) { a.phase = 4; a.phaseLabel = 'Phase 4 — Write'; a.progressPercent = 70; a.quietLine = 'Phase 3 complete. Ready to write.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
+      if (a.phase < 4) { a.phase = 4; a.phaseLabel = 'Phase 4 \u2014 Write'; a.progressPercent = 70; a.quietLine = 'Phase 3 complete. Ready to write.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
       setActivePhaseTab(4);
     });
   }
@@ -2094,7 +2177,7 @@
       p3UI.thesisSocraticText = 'Write a thesis first.';
       renderAnchored('p3-socratic-anchor', renderPhase3); return;
     }
-    p3UI.thesisSocraticVisible = true; p3UI.thesisSocraticStatus = 'busy'; p3UI.thesisSocraticText = 'Thinking…';
+    p3UI.thesisSocraticVisible = true; p3UI.thesisSocraticStatus = 'busy'; p3UI.thesisSocraticText = 'Thinking\u2026';
     renderAnchored('p3-socratic-anchor', renderPhase3);
     var systemPrompt = 'You are a warm, patient senior student \u2014 the older-brother voice. You do NOT write prose. You do NOT correct the thesis. You do NOT suggest a new thesis. You ask two or three short questions that help the student test the thesis themselves. Keep the whole reply under 120 words.';
     var userPrompt = 'Assignment: "' + a.title + '".\nThesis: "' + a.p3.thesis + '"\n\nAsk two or three questions to help them test this thesis. Only questions.';
@@ -2167,17 +2250,16 @@
   }
 
   function renderPhase4() {
-    surface.scrollTop = 0;
     var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
     if (!a) return;
     initPhase4ForAssignment(a);
     if (!p4UI.arrivalSeen[a.id]) { p4UI.arrivalSeen[a.id] = true; showArrivalSheet(a); }
     var surfaces = getSurfacesForAssignment(a);
     if (surfaces.indexOf(p4UI.activeSurface) === -1) p4UI.activeSurface = surfaces[0];
-    footerState.textContent = getSurfaceLabel(p4UI.activeSurface) + ' · ' + stateLabel(surfaceStateForUI(a, p4UI.activeSurface));
+    footerState.textContent = getSurfaceLabel(p4UI.activeSurface) + ' \u00b7 ' + stateLabel(surfaceStateForUI(a, p4UI.activeSurface));
     footerAction.classList.remove('hidden');
     var html = '';
-    html += '<div class="p4-surface-selector"><button type="button" class="p4-surface-selector-btn" id="p4-surface-btn">Write the: ' + getSurfaceLabel(p4UI.activeSurface) + ' <span class="caret">▾</span></button>';
+    html += '<div class="p4-surface-selector"><button type="button" class="p4-surface-selector-btn" id="p4-surface-btn">Write the: ' + getSurfaceLabel(p4UI.activeSurface) + ' <span class="caret">\u25be</span></button>';
     html += '<div class="p4-surface-menu" id="p4-surface-menu" role="menu">';
     surfaces.forEach(function (sid) {
       var st = surfaceStateForUI(a, sid);
@@ -2210,7 +2292,7 @@
     } else {
       html += '<div style="margin-top:var(--gap-loose);text-align:center;"><button type="button" class="quiet-link" id="p4-seeds-btn">I\u2019m not sure where to start</button></div>';
     }
-    html += '<div class="p4-tools-row"><button type="button" class="p4-tools-btn" id="p4-tools-btn">Writing tools ▾</button>';
+    html += '<div class="p4-tools-row"><button type="button" class="p4-tools-btn" id="p4-tools-btn">Writing tools \u25be</button>';
     html += '<div class="p4-tools-menu" id="p4-tools-menu" role="menu">';
     html += '<div class="submenu-label">Feedback</div>';
     html += '<button role="menuitem" type="button" data-feedback="structure" class="submenu-item">Structure</button>';
@@ -2309,11 +2391,11 @@
     var surfaceId = p4UI.activeSurface;
     var state = surfaceStateForUI(a, surfaceId);
     var surfaces = getSurfacesForAssignment(a);
-    footerState.textContent = getSurfaceLabel(surfaceId) + ' · ' + stateLabel(state);
+    footerState.textContent = getSurfaceLabel(surfaceId) + ' \u00b7 ' + stateLabel(state);
     footerAction.classList.remove('hidden'); footerAction.disabled = false;
     var allDrafted = surfaces.every(function (sid) { return surfaceStateForUI(a, sid) === 'drafted' || surfaceStateForUI(a, sid) === 'revised'; });
     if (allDrafted) { footerAction.textContent = 'Read it end to end'; footerAction.setAttribute('data-p4-action', 'read'); updatePhaseTabsForAssignment(); }
-    else if (state === 'drafted' || state === 'revised') { footerAction.textContent = 'Next surface →'; footerAction.setAttribute('data-p4-action', 'next'); }
+    else if (state === 'drafted' || state === 'revised') { footerAction.textContent = 'Next surface \u2192'; footerAction.setAttribute('data-p4-action', 'next'); }
     else { footerAction.textContent = 'Mark as drafted'; footerAction.setAttribute('data-p4-action', 'draft'); }
   }
   function handlePhase4Footer() {
@@ -2348,7 +2430,7 @@
       sentence: 'Sentence feedback names a pattern, asks about a choice, names a strength. It does not correct.'
     };
     var body = '<details class="why-collapse"><summary>Why this layer?</summary><div class="why-body"><p>' + layerWhy[layer] + '</p></div></details>';
-    body += '<div id="fb-body" class="feedback-body busy">Thinking…</div>';
+    body += '<div id="fb-body" class="feedback-body busy">Thinking\u2026</div>';
     openSheet({ title: layerTitles[layer], body: body, actions: [{ label: 'Close' }] });
     var systemPrompt = PROMPTS_7B[layer + '_feedback'];
     var userPrompt = 'Assignment: "' + a.title + '".\nSurface: ' + surfaceLabel + '.\nThesis: "' + (a.p3 && a.p3.thesis || '') + '"\n\nDraft:\n"""\n' + (surfaceText || '(empty)') + '\n"""\n\nGive your feedback.';
@@ -2365,11 +2447,11 @@
     var surfaceId = p4UI.activeSurface;
     var surfaceLabel = getSurfaceLabel(surfaceId);
     var key = a.id + ':' + surfaceId;
-    p4UI.seedsVisible[key] = ['Thinking…'];
+    p4UI.seedsVisible[key] = ['Thinking\u2026'];
     renderPhase4();
     var userPrompt = 'The student is stuck on the ' + surfaceLabel + ' of "' + a.title + '".\nThesis: "' + (a.p3 && a.p3.thesis || '') + '"\n\nOffer 3 to 5 short seed questions. One per line.';
     callAI(userPrompt, { systemPrompt: PROMPTS_7B.seeds, maxTokens: 300 }).then(function (reply) {
-      var lines = (reply || '').split('\n').map(function (l) { return l.replace(/^\s*[-*•]\s*/, '').trim(); }).filter(function (l) { return l.length > 0; });
+      var lines = (reply || '').split('\n').map(function (l) { return l.replace(/^\s*[-\*\u2022]\s*/, '').trim(); }).filter(function (l) { return l.length > 0; });
       p4UI.seedsVisible[key] = lines.slice(0, 5);
       logAIUse(a, 'seeds', surfaceId);
       renderPhase4();
@@ -2507,7 +2589,7 @@
       var text = input.value.trim();
       if (!text) return;
       resultEl.className = 'translation-result busy visible';
-      resultEl.textContent = 'Translating…';
+      resultEl.textContent = 'Translating\u2026';
       callAI(text, { systemPrompt: PROMPTS_7B.translation, maxTokens: 1500 }).then(function (reply) {
         resultEl.className = 'translation-result visible';
         resultEl.textContent = (reply || '').trim();
@@ -2620,7 +2702,14 @@
       html += '</div>';
     }
     html += '</div>';
-    openSheet({ title: 'Read it end to end', body: html, actions: [{ label: 'Close' }] });
+    openSheet({
+      title: 'Read it end to end',
+      body: html,
+      actions: [
+        { label: 'Edit', onClick: function () { setActivePhaseTab(4); } },
+        { label: 'Complete', primary: true, onClick: function () { setActivePhaseTab(5); } }
+      ]
+    });
     sheetBody.querySelectorAll('.completion-paragraph').forEach(function (p) {
       p.addEventListener('click', function () {
         var surfaceKey = p.getAttribute('data-surface-key');
@@ -2642,7 +2731,7 @@
     var parts = text.split(/\n\s*\n/).filter(function (p) { return p.trim(); });
     var html = '';
     parts.forEach(function (p) {
-      var snippet = p.length > 120 ? p.substring(0, 120) + '…' : p;
+      var snippet = p.length > 120 ? p.substring(0, 120) + '\u2026' : p;
       var attrSnip = escapeHtml(snippet).replace(/"/g, '&quot;');
       var marked = (a.p4.revisionNotes || []).some(function (n) { return n.surface === surfaceKey && n.snippet === snippet; });
       html += '<div class="completion-paragraph' + (marked ? ' marked' : '') + '" data-surface-key="' + escapeHtml(surfaceKey) + '" data-snippet="' + attrSnip + '">' + escapeHtml(p) + '<span class="cp-hint">Tap to add a note</span></div>';
@@ -2690,34 +2779,41 @@
     }
   }
   function renderPhase5() {
-    surface.scrollTop = 0;
     var a = getPhase5Assignment();
     if (!a) return;
     initPhase5ForAssignment(a);
     footerAction.classList.remove('hidden');
     footerAction.disabled = false;
     if (p5UI.screen === 'arrival') {
-      footerState.textContent = 'Phase 5 · Arrival';
-      footerAction.textContent = 'Begin checks';
-      footerAction.setAttribute('data-p5-action', 'checks');
+      footerState.textContent = 'Phase 5 \u00b7 Arrival';
+      var allDone = a.p5.checksRun.citations && a.p5.checksRun.wordCount && a.p5.checksRun.formatting && a.p5.checksRun.integrity;
+      if (allDone) {
+        footerAction.textContent = 'Checks completed \u2192';
+        footerAction.disabled = false;
+        footerAction.setAttribute('data-p5-action', 'declaration');
+      } else {
+        footerAction.textContent = 'Checks completed';
+        footerAction.disabled = true;
+        footerAction.setAttribute('data-p5-action', 'none');
+      }
       renderP5Arrival(a);
     } else if (p5UI.screen === 'checks') {
-      footerState.textContent = 'Phase 5 · Checks';
-      footerAction.textContent = 'Go to declaration →';
+      footerState.textContent = 'Phase 5 \u00b7 Checks';
+      footerAction.textContent = 'Go to declaration \u2192';
       footerAction.setAttribute('data-p5-action', 'declaration');
       renderP5Checks(a);
     } else if (p5UI.screen === 'declaration') {
-      footerState.textContent = 'Phase 5 · Declaration';
-      footerAction.textContent = 'Go to export →';
+      footerState.textContent = 'Phase 5 \u00b7 Declaration';
+      footerAction.textContent = 'Go to export \u2192';
       footerAction.setAttribute('data-p5-action', 'export');
       renderP5Declaration(a);
     } else if (p5UI.screen === 'export') {
-      footerState.textContent = 'Phase 5 · Export';
+      footerState.textContent = 'Phase 5 \u00b7 Export';
       footerAction.textContent = 'Export';
       footerAction.setAttribute('data-p5-action', 'doExport');
       renderP5Export(a);
     } else if (p5UI.screen === 'close') {
-      footerState.textContent = 'Phase 5 · Close';
+      footerState.textContent = 'Phase 5 \u00b7 Close';
       footerAction.textContent = 'Back to semester view';
       footerAction.setAttribute('data-p5-action', 'semester');
       renderP5Close(a);
@@ -2725,6 +2821,7 @@
   }
   function handlePhase5Footer() {
     var action = footerAction.getAttribute('data-p5-action');
+    if (action === 'none') return;
     if (action === 'checks') { p5UI.screen = 'checks'; renderPhase5(); }
     else if (action === 'declaration') { p5UI.screen = 'declaration'; renderPhase5(); }
     else if (action === 'export') { p5UI.screen = 'export'; renderPhase5(); }
@@ -2734,12 +2831,12 @@
 
   function renderP5Arrival(a) {
     var html = '';
-    html += '<div class="p5-header"><h1>Complete assignment</h1><p>Four checks, then a declaration, then the export. You can run the checks in any order. You can export without running them all — that\u2019s your call.</p></div>';
+    html += '<div class="p5-header"><h1>Complete assignment</h1><p>Four checks, then a declaration, then the export. You can run the checks in any order. You can export without running them all \u2014 that\u2019s your call.</p></div>';
     html += '<div class="p5-check-list">';
-    html += renderP5CheckCard('citations', 'Check 1 — Citations', 'Cross-references in-text citations against the reference list, in both directions.', a);
-    html += renderP5CheckCard('wordCount', 'Check 2 — Word count', 'Counts words per the brief\u2019s rules and reports against the limit.', a);
-    html += renderP5CheckCard('formatting', 'Check 3 — Formatting', 'Applies the brief\u2019s formatting requirements at export. Asks only what it can\u2019t know.', a);
-    html += renderP5CheckCard('integrity', 'Check 4 — Integrity self-check', 'Four questions. Not scored. A pause.', a);
+    html += renderP5CheckCard('citations', 'Check 1 \u2014 Citations', 'Cross-references in-text citations against the reference list, in both directions.', a);
+    html += renderP5CheckCard('wordCount', 'Check 2 \u2014 Word count', 'Counts words per the brief\u2019s rules and reports against the limit.', a);
+    html += renderP5CheckCard('formatting', 'Check 3 \u2014 Formatting', 'Applies the brief\u2019s formatting requirements at export. Asks only what it can\u2019t know.', a);
+    html += renderP5CheckCard('integrity', 'Check 4 \u2014 Integrity self-check', 'Four questions. Not scored. A pause.', a);
     html += '</div>';
     phase5Body.innerHTML = html;
     bindP5CheckEvents(a);
@@ -2749,7 +2846,7 @@
     var html = '<div class="p5-check-card' + (st ? ' completed' : '') + '" data-check="' + key + '">';
     html += '<div class="check-title">' + escapeHtml(title) + '</div>';
     html += '<div class="check-desc">' + escapeHtml(desc) + '</div>';
-    html += '<div class="check-status">' + (st ? '✓ Complete' : 'Not yet run') + '</div>';
+    html += '<div class="check-status">' + (st ? '\u2713 Complete' : 'Not yet run') + '</div>';
     if (key === 'integrity') {
       html += '<button type="button" class="check-run-btn" data-run="integrity">Run integrity check</button>';
     } else {
@@ -2900,10 +2997,10 @@
     var html = '';
     html += '<div class="p5-header"><h1>The four checks</h1><p>Run each check. You can go to the declaration at any time.</p></div>';
     html += '<div class="p5-check-list">';
-    html += renderP5CheckCard('citations', 'Check 1 — Citations', 'Cross-references in-text citations against the reference list, in both directions.', a);
-    html += renderP5CheckCard('wordCount', 'Check 2 — Word count', 'Counts words per the brief\u2019s rules and reports against the limit.', a);
-    html += renderP5CheckCard('formatting', 'Check 3 — Formatting', 'Applies the brief\u2019s formatting requirements at export.', a);
-    html += renderP5CheckCard('integrity', 'Check 4 — Integrity self-check', 'Four questions. Not scored. A pause.', a);
+    html += renderP5CheckCard('citations', 'Check 1 \u2014 Citations', 'Cross-references in-text citations against the reference list, in both directions.', a);
+    html += renderP5CheckCard('wordCount', 'Check 2 \u2014 Word count', 'Counts words per the brief\u2019s rules and reports against the limit.', a);
+    html += renderP5CheckCard('formatting', 'Check 3 \u2014 Formatting', 'Applies the brief\u2019s formatting requirements at export.', a);
+    html += renderP5CheckCard('integrity', 'Check 4 \u2014 Integrity self-check', 'Four questions. Not scored. A pause.', a);
     html += '</div>';
     phase5Body.innerHTML = html;
     bindP5CheckEvents(a);
@@ -2984,14 +3081,14 @@
     html += '<div class="p5-export-summary"><h3 style="font-size:var(--size-small);font-weight:600;color:var(--text);margin:0 0 var(--gap-tight);">What\u2019s included</h3><ul>';
     html += '<li>Title page (if the brief requires one)</li>';
     html += '<li>AI-use declaration (if the institution requires one)</li>';
-    html += '<li>The draft, in reading order (Introduction → Body → Conclusion)</li>';
+    html += '<li>The draft, in reading order (Introduction \u2192 Body \u2192 Conclusion)</li>';
     html += '<li>Image placeholders as visible lines</li>';
     html += '<li>Reference list from your approved sources</li>';
     html += '</ul></div>';
     html += '<div class="p5-form-row"><label for="p5-filename">Filename (you can change this)</label><input type="text" id="p5-filename" data-field="exportFilename" value="' + escapeHtml(a.p5.exportFilename || defaultFilename(a)) + '"></div>';
     html += '<div class="p5-export-format">';
     html += '<label><input type="radio" name="p5-format" value="doc"' + (a.p5.exportFormat === 'doc' ? ' checked' : '') + '><span class="ef-label"><div class="ef-title">Word (.doc)</div><div class="ef-desc">Opens in Word. If your institution requires .docx, open the .doc in Word and Save As .docx.</div></span></label>';
-    html += '<label><input type="radio" name="p5-format" value="pdf"' + (a.p5.exportFormat === 'pdf' ? ' checked' : '') + '><span class="ef-label"><div class="ef-title">PDF (via browser Print)</div><div class="ef-desc">Opens a print-friendly view. Use your browser\u2019s Print → Save as PDF.</div></span></label>';
+    html += '<label><input type="radio" name="p5-format" value="pdf"' + (a.p5.exportFormat === 'pdf' ? ' checked' : '') + '><span class="ef-label"><div class="ef-title">PDF (via browser Print)</div><div class="ef-desc">Opens a print-friendly view. Use your browser\u2019s Print \u2192 Save as PDF.</div></span></label>';
     html += '<label><input type="radio" name="p5-format" value="md"' + (a.p5.exportFormat === 'md' ? ' checked' : '') + '><span class="ef-label"><div class="ef-title">Markdown (.md)</div><div class="ef-desc">Plain text. Good for version control, Obsidian, or pasting elsewhere.</div></span></label>';
     html += '</div>';
     phase5Body.innerHTML = html;
@@ -3127,6 +3224,7 @@
     var savedMeta = PROVIDERS[savedProvider] || {};
     var savedKey = savedApi.key || '';
     var savedModel = savedApi.model || savedMeta.defaultModel || '';
+    var currentLevel = welcome.level || 'undergrad';
     sheetTitle.textContent = 'Change AI provider';
     var providersHTML = '<div class="cap-providers" role="group">';
     Object.keys(PROVIDERS).forEach(function (key) {
@@ -3135,7 +3233,11 @@
       providersHTML += '<button type="button" class="cap-provider" data-cap-provider="' + key + '" aria-pressed="' + pressed + '"><span class="cp-name">' + p.label + '</span><span class="cp-desc">' + (p.keyHint || '') + '</span></button>';
     });
     providersHTML += '</div>';
-    sheetBody.innerHTML = '<p>Change which AI provider the tool uses.</p>' + providersHTML + '<label class="cap-label" for="cap-key">API key</label><input type="password" id="cap-key" class="cap-input" autocomplete="off" value="' + escapeHtml(savedKey) + '"><label class="cap-label" for="cap-model">Model</label><input type="text" id="cap-model" class="cap-input" autocomplete="off" value="' + escapeHtml(savedModel) + '"><div class="cap-status" id="cap-status"></div>';
+    var levelHTML = '<div class="cap-level" role="group" aria-label="Degree level">';
+    levelHTML += '<button type="button" class="cap-level-btn" data-cap-level="undergrad" aria-pressed="' + (currentLevel === 'undergrad' ? 'true' : 'false') + '"><span class="cl-name">Undergraduate</span><span class="cl-desc">Bachelor\u2019s degree. Plain-language prompts, \u201cexplain this to a friend\u201d reading notes.</span></button>';
+    levelHTML += '<button type="button" class="cap-level-btn" data-cap-level="masters" aria-pressed="' + (currentLevel === 'masters' ? 'true' : 'false') + '"><span class="cl-name">Taught master\u2019s</span><span class="cl-desc">Postgraduate coursework. Prompts assume more analytical confidence.</span></button>';
+    levelHTML += '</div>';
+    sheetBody.innerHTML = '<p>Change which AI provider the tool uses.</p>' + providersHTML + '<label class="cap-label" for="cap-key">API key</label><input type="password" id="cap-key" class="cap-input" autocomplete="off" value="' + escapeHtml(savedKey) + '"><label class="cap-label" for="cap-model">Model</label><input type="text" id="cap-model" class="cap-input" autocomplete="off" value="' + escapeHtml(savedModel) + '"><div class="cap-status" id="cap-status"></div><label class="cap-label">Degree level</label>' + levelHTML;
     sheetActions.innerHTML = '';
     var testLink = document.createElement('button'); testLink.type = 'button'; testLink.className = 'cap-test-link'; testLink.textContent = 'Test'; testLink.addEventListener('click', runCapTest);
     var cancelBtn = document.createElement('button'); cancelBtn.type = 'button'; cancelBtn.className = 'btn-quiet'; cancelBtn.textContent = 'Cancel'; cancelBtn.addEventListener('click', closeSheet);
@@ -3155,6 +3257,22 @@
         var st = document.getElementById('cap-status'); if (st) { st.textContent = ''; st.className = 'cap-status'; }
       });
     });
+    sheetBody.querySelectorAll('.cap-level-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var chosenLevel = btn.getAttribute('data-cap-level');
+        sheetBody.querySelectorAll('.cap-level-btn').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cap-level') === chosenLevel ? 'true' : 'false'); });
+        welcome.level = chosenLevel;
+        writeStudent({
+          setupComplete: welcome.setupComplete,
+          level: welcome.level,
+          integrityAgreed: welcome.integrityAgreed,
+          api: welcome.api
+        });
+        if (currentView === 'assignment' && currentActivePhaseTab === 2) {
+          renderPhase2();
+        }
+      });
+    });
   }
   function capGetCurrentProvider() {
     var pressed = sheetBody.querySelector('.cap-provider[aria-pressed="true"]');
@@ -3171,10 +3289,10 @@
     var testConfig = { provider: provider, key: keyEl.value.trim(), model: model };
     var testLink = sheetActions.querySelector('.cap-test-link');
     if (testLink) testLink.disabled = true;
-    st.className = 'cap-status busy'; st.textContent = 'Testing…';
+    st.className = 'cap-status busy'; st.textContent = 'Testing\u2026';
     var start = Date.now();
-    try { await testCallWith(testConfig); st.className = 'cap-status ok'; st.textContent = '✓ Connection OK (' + (Date.now() - start) + 'ms). Tap Save to keep this provider.'; }
-    catch (e) { st.className = 'cap-status error'; st.textContent = '✗ ' + (e && e.message ? e.message : String(e)); }
+    try { await testCallWith(testConfig); st.className = 'cap-status ok'; st.textContent = '\u2713 Connection OK (' + (Date.now() - start) + 'ms). Tap Save to keep this provider.'; }
+    catch (e) { st.className = 'cap-status error'; st.textContent = '\u2717 ' + (e && e.message ? e.message : String(e)); }
     finally { if (testLink) testLink.disabled = false; }
   }
   async function testCallWith(config) {
@@ -3285,17 +3403,230 @@
   supportBtn.addEventListener('click', function (e) { e.stopPropagation(); if (supportMenu.classList.contains('open')) closeSupport(); else openSupport(); });
   document.addEventListener('click', function (e) { if (!supportMenu.contains(e.target) && e.target !== supportBtn) closeSupport(); });
 
-  // ---------- Arrival sheet (plane metaphor) ----------
   function showArrivalSheet(a) {
     var body = '<p>The body is the journey. The introduction is boarding \u2014 it gets the reader on the plane and tells them where they\u2019re going. The conclusion is the landing \u2014 it brings them to the destination and lets them off.</p><p>You can\u2019t board passengers until you know where the plane is going. So: write the body first, then the landing, then the boarding.</p>';
     openSheet({ title: 'Let\u2019s write', body: body, actions: [{ label: 'Let\u2019s write', primary: true }] });
   }
 
   // ============================================================================
+  // SUPPORT
+  // ============================================================================
+
+  function currentPhaseNum() {
+    if (currentView === 'assignment' && currentAssignmentId) {
+      if (currentActivePhaseTab !== null) return currentActivePhaseTab;
+      var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
+      if (a) return a.phase || 2;
+    }
+    if (currentView === 'semester') return 1;
+    if (currentView === 'phase1' || currentView === 'setup') return 1;
+    return 1;
+  }
+
+  function openPhaseHelp() {
+    var phaseNum = currentPhaseNum();
+    var help = PHASE_HELP[phaseNum];
+    if (!help) {
+      openSheet({ title: 'Support', body: '<p>This screen doesn\u2019t have a phase explanation yet. If you\u2019re not sure what to do next, tell me where you are and I\u2019ll help.</p>', actions: [{ label: 'Back to it', primary: true }] });
+      return;
+    }
+    var body = '<div class="support-body">';
+    body += '<h3>What this phase is for</h3><p>' + escapeHtml(help.whatFor) + '</p>';
+    body += '<h3>What it needs from you</h3><p>' + escapeHtml(help.needs) + '</p>';
+    body += '<h3>What you\u2019ll walk away with</h3><p>' + escapeHtml(help.walkAway) + '</p>';
+    body += '<h3>What it won\u2019t do</h3><p>' + escapeHtml(help.wontDo) + '</p>';
+    body += '<details class="why-collapse" style="margin-top:var(--gap);"><summary>Why this phase exists</summary><div class="why-body"><p>' + escapeHtml(help.why) + '</p></div></details>';
+    body += '</div>';
+    openSheet({ title: help.title, body: body, actions: [{ label: 'Back to it', primary: true }] });
+  }
+
+  function smallestNextAction(a) {
+    if (!a) return 'Open your most recent assignment. That\u2019s the whole task.';
+    var phase = a.phase || 2;
+    if (phase === 2) {
+      var approved = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }).length : 0;
+      if (approved >= 3) return 'Tap Continue to Build the Argument. That\u2019s the whole task.';
+      if (a.p2 && a.p2.sources && a.p2.sources.length > 0) return 'Open the top source in Find Sources and write one sentence of reading note. That\u2019s the whole task.';
+      return 'Type a working question into the topic box in Find Sources. You don\u2019t have to search yet. That\u2019s the whole task.';
+    }
+    if (phase === 3) {
+      if (!a.p3 || !a.p3.structure) return 'Pick a structure in Build the Argument. Any one. You can change it later. That\u2019s the whole task.';
+      if (!a.p3.thesis || a.p3.thesis.trim().length < 20) return 'Write one sentence of your thesis. One sentence. You\u2019ll refine it later. That\u2019s the whole task.';
+      return 'Open the outline and fill in one word target. One number. That\u2019s the whole task.';
+    }
+    if (phase === 4) {
+      var surfaces = getSurfacesForAssignment(a);
+      for (var i = 0; i < surfaces.length; i++) {
+        var sid = surfaces[i];
+        if (surfaceStateForUI(a, sid) !== 'drafted' && surfaceStateForUI(a, sid) !== 'revised') {
+          if (sid === 'body' && a.p4 && a.p4.body && a.p4.body.sections && a.p4.body.sections.length > 0) {
+            return 'Open the body. Write one sentence for the first section. One. That\u2019s the whole task.';
+          }
+          return 'Open the ' + getSurfaceLabel(sid).toLowerCase() + ' and write one sentence. One. That\u2019s the whole task.';
+        }
+      }
+      return 'Tap Read it end to end. Read one paragraph. That\u2019s the whole task.';
+    }
+    if (phase === 5) {
+      return 'Open the four checks and run one. Just one. That\u2019s the whole task.';
+    }
+    return 'Open your most recent assignment. That\u2019s the whole task.';
+  }
+
+  function openStressed() {
+    var body = '<div class="support-body">';
+    body += '<p><strong>Okay. Stop for a second.</strong></p>';
+    body += '<p>You\u2019re probably overwhelmed because there\u2019s a lot, and it\u2019s all due, and your brain is trying to hold all of it at once. That\u2019s not a character flaw. It\u2019s just load.</p>';
+    body += '<p>Let\u2019s shrink it. Pick one:</p>';
+    body += '<div class="sp-options">';
+    body += '<button type="button" class="sp-option" data-stressed="due">What\u2019s actually due soonest?</button>';
+    body += '<button type="button" class="sp-option" data-stressed="start">I don\u2019t know where to start.</button>';
+    body += '<button type="button" class="sp-option" data-stressed="stop">I need to stop for today.</button>';
+    body += '</div>';
+    body += '</div>';
+    openSheet({ title: 'I\u2019m stressed', body: body, actions: [{ label: 'Close' }] });
+    sheetBody.querySelectorAll('.sp-option').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var kind = b.getAttribute('data-stressed');
+        if (kind === 'due') {
+          var a = assignments.find(function (x) { return x.id === currentAssignmentId; }) || assignments[0];
+          var dueText;
+          if (a) {
+            dueText = 'The nearest one is <strong>' + escapeHtml(a.title) + '</strong>, due in ' + a.dueInDays + ' day' + (a.dueInDays === 1 ? '' : 's') + '. That\u2019s the one to look at first. Everything else can wait until it\u2019s done.';
+          } else {
+            dueText = 'You haven\u2019t added any assignments yet. That\u2019s the first thing to do \u2014 but it can wait a moment.';
+          }
+          sheetBody.innerHTML = '<div class="support-body"><p>' + dueText + '</p><p class="sp-quiet-line">If you want to see the whole semester, close this and tap your way back to the semester view.</p></div>';
+          sheetActions.innerHTML = '';
+          var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn-quiet'; btn.textContent = 'Close';
+          btn.addEventListener('click', closeSheet); sheetActions.appendChild(btn);
+          sheetClose.focus();
+        } else if (kind === 'start') {
+          var a2 = assignments.find(function (x) { return x.id === currentAssignmentId; }) || assignments[0];
+          var action = smallestNextAction(a2);
+          sheetBody.innerHTML = '<div class="support-body"><p>For the next 10 minutes, do this one thing:</p><p class="sp-where"><strong>' + action + '</strong></p><p>When the ten minutes are up, you can stop, or come back and I\u2019ll give you the next one.</p></div>';
+          sheetActions.innerHTML = '';
+          var btn2 = document.createElement('button'); btn2.type = 'button'; btn2.className = 'btn-primary'; btn2.textContent = 'Okay';
+          btn2.addEventListener('click', function () {
+            if (a2 && currentView !== 'assignment') {
+              closeSheet();
+              enterAssignment(a2.id);
+            } else {
+              closeSheet();
+            }
+          });
+          sheetActions.appendChild(btn2);
+          sheetClose.focus();
+        } else if (kind === 'stop') {
+          sheetBody.innerHTML = '<div class="support-body"><p>Okay. Close the tab. Save what you have. No guilt, no follow-up. Come back when you\u2019re ready.</p></div>';
+          sheetActions.innerHTML = '';
+          var btn3 = document.createElement('button'); btn3.type = 'button'; btn3.className = 'btn-quiet'; btn3.textContent = 'Close';
+          btn3.addEventListener('click', closeSheet); sheetActions.appendChild(btn3);
+          sheetClose.focus();
+        }
+      });
+    });
+  }
+
+  var THINKING_CHECKS = [
+    { key: 'claim', label: 'My claim', prompt: 'What are you actually claiming? Say it in one sentence.' },
+    { key: 'structure', label: 'My structure', prompt: 'How is your argument shaped? What comes first, and why?' },
+    { key: 'sources', label: 'My sources', prompt: 'Which source do you trust most, and what does it actually say?' },
+    { key: 'reasoning', label: 'My reasoning', prompt: 'What\u2019s the link between your strongest piece of evidence and your claim?' },
+    { key: 'honesty', label: 'My honesty', prompt: 'If someone asked you to defend the weakest part of this, what would you say?' }
+  ];
+  var THINKING_MAX_QUESTIONS = 3;
+
+  function openThinking() {
+    var body = '<div class="support-body">';
+    body += '<p>Not feedback on your prose \u2014 questions about your reasoning. Pick one, and I\u2019ll ask you a few things.</p>';
+    body += '<div class="sp-options">';
+    THINKING_CHECKS.forEach(function (c) {
+      body += '<button type="button" class="sp-option" data-thinking="' + c.key + '">' + escapeHtml(c.label) + '</button>';
+    });
+    body += '</div>';
+    body += '</div>';
+    openSheet({ title: 'Check my thinking', body: body, actions: [{ label: 'Close' }] });
+    sheetBody.querySelectorAll('.sp-option').forEach(function (b) {
+      b.addEventListener('click', function () { runThinkingCheck(b.getAttribute('data-thinking'), '', 0); });
+    });
+  }
+
+  function backToThinkingMenu() {
+    openThinking();
+  }
+
+  async function runThinkingCheck(checkKey, history, count) {
+    var check = THINKING_CHECKS.find(function (c) { return c.key === checkKey; });
+    if (!check) return;
+    var a = assignments.find(function (x) { return x.id === currentAssignmentId; }) || assignments[0] || {};
+    var lines = [];
+    lines.push('Assignment: "' + (a.title || '(no assignment)') + '"');
+    if (a.p3 && a.p3.thesis) lines.push('Thesis: "' + a.p3.thesis + '"');
+    if (a.p2 && a.p2.sources) {
+      var approved = a.p2.sources.filter(function (s) { return s.approved; });
+      if (approved.length > 0) {
+        lines.push('Sources: ' + approved.map(function (s) { return (s.author || 'Unknown') + ' ' + (s.year || ''); }).join('; '));
+      }
+    }
+    lines.push('');
+    lines.push(check.prompt);
+    if (history) lines.push(history);
+    var systemPrompt = PROMPTS_7B['thinking_' + checkKey];
+    sheetBody.innerHTML = '<div class="support-body"><p style="font-style:italic;color:var(--text-quiet);">Thinking\u2026</p></div>';
+    sheetActions.innerHTML = '';
+    var closeBtn = document.createElement('button'); closeBtn.type = 'button'; closeBtn.className = 'btn-quiet'; closeBtn.textContent = 'Close';
+    closeBtn.addEventListener('click', closeSheet); sheetActions.appendChild(closeBtn);
+    try {
+      var reply = await callAI(lines.join('\n'), { systemPrompt: systemPrompt, maxTokens: 200 });
+      sheetTitle.textContent = 'Check my thinking \u2014 ' + check.label;
+      var q = (reply || '').trim();
+      var isLast = (count + 1) >= THINKING_MAX_QUESTIONS;
+      var html = '<div class="support-body">';
+      html += '<p><strong>Question ' + (count + 1) + ' of ' + THINKING_MAX_QUESTIONS + '</strong></p>';
+      html += '<p>' + escapeHtml(q) + '</p>';
+      if (isLast) {
+        html += '<p class="sp-quiet-line" style="margin-top:var(--gap-tight);">That\u2019s worth sitting with. Come back to it when you\u2019ve got something.</p>';
+      } else {
+        html += '<label class="manual-label" for="think-answer" style="margin-top:var(--gap-tight);">Your answer</label>';
+        html += '<textarea class="manual-textarea" id="think-answer" placeholder="Answer in your own words. It doesn\u2019t need to be polished."></textarea>';
+        html += '<p class="sp-quiet-line" style="margin-top:var(--gap-tight);">Nothing here is recorded. When you close the sheet, it closes.</p>';
+      }
+      html += '</div>';
+      sheetBody.innerHTML = html;
+      sheetActions.innerHTML = '';
+      if (isLast) {
+        var doneBtn = document.createElement('button'); doneBtn.type = 'button'; doneBtn.className = 'btn-primary'; doneBtn.textContent = 'Close';
+        doneBtn.addEventListener('click', closeSheet);
+        sheetActions.appendChild(doneBtn);
+      } else {
+        var backBtn = document.createElement('button'); backBtn.type = 'button'; backBtn.className = 'btn-quiet'; backBtn.textContent = 'Back to the five checks';
+        backBtn.addEventListener('click', backToThinkingMenu);
+        sheetActions.appendChild(backBtn);
+        var moreBtn = document.createElement('button'); moreBtn.type = 'button'; moreBtn.className = 'btn-primary'; moreBtn.textContent = 'Next question';
+        moreBtn.addEventListener('click', function () {
+          var ta = document.getElementById('think-answer');
+          var answer = (ta && ta.value.trim()) || '';
+          if (!answer) { closeSheet(); return; }
+          var newHistory = (history || '') + '\nQ: ' + q + '\nA: ' + answer;
+          runThinkingCheck(checkKey, newHistory, count + 1);
+        });
+        sheetActions.appendChild(moreBtn);
+      }
+    } catch (e) {
+      sheetBody.innerHTML = '<div class="support-body"><p style="color:var(--danger);">Could not reach the AI: ' + escapeHtml(e && e.message ? e.message : String(e)) + '</p></div>';
+    }
+  }
+
+  if (supportPhaseHelpBtn) supportPhaseHelpBtn.addEventListener('click', function () { closeSupport(); openPhaseHelp(); });
+  if (supportStressedBtn) supportStressedBtn.addEventListener('click', function () { closeSupport(); openStressed(); });
+  if (supportThinkingBtn) supportThinkingBtn.addEventListener('click', function () { closeSupport(); openThinking(); });
+
+  // ============================================================================
   // BOOT
   // ============================================================================
   function boot() {
-    bootLine.textContent = 'Getting things ready…';
+    bootLine.textContent = 'Getting things ready\u2026';
     populateProviderSelect();
     var student = readStudent();
     if (student) {
@@ -3310,7 +3641,7 @@
     catch (e) { readPromise = Promise.reject(e); }
     readPromise.then(function (rows) {
       assignments = Array.isArray(rows) ? rows : [];
-      if (assignments.length > 0) bootLine.textContent = 'Opening your semester…';
+      if (assignments.length > 0) bootLine.textContent = 'Opening your semester\u2026';
 
       if (welcome.setupComplete) {
         setTimeout(function () {
