@@ -345,14 +345,6 @@
   .p4-seeds-inline li { margin-bottom: 4px; }
   .p4-seeds-inline .seeds-close { font-size: var(--size-tiny); color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; font-family: inherit; margin-top: 4px; display: inline-block; }
 
-  .p4-ask-row { margin-top: var(--gap-loose); padding-top: var(--gap); border-top: 1px solid var(--rule); }
-  .p4-ask-row .ask-label { font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; display: block; }
-  .p4-ask-row .ask-field { display: flex; gap: var(--gap-tight); }
-  .p4-ask-row input[type="text"] { flex: 1 1 auto; font: inherit; font-size: var(--size-small); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; line-height: 1.4; box-sizing: border-box; }
-  .p4-ask-row input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
-  .p4-ask-row .ask-submit { font-size: var(--size-small); font-weight: 600; color: var(--surface); background: var(--accent); padding: 10px 16px; border-radius: 999px; font-family: inherit; cursor: pointer; flex: 0 0 auto; }
-  .p4-ask-row .ask-submit:hover { opacity: 0.9; }
-
   .why-collapse { margin: 0 0 var(--gap-tight); border-bottom: 1px solid var(--rule); padding-bottom: var(--gap-tight); }
   .why-collapse summary { font-size: var(--size-tiny); color: var(--text-quiet); cursor: pointer; list-style: none; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
   .why-collapse summary::-webkit-details-marker { display: none; }
@@ -2249,6 +2241,41 @@
     return '';
   }
 
+// Patterns that suggest the student is asking the tool to write for them.
+// Checked client-side, before any API call. Crude by design: it catches the
+// obvious asks, costs nothing, and never sends the student's text anywhere
+// to find out what they meant. If it misses a phrasing, the student gets a
+// normal response - which is the tool doing its job anyway.
+var WRITE_REQUEST_PATTERNS = [
+  'write this for me',
+  'write it for me',
+  'write that for me',
+  'can you write',
+  'could you write',
+  'would you write',
+  'do my essay',
+  'do my assignment',
+  'draft this for me',
+  'draft it for me',
+  'write my essay',
+  'write my assignment',
+  'write my introduction',
+  'write my conclusion',
+  'write my body',
+  'write my section',
+  'write the essay for me',
+  'write the assignment for me'
+];
+
+function isAskingForProse(text) {
+  if (!text) return false;
+  var lower = String(text).toLowerCase();
+  for (var i = 0; i < WRITE_REQUEST_PATTERNS.length; i++) {
+    if (lower.indexOf(WRITE_REQUEST_PATTERNS[i]) !== -1) return true;
+  }
+  return false;
+}
+
   function renderPhase4() {
     var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
     if (!a) return;
@@ -2308,7 +2335,7 @@
     html += '<button role="menuitem" type="button" id="p4-arrival-view">Arrival (plane metaphor)</button>';
     html += '<button role="menuitem" type="button" id="p4-image-btn">Insert image placeholder</button>';
     html += '</div></div>';
-    html += '<div class="p4-ask-row"><label class="ask-label" for="p4-ask-input">Ask the tool for prose</label><div class="ask-field"><input type="text" id="p4-ask-input" placeholder="e.g. \u201cwrite my introduction\u201d"><button type="button" class="ask-submit" id="p4-ask-submit">Ask</button></div></div>';
+    
     phase4Body.innerHTML = html;
     bindPhase4Events(a);
     updatePhase4Footer(a);
@@ -2381,11 +2408,7 @@
     if (seedsBtn) seedsBtn.addEventListener('click', function () { runSeedsForSurface(a); });
     var seedsClose = document.getElementById('p4-seeds-close');
     if (seedsClose) seedsClose.addEventListener('click', function () { var key = a.id + ':' + p4UI.activeSurface; delete p4UI.seedsVisible[key]; renderPhase4(); });
-    var askInput = document.getElementById('p4-ask-input');
-    var askSubmit = document.getElementById('p4-ask-submit');
-    function triggerRefusal() { openRefusalSheet(a); if (askInput) askInput.value = ''; }
-    if (askSubmit) askSubmit.addEventListener('click', triggerRefusal);
-    if (askInput) askInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); triggerRefusal(); } });
+    
   }
   function updatePhase4Footer(a) {
     var surfaceId = p4UI.activeSurface;
@@ -2480,13 +2503,19 @@
     var actions = [{ label: 'Close' }];
     if (wt.phase === 'awaiting-answer') {
       actions = [{ label: 'Close' }, { label: 'Send answer', primary: true, keepOpen: true, onClick: function () {
-        var ta = document.getElementById('wt-answer');
-        if (!ta || !ta.value.trim()) return;
-        wt.history.push({ q: wt.currentQuestion, a: ta.value.trim() });
-        wt.currentQuestion = ''; wt.phase = 'awaiting-question';
-        openWalkthroughSheet(a);
-        fetchWalkthroughQuestion(a, key);
-      } }];
+		var ta = document.getElementById('wt-answer');
+		if (!ta || !ta.value.trim()) return;
+		// If the student is asking the tool to write for them, refuse instead of
+		// sending the answer on. The answer is not added to the history.
+	if (isAskingForProse(ta.value)) {
+		openRefusalSheet(a);
+		return;
+  }
+  wt.history.push({ q: wt.currentQuestion, a: ta.value.trim() });
+  wt.currentQuestion = ''; wt.phase = 'awaiting-question';
+  openWalkthroughSheet(a);
+  fetchWalkthroughQuestion(a, key);
+} }];
     }
     openSheet({ title: 'Walkthrough \u2014 ' + surfaceLabel, body: body, actions: actions });
     if (wt.phase === 'awaiting-question' && !wt.currentQuestion) fetchWalkthroughQuestion(a, key);
@@ -2550,8 +2579,18 @@
     }
   }
   function openRefusalSheet(a) {
-    openSheet({ title: 'I can\u2019t write it for you', body: '<div class="refusal-copy"><p>I know. It\u2019s tempting. But here\u2019s the thing: if I write it, you can\u2019t defend it. And that\u2019s the whole point of the assignment \u2014 not the words on the page, but the thinking that produces them. Your name goes on this. It needs to be yours.</p><p>What I can do: ask you questions until the thinking is clear, then you write it. Want to try that?</p></div>', actions: [{ label: 'Close' }, { label: 'Ask me questions', primary: true, onClick: function () { setTimeout(function () { openWalkthroughSheet(a); }, 300); } }] });
-  }
+  openSheet({
+    title: 'I can\u2019t write it for you',
+    body: '<div class="refusal-copy"><p>It looks like you\u2019re asking me to write something for you. Here\u2019s the reason I won\u2019t: if I write it, you can\u2019t defend it. And that\u2019s the whole point of the assignment \u2014 not the words on the page, but the thinking that produces them. Your name goes on this. It needs to be yours.</p><p>What I can do: ask you questions until the thinking is clear, then you write it.</p><p>If that wasn\u2019t what you meant, say it another way.</p></div>',
+    actions: [
+      { label: 'Close' },
+      { label: 'Ask me questions', primary: true, onClick: function () {
+        // Return the student to the walkthrough they were in, not a fresh one.
+        setTimeout(function () { openWalkthroughSheet(a); }, 300);
+      } }
+    ]
+  });
+}
   function insertImagePlaceholder() {
     var placeholder = '[Image: ]';
     var active = document.activeElement;
@@ -3608,6 +3647,12 @@
           var ta = document.getElementById('think-answer');
           var answer = (ta && ta.value.trim()) || '';
           if (!answer) { closeSheet(); return; }
+		  var ta = document.getElementById('think-answer');
+		  var answer = (ta && ta.value.trim()) || '';
+		  if (!answer) { closeSheet(); return; }
+		  if (isAskingForProse(answer)) { openRefusalSheet(a); return; }
+		  var newHistory = (history || '') + '\nQ: ' + q + '\nA: ' + answer;
+		  runThinkingCheck(checkKey, newHistory, count + 1);
           var newHistory = (history || '') + '\nQ: ' + q + '\nA: ' + answer;
           runThinkingCheck(checkKey, newHistory, count + 1);
         });
