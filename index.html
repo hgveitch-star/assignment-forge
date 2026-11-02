@@ -125,6 +125,11 @@
   .file-list .fl-name { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .file-list .fl-remove { flex: 0 0 auto; font-size: var(--size-small); color: var(--text-quiet); background: none; border: 0; padding: 0 4px; font-family: inherit; cursor: pointer; }
   .file-list .fl-remove:hover { color: var(--bottleneck); }
+    .upload-block .ub-methods { display: flex; flex-wrap: wrap; gap: var(--gap); margin-top: var(--gap-tight); padding-top: var(--gap-tight); border-top: 1px solid var(--rule); }
+  .upload-block .ub-method-link { font-size: var(--size-small); color: var(--accent); background: none; border: 0; padding: 4px 0; font-family: inherit; cursor: pointer; text-decoration: underline; }
+  .upload-block .ub-method-link:hover { color: var(--text); }
+  .upload-block .ub-method-link.muted { color: var(--text-quiet); text-decoration: none; font-style: italic; }
+  .upload-block .ub-method-link.muted:hover { color: var(--text-quiet); text-decoration: underline; }
   .file-counter { font-size: var(--size-tiny); color: var(--text-quiet); margin-top: 6px; }
   .file-counter strong { color: var(--text); }
   .clear-link { display: inline-block; margin-top: 6px; font-size: var(--size-tiny); color: var(--text-quiet); background: none; border: 0; padding: 2px 0; font-family: inherit; cursor: pointer; }
@@ -174,11 +179,11 @@
   .review-assignment-list { list-style: none; padding: 0; margin: 0; }
   .review-assignment-list li { display: flex; align-items: baseline; gap: var(--gap-tight); padding: 6px 0; font-size: var(--size-small); color: var(--text); line-height: 1.5; flex-wrap: wrap; border-bottom: 1px solid var(--rule); }
   .review-assignment-list li:last-child { border-bottom: 0; }
-  .review-assignment-list .ra-title { flex: 1 1 auto; min-width: 0; font-weight: 600; cursor: pointer; }
-  .review-assignment-list .ra-title:hover { color: var(--accent); }
+  .review-assignment-list .ra-title { flex: 1 1 auto; min-width: 0; font-weight: 600; cursor: pointer; color: var(--accent); }
+  .review-assignment-list .ra-title:hover { text-decoration: underline; color: var(--text); }
+  .review-assignment-list .ra-title .ra-pencil { font-size: 0.8em; color: var(--text-quiet); margin-left: 6px; }
+  .review-assignment-list .ra-title-passive { flex: 1 1 auto; min-width: 0; font-weight: 400; cursor: default; color: var(--text-quiet); }
   .review-assignment-list .ra-meta { flex: 0 0 auto; font-size: var(--size-tiny); color: var(--text-quiet); white-space: nowrap; }
-  .review-assignment-list .ra-brief { color: var(--accent); font-size: var(--size-tiny); background: none; border: 0; padding: 0 0 0 4px; font-family: inherit; cursor: pointer; text-decoration: underline; }
-  .review-assignment-list .ra-brief:hover { color: var(--text); }
   .review-note { font-size: var(--size-small); color: var(--text-quiet); font-style: italic; line-height: 1.55; margin: var(--gap-tight) 0 0; }
   .review-link { font-size: var(--size-small); color: var(--text-quiet); background: none; border: 0; padding: 8px 0; font-family: inherit; cursor: pointer; text-decoration: underline; }
   .review-link:hover { color: var(--text); }
@@ -186,12 +191,21 @@
   .p1-lede { color: var(--text-quiet); font-size: var(--size-small); line-height: 1.55; margin: 0 0 var(--gap-loose); }
   .p1-field { margin-bottom: var(--gap); }
   .p1-field label { display: block; font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; }
-  .p1-field textarea { width: 100%; font: inherit; font-size: var(--size-small); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; line-height: 1.5; resize: vertical; min-height: 64px; box-sizing: border-box; }
-  .p1-field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .p1-field textarea, .p1-field input[type="text"], .p1-field select { width: 100%; font: inherit; font-size: var(--size-small); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; line-height: 1.5; resize: vertical; min-height: 64px; box-sizing: border-box; }
+  .p1-field select { min-height: auto; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236E6E68' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+  .p1-field textarea:focus, .p1-field input:focus, .p1-field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
   .p1-field.p1-own-answer { margin-bottom: var(--gap-loose); padding-bottom: var(--gap); border-bottom: 1px solid var(--rule); }
   .p1-field.p1-own-answer textarea { background: rgba(185, 183, 176, 0.08); min-height: 96px; }
   .p1-field-from-parser { font-size: var(--size-tiny); color: var(--text-quiet); font-style: italic; margin-top: 4px; line-height: 1.5; }
-
+  
+  .rubric-list { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); padding: var(--gap-tight); margin-top: 6px; }
+  .rubric-row { display: flex; gap: var(--gap-tight); margin-bottom: 6px; align-items: center; }
+  .rubric-row input { flex: 1 1 auto; font: inherit; font-size: var(--size-small); padding: 6px 10px; border: 1px solid var(--rule); border-radius: 6px; }
+  .rubric-row input.rubric-weight { flex: 0 0 80px; }
+  .rubric-row .rubric-remove { color: var(--text-quiet); font-size: 16px; padding: 0 6px; }
+  .rubric-row .rubric-remove:hover { color: var(--danger); }
+  .rubric-add { font-size: var(--size-small); color: var(--accent); background: none; border: 0; padding: 4px 0; font-family: inherit; cursor: pointer; text-decoration: underline; margin-top: 4px; display: inline-block; }
+  
   .pv-header { margin-bottom: var(--gap-loose); }
   .pv-header-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--gap-tight); margin-bottom: 6px; }
   .pv-header h1 { font-size: var(--size-title); font-weight: 600; line-height: 1.25; margin: 0; letter-spacing: -0.01em; }
@@ -221,8 +235,8 @@
   .course-card .assessment-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid var(--rule); font-size: var(--size-small); }
   .course-card .assessment-row:first-of-type { border-top: 0; }
   .course-card .assessment-title { font-weight: 600; color: var(--text); flex: 1 1 auto; }
-  .course-card .assessment-title.clickable { cursor: pointer; }
-  .course-card .assessment-title.clickable:hover { color: var(--accent); }
+  .course-card .assessment-title.clickable { cursor: pointer; color: var(--accent); }
+  .course-card .assessment-title.clickable:hover { text-decoration: underline; }
   .course-card .assessment-meta { flex: 0 0 auto; color: var(--text-quiet); font-size: var(--size-tiny); margin-left: var(--gap-tight); text-align: right; }
   .course-card .assessment-row.passive .assessment-title { font-weight: 400; color: var(--text-quiet); }
   
@@ -299,13 +313,6 @@
   .outline-input::placeholder { color: var(--skeleton); font-style: normal; }
   .outline-targets-row { display: grid; grid-template-columns: 2fr 1fr; gap: 6px; align-items: end; }
   @media (max-width: 500px) { .outline-targets-row { grid-template-columns: 1fr; } }
-  .source-checklist { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; padding: var(--gap-tight); background: rgba(185, 183, 176, 0.04); border: 1px solid var(--rule); border-radius: 8px; }
-  .source-checklist-empty { font-size: var(--size-tiny); color: var(--text-quiet); font-style: italic; line-height: 1.5; }
-  .source-checkbox-row { display: flex; align-items: flex-start; gap: 8px; font-size: var(--size-small); color: var(--text); line-height: 1.45; cursor: pointer; padding: 4px 0; }
-  .source-checkbox-row input { margin: 3px 0 0 0; width: 16px; height: 16px; accent-color: var(--accent); flex: 0 0 auto; }
-  .source-checkbox-row .scb-label { flex: 1 1 auto; }
-  .source-checkbox-row .scb-short { font-weight: 600; }
-  .source-checkbox-row .scb-title { display: block; color: var(--text-quiet); font-size: var(--size-tiny); margin-top: 2px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .add-section-btn { display: block; width: 100%; font-size: var(--size-small); color: var(--accent); background: none; border: 1px dashed var(--skeleton); border-radius: var(--radius); padding: var(--gap-tight); font-family: inherit; cursor: pointer; text-align: center; }
   .add-section-btn:hover { border-color: var(--accent); }
   .word-count-check { margin-top: var(--gap); padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); font-size: var(--size-small); line-height: 1.55; }
@@ -316,6 +323,11 @@
   .wcc-label { color: var(--text-quiet); }
   .wcc-value { font-weight: 600; color: var(--text); }
   .rubric-note { margin-top: var(--gap-tight); font-size: var(--size-tiny); color: var(--text-quiet); font-style: italic; line-height: 1.5; }
+  
+  .rubric-panel { margin-top: var(--gap); padding: var(--gap); border: 1px solid var(--rule); border-radius: var(--radius); background: rgba(185, 183, 176, 0.04); font-size: var(--size-small); line-height: 1.55; }
+  .rubric-panel .rp-title { font-size: var(--size-tiny); color: var(--text-quiet); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; margin-bottom: 6px; }
+  .rubric-panel ul { margin: 0; padding-left: 20px; }
+  .rubric-panel li { margin-bottom: 4px; }
 
   .p4-surface-selector { display: flex; align-items: center; gap: var(--gap-tight); margin-bottom: var(--gap); flex-wrap: wrap; position: relative; }
   .p4-surface-selector-btn { font-size: var(--size-small); font-weight: 600; color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 16px; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
@@ -342,6 +354,12 @@
   .p4-advice p:last-child { margin-bottom: 0; }
   .p4-single-editor { width: 100%; box-sizing: border-box; font: inherit; font-size: var(--size-body); color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; line-height: 1.65; resize: none; overflow: hidden; min-height: 220px; }
   .p4-single-editor:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  
+  .p4-cite-row { margin-top: var(--gap-tight); display: flex; align-items: center; gap: var(--gap-tight); flex-wrap: wrap; }
+  .p4-cite-btn { font-size: var(--size-tiny); color: var(--accent); background: none; border: 1px dashed var(--skeleton); border-radius: 6px; padding: 4px 10px; font-family: inherit; cursor: pointer; }
+  .p4-cite-btn:hover { border-color: var(--accent); }
+  .p4-cite-note { font-size: var(--size-tiny); color: var(--text-quiet); font-style: italic; }
+  
   .p4-tools-row { margin-top: var(--gap-loose); padding-top: var(--gap); border-top: 1px solid var(--rule); position: relative; display: flex; gap: var(--gap-tight); flex-wrap: wrap; align-items: center; }
   .p4-tools-btn { font-size: var(--size-small); color: var(--text-quiet); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 14px; font-family: inherit; cursor: pointer; }
   .p4-tools-btn:hover { border-color: var(--skeleton); color: var(--text); }
@@ -661,6 +679,10 @@
           <ul class="file-list" id="list-syllabus"></ul>
           <div class="file-counter" id="counter-syllabus">0 files uploaded.</div>
           <button type="button" class="clear-link hidden" id="clear-syllabus">Clear syllabus files</button>
+          <div class="ub-methods">
+            <button type="button" class="ub-method-link" data-method="paste" data-target="syllabus">Paste text instead</button>
+            <button type="button" class="ub-method-link muted" data-method="image" data-target="syllabus">Upload image</button>
+          </div>
         </div>
         <div class="upload-block">
           <span class="ub-label">Assignment brief (optional)</span>
@@ -669,6 +691,10 @@
           <ul class="file-list" id="list-brief"></ul>
           <div class="file-counter" id="counter-brief">0 files uploaded.</div>
           <button type="button" class="clear-link hidden" id="clear-brief">Clear brief files</button>
+          <div class="ub-methods">
+            <button type="button" class="ub-method-link" data-method="paste" data-target="brief">Paste text instead</button>
+            <button type="button" class="ub-method-link muted" data-method="image" data-target="brief">Upload image</button>
+          </div>
         </div>
         <button type="button" class="manual-link" id="add-manually">Or add an assignment manually →</button>
         <div class="manual-entries hidden" id="manual-entries"></div>
@@ -718,7 +744,7 @@
     <section id="assignment-home">
       <div class="phase-tabs" role="tablist">
         <button type="button" class="phase-tab" data-phase="1" disabled>Understand</button>
-        <button type="button" class="phase-tab" data-phase="2">Find Sources</button>
+        <button type="button" class="phase-tab" data-phase="2">Gather Sources</button>
         <button type="button" class="phase-tab" data-phase="3">Build the Argument</button>
         <button type="button" class="phase-tab" data-phase="4">Write</button>
         <button type="button" class="phase-tab" data-phase="5">Complete</button>
@@ -762,7 +788,7 @@ var PROVIDERS = {
 var STORAGE_VERSION = 1;
 var LS_STUDENT_KEY = 'taf_student_v1';
 var IDB_NAME = 'taf_store_v1';
-var IDB_VERSION = 3; // Bumped to 3 for the new course assessments structure
+var IDB_VERSION = 3;
 var IDB_STORE = 'assignments';
 var IDB_COURSE_STORE = 'courses';
 
@@ -888,13 +914,19 @@ if (typeof pdfjsLib !== 'undefined' && pdfjsLib.GlobalWorkerOptions) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
-var MAX_FILE_BYTES = 10 * 1024 * 1024;
+var MAX_FILE_BYTES = 25 * 1024 * 1024;
 
 function readFileAsText(file) {
   return new Promise(function (resolve, reject) {
     if (!file) { reject(new Error('No file provided.')); return; }
+    if (file.size === 0) {
+      reject(new Error('That file appears to be empty (0 bytes). Try a different file, or paste the text instead.'));
+      return;
+    }
     if (file.size > MAX_FILE_BYTES) {
-      reject(new Error('That file is ' + Math.round(file.size / (1024 * 1024)) + ' MB. The tool can read files up to 10 MB. Try a smaller file, or paste the assignment brief instead.'));
+      var mb = Math.round(file.size / (1024 * 1024));
+      var limit = Math.round(MAX_FILE_BYTES / (1024 * 1024));
+      reject(new Error('That file is ' + mb + ' MB. The limit is ' + limit + ' MB. Try a smaller file, or use "Paste text instead".'));
       return;
     }
     var name = (file.name || '').toLowerCase();
@@ -913,6 +945,12 @@ function readFileAsText(file) {
         var next = function (i) {
           if (i > pages) {
             var text = collected.join('\n\n');
+            // Scan detection: if the PDF had pages but produced almost no text, it's likely image-only
+            var trimmed = text.replace(/\s+/g, ' ').trim();
+            if (pdf.numPages > 0 && trimmed.length < 40) {
+              reject(new Error('This PDF has no extractable text. It looks like a scan or an image-only PDF. Open it in your phone\u2019s PDF viewer, copy the text, and use "Paste text instead".'));
+              return;
+            }
             var warning = pdf.numPages > 30 ? 'Only the first 30 of ' + pdf.numPages + ' pages were read.' : '';
             resolve({ text: text, kind: 'pdf', warning: warning });
             return;
@@ -923,11 +961,19 @@ function readFileAsText(file) {
           }).catch(reject);
         };
         next(1);
-      }).catch(function (e) { reject(new Error('Could not read that PDF: ' + (e && e.message ? e.message : 'unknown error'))); });
+      }).catch(function (e) {
+        if (e && e.message && e.message.indexOf('no extractable text') !== -1) { reject(e); return; }
+        reject(new Error('Could not read that PDF: ' + (e && e.message ? e.message : 'unknown error')));
+      });
     } else if (isDocx) {
       if (typeof mammoth === 'undefined') { reject(new Error('The Word reader did not load. Check your connection and reload the tool.')); return; }
       file.arrayBuffer().then(function (buf) { return mammoth.extractRawText({ arrayBuffer: buf }); }).then(function (result) {
-        resolve({ text: result.value || '', kind: 'docx', warning: '' });
+        var text = result.value || '';
+        if (text.replace(/\s+/g, '').length === 0) {
+          reject(new Error('That Word file appears to have no readable text. Try a different file, or use "Paste text instead".'));
+          return;
+        }
+        resolve({ text: text, kind: 'docx', warning: '' });
       }).catch(function (e) { reject(new Error('Could not read that Word file: ' + (e && e.message ? e.message : 'unknown error'))); });
     } else if (isXlsx) {
       if (typeof XLSX === 'undefined') { reject(new Error('The spreadsheet reader did not load. Check your connection and reload the tool.')); return; }
@@ -943,11 +989,18 @@ function readFileAsText(file) {
       }).catch(function (e) { reject(new Error('Could not read that spreadsheet: ' + (e && e.message ? e.message : 'unknown error'))); });
     } else if (isText) {
       var reader = new FileReader();
-      reader.onload = function () { resolve({ text: String(reader.result || ''), kind: 'text', warning: '' }); };
+      reader.onload = function () {
+        var text = String(reader.result || '');
+        if (text.replace(/\s+/g, '').length === 0) {
+          reject(new Error('That file appears to have no readable text. Try a different file, or use "Paste text instead".'));
+          return;
+        }
+        resolve({ text: text, kind: 'text', warning: '' });
+      };
       reader.onerror = function () { reject(new Error('Could not read that file.')); };
       reader.readAsText(file);
     } else {
-      reject(new Error('The tool can read PDF, Word (.docx), Excel (.xlsx), and plain text files.'));
+      reject(new Error('The tool can read PDF, Word (.docx), Excel (.xlsx), and plain text files. Use "Paste text instead" for anything else.'));
     }
   });
 }
@@ -1061,10 +1114,19 @@ function parseSyllabusText(rawText) {
     text = text.slice(0, cut) + '\n\n[...document truncated for length...]';
   }
   var prompt = SYLLABUS_EXTRACT_PROMPT.replace('{{text}}', text);
-  return callAI(prompt, { maxTokens: 3000 }).then(function (reply) {
+  return callAI(prompt, { maxTokens: 4000 }).then(function (reply) {
     var parsed = tryParseJson(reply);
     if (!parsed || typeof parsed !== 'object') {
-      empty.notes = 'The AI returned an unreadable response. You can fill in the fields by hand.';
+      // Diagnose the failure
+      var reason = 'The AI returned a response that could not be read as JSON.';
+      if (reply && reply.length > 0) {
+        var trimmed = String(reply).trim();
+        if (!trimmed.endsWith('}')) {
+          reason = 'The AI response was cut off before it finished. This usually means the file is too large for the current model. Try a shorter file, or fill in the fields by hand.';
+        }
+      }
+      empty.notes = reason;
+      console.warn('Parser could not parse response. Raw response:', reply);
       return empty;
     }
     var out = JSON.parse(JSON.stringify(empty));
@@ -1139,11 +1201,11 @@ var assignments = [];
 var currentView = 'boot';
 var currentAssignmentId = null;
 var currentActivePhaseTab = null;
-var setupState = { syllabusFiles: [], briefFiles: [], manualEntries: [], completed: false, inProgress: false, isEditMode: false };
+var setupState = { syllabusFiles: [], briefFiles: [], manualEntries: [], pastedText: { syllabus: '', brief: '' }, completed: false, inProgress: false, isEditMode: false };
 var parseState = { cancelled: false, current: null, queue: [], results: [] };
-var phase1State = { mode: 'create', targetId: null, sourceEntry: '', fields: { purpose: '', skills: '', knowledge: '', task: '', criteria: '', logistics: '' }, fromParser: {} };
+var phase1State = { mode: 'create', targetId: null, sourceEntry: '', fields: { purpose: '', skills: '', knowledge: '', task: '', criteria: '', logistics: '', aiPolicy: null, rubric: [], citationStyle: '', citationStyleOther: '', groupWork: '' }, fromParser: {} };
 var p3UI = { thesisSocraticVisible: false, thesisSocraticStatus: 'idle', thesisSocraticText: '' };
-var p4UI = { activeSurface: 'body', arrivalSeen: {}, seedsVisible: {}, walkthroughs: {} };
+var p4UI = { activeSurface: 'body', arrivalSeen: {}, seedsVisible: {}, walkthroughs: {}, citationInsertTarget: null };
 var p5UI = { screen: 'arrival', citationResult: null, wordCountResult: null, formattingDone: false, integrityAnswers: [null, null, null, null], integrityComments: ['','','',''], institutionPolicy: 'Default (unspecified)', citationStyle: 'None / not required', declarationText: '', exportFormat: 'doc' };
 
 function getApiConfig() {
@@ -1215,6 +1277,64 @@ function buildMessages(systemPrompt, userPrompt) {
   if (systemPrompt) return [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }];
   return [{ role: 'user', content: userPrompt }];
 }
+// ============================================================================
+// ITEM 2 — SOURCE METADATA EXTRACTION (upload + citation parse)
+// ============================================================================
+var SOURCE_EXTRACT_PROMPT = [
+  'You extract academic source metadata from a text or a citation string.',
+  '',
+  'Return ONLY a JSON object. No preamble, no explanation, no markdown code fences. Just the JSON.',
+  '',
+  'The JSON object must have exactly these keys:',
+  '  "title": string — the full title of the work. Empty if not stated.',
+  '  "author": string — the first author\u2019s surname, or "Surname et al." if multiple. Empty if not stated.',
+  '  "year": string — the four-digit publication year. Empty if not stated.',
+  '  "journal": string — the journal, book, or publisher. Empty if not stated.',
+  '  "doi": string — the DOI only (e.g. "10.xxxx/yyyy"), no "https://doi.org/" prefix. Empty if not stated.',
+  '',
+  'ABSOLUTE RULE: You may only extract text that appears explicitly in the INPUT below.',
+  'You may NOT use anything from your training data. You may NOT guess, infer, or fill gaps',
+  'with plausible-looking information. An empty field is correct; a guessed field is wrong.',
+  '',
+  'If the input is a full citation, parse it. If it is raw document text, find the title,',
+  'author, year, journal, and DOI wherever they appear (often on a cover page or header).',
+  '',
+  'INPUT:',
+  '"""',
+  '{{text}}',
+  '"""'
+].join('\n');
+
+function extractSourceMetadata(inputText, kind) {
+  // kind: 'text' (raw document text) or 'citation' (a citation string)
+  if (!inputText || inputText.trim().length === 0) {
+    return Promise.resolve({ title: '', author: '', year: '', journal: '', doi: '' });
+  }
+  var text = inputText;
+  if (kind === 'text' && text.length > 20000) {
+    // For raw text, the first ~20k chars usually contains the cover/header/citation block
+    var cut = text.lastIndexOf(' ', 20000);
+    if (cut < 15000) cut = 20000;
+    text = text.slice(0, cut) + '\n\n[...truncated for length...]';
+  }
+  var prompt = SOURCE_EXTRACT_PROMPT.replace('{{text}}', text);
+  return callAI(prompt, { maxTokens: 600 }).then(function (reply) {
+    var parsed = tryParseJson(reply);
+    if (!parsed || typeof parsed !== 'object') {
+      return { title: '', author: '', year: '', journal: '', doi: '' };
+    }
+    var out = { title: '', author: '', year: '', journal: '', doi: '' };
+    ['title', 'author', 'year', 'journal', 'doi'].forEach(function (k) {
+      if (parsed[k]) out[k] = String(parsed[k]).trim();
+    });
+    // Normalise DOI: strip any URL prefix the model may have added
+    out.doi = out.doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim();
+    return out;
+  }).catch(function () {
+    // Never throw from a metadata extraction — the caller falls back to the empty form
+    return { title: '', author: '', year: '', journal: '', doi: '' };
+  });
+}
 
 var PROMPTS_7B = {
   structure_feedback: 'You are a warm, patient senior student \u2014 the older-brother voice. You help the student SEE what their draft is doing, without doing it for them.\n\nHARD RULES:\n- You do NOT write prose. Not one sentence.\n- You do NOT rewrite the student\u2019s text.\n- You do NOT supply transitions, topic sentences, or concluding sentences.\n- You do NOT tell the student what the section SHOULD say.\n- You DO name what the section is currently doing.\n- You DO point out a mismatch between the outline and the draft, if there is one.\n- You DO ask one or two questions that help the student see the structure themselves.\n\nTONE: warm, direct, plain language. Second person. Under 120 words.\n\nReturn only the feedback. No preamble.',
@@ -1266,8 +1386,49 @@ var CITATION_STYLES = {
   'APA 7': 'APA 7: AI tools cannot be authors because they cannot consent to the responsibilities of authorship. If you quote or reproduce AI-generated text, cite it in-text and in the reference list (author = the company; date = version date; title = tool name; source = URL). If you use AI in other ways, describe the use in the Method section, introduction, or a comparable place.',
   'Harvard': 'Harvard: cite AI-generated material as you would any other source. Where the tool produced direct text, cite it in-text and in the reference list. Where AI was used in another way, describe it in the appropriate section of your work.',
   'MLA 9': 'MLA 9: cite AI-generated content as a source. Include the prompt and the tool\'s response. If the content was generative rather than quoted, describe the use.',
-  'Chicago': 'Chicago: cite AI-generated material in a footnote with the tool name, version, and access date. If the material is not quoted but used, describe the use in the appropriate note.'
+  'Chicago (notes-bibliography)': 'Chicago (notes-bibliography): cite AI-generated material in a footnote with the tool name, version, and access date. If the material is not quoted but used, describe the use in the appropriate note.',
+  'Chicago (author-date)': 'Chicago (author-date): cite AI-generated material in-text with the tool name and date, and include a reference list entry.',
+  'OSCOLA': 'OSCOLA: legal citation. Cite AI-generated material as you would any other source, following OSCOLA conventions.',
+  'Vancouver': 'Vancouver: cite AI-generated material with a numbered reference in order of first appearance.',
+  'IEEE': 'IEEE: cite AI-generated material with a bracketed number in order of first appearance.',
+  'SAJAS': 'SAJAS: South African Journal of Animal Science. Follow the author guidelines for the journal.',
+  'Other': 'Other style. Follow the assignment brief or your institution\'s convention.'
 };
+
+var CITATION_STYLE_OPTIONS = [
+  { value: '', label: 'No preferred citation style indicated; please choose one' },
+  { value: 'APA 7', label: 'APA 7' },
+  { value: 'Harvard', label: 'Harvard' },
+  { value: 'MLA 9', label: 'MLA 9' },
+  { value: 'Chicago (notes-bibliography)', label: 'Chicago (notes-bibliography)' },
+  { value: 'Chicago (author-date)', label: 'Chicago (author-date)' },
+  { value: 'OSCOLA', label: 'OSCOLA' },
+  { value: 'Vancouver', label: 'Vancouver' },
+  { value: 'IEEE', label: 'IEEE' },
+  { value: 'SAJAS', label: 'SAJAS' },
+  { value: 'Other', label: 'Other' }
+];
+
+function formatInlineCitation(source, style) {
+  var author = source.author || 'Unknown';
+  var year = source.year || 'n.d.';
+  switch (style) {
+    case 'APA 7':
+    case 'Harvard':
+      return '(' + author + ', ' + year + ')';
+    case 'MLA 9':
+      return '(' + author + ' ' + year + ')';
+    case 'Chicago (author-date)':
+      return '(' + author + ' ' + year + ')';
+    case 'Vancouver':
+    case 'IEEE':
+    case 'OSCOLA':
+    case 'Chicago (notes-bibliography)':
+    case 'SAJAS':
+    default:
+      return '(' + author + ', ' + year + ')';
+  }
+}
 
 var PHASE_HELP = {
   1: {
@@ -1279,10 +1440,10 @@ var PHASE_HELP = {
     why: 'Assignments don\u2019t come one at a time. They come in clusters. Seeing them together, sorted by what\u2019s actually due soonest, is how you avoid being surprised by three deadlines landing in the same week.'
   },
   2: {
-    title: 'Find Sources',
+    title: 'Gather Sources',
     whatFor: 'This phase is for gathering the sources that answer your assignment question, and reading them well enough to use them.',
     needs: 'A working question, and a willingness to read. You\u2019ll need to write a short reading note for each source before you can approve it \u2014 that\u2019s the rule.',
-    walkAway: 'A set of approved sources, each with a reading note in your own words, ready to support the argument you build next.',
+    walkAway: 'A reading list of approved sources, each with a reading note in your own words, ready to support the argument you build next.',
     wontDo: 'It won\u2019t read for you. It won\u2019t summarise for you. It won\u2019t decide which sources are good enough \u2014 you decide that when you write the note.',
     why: 'Sources are the ground your argument stands on. If you can\u2019t say, in your own words, what a source argues, you can\u2019t use it in an argument. The reading note is how you find out whether you actually understand it, and it\u2019s how you avoid borrowing someone else\u2019s words without knowing it.'
   },
@@ -1298,7 +1459,7 @@ var PHASE_HELP = {
     title: 'Write',
     whatFor: 'This phase is for writing the draft. Section by section. The words on the page are yours.',
     needs: 'A thesis and an outline. Beyond that, it needs you to write. The tool can ask questions and give feedback, but it cannot produce the prose.',
-    walkAway: 'A full draft \u2014 body, conclusion, introduction \u2014 with every section at least drafted.',
+    walkAway: 'A full draft \u2014 body, conclusion, introduction \u2014 with every section at least drafted, and citations inserted where you need them.',
     wontDo: 'It won\u2019t write for you. It won\u2019t rewrite your prose. It won\u2019t supply transitions, topic sentences, or concluding sentences. It won\u2019t tell you what a section should say.',
     why: 'The point of an assignment is not the words on the page. It\u2019s the thinking that produces them. If the tool wrote it, you couldn\u2019t defend it \u2014 and you\u2019d have learned nothing except how to ask. The tool is here to help you think, not to think for you. The writing order (body first, then landing, then boarding) follows the same principle: you can\u2019t introduce what you haven\u2019t yet introduced.'
   },
@@ -1362,7 +1523,6 @@ var editSemesterBtn = document.getElementById('edit-semester');
 var p1Lede = document.getElementById('p1-lede');
 var p1FilesNote = document.getElementById('p1-files-note');
 var p1ExtractBody = document.getElementById('p1-extract-body');
-var p1SpecBody = document.getElementById('p1-spec-body');
 var phase2Body = document.getElementById('phase2-body');
 var phase3Body = document.getElementById('phase3-body');
 var phase4Body = document.getElementById('phase4-body');
@@ -1567,7 +1727,7 @@ function showSetupScreen(which) {
   }
 }
 function hasAnyPendingInput() {
-  return setupState.syllabusFiles.length > 0 || setupState.briefFiles.length > 0 || setupState.manualEntries.length > 0;
+  return setupState.syllabusFiles.length > 0 || setupState.briefFiles.length > 0 || setupState.manualEntries.length > 0 || (setupState.pastedText.syllabus && setupState.pastedText.syllabus.trim().length > 0) || (setupState.pastedText.brief && setupState.pastedText.brief.trim().length > 0);
 }
 function renderChosenSummary() {
   var pending = setupState.syllabusFiles.length + setupState.briefFiles.length + setupState.manualEntries.length;
@@ -1577,6 +1737,8 @@ function renderChosenSummary() {
   if (setupState.syllabusFiles.length > 0) parts.push(setupState.syllabusFiles.length + ' syllabu' + (setupState.syllabusFiles.length === 1 ? 's' : 'ses'));
   if (setupState.briefFiles.length > 0) parts.push(setupState.briefFiles.length + ' brief' + (setupState.briefFiles.length === 1 ? '' : 's'));
   if (setupState.manualEntries.length > 0) parts.push(setupState.manualEntries.length + ' manual entr' + (setupState.manualEntries.length === 1 ? 'y' : 'ies'));
+    if (setupState.pastedText.syllabus && setupState.pastedText.syllabus.trim().length > 0) parts.push('a pasted syllabus');
+  if (setupState.pastedText.brief && setupState.pastedText.brief.trim().length > 0) parts.push('a pasted brief');
   var pendingStr = parts.length > 0 ? 'You\u2019ve added ' + parts.join(', ') + ' to process.' : 'You haven\u2019t added anything new.';
   var existingStr = existing > 0 ? ' Your semester has ' + existing + ' assignment' + (existing === 1 ? '' : 's') + '.' : '';
   chosenSummary.innerHTML = '<strong>' + pendingStr + '</strong>' + existingStr;
@@ -1621,6 +1783,50 @@ uploadSyllabus.addEventListener('change', function () { addFiles('syllabus', Arr
 uploadBrief.addEventListener('change', function () { addFiles('brief', Array.prototype.slice.call(uploadBrief.files)); uploadBrief.value = ''; });
 clearSyllabus.addEventListener('click', function () { clearFiles('syllabus'); });
 clearBrief.addEventListener('click', function () { clearFiles('brief'); });
+document.querySelectorAll('.ub-method-link').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var method = btn.getAttribute('data-method');
+    var target = btn.getAttribute('data-target');
+    if (method === 'paste') openPasteTextSheet(target);
+    else if (method === 'image') openImagePlaceholderSheet();
+  });
+});
+
+function openPasteTextSheet(target) {
+  var which = target === 'syllabus' ? 'syllabus' : 'brief';
+  var label = which === 'syllabus' ? 'syllabus' : 'assignment brief';
+  var existing = setupState.pastedText[which] || '';
+  sheetTitle.textContent = 'Paste the ' + label + ' text';
+  sheetBody.innerHTML = '<p>If uploading is failing, or you have the ' + label + ' on a screen you can copy from, paste its text here. It will be treated exactly as a file would.</p><label class="manual-label" for="paste-text-input">Pasted text</label><textarea class="manual-textarea" id="paste-text-input" style="min-height:160px;" placeholder="Paste the ' + label + ' text here.">' + escapeHtml(existing) + '</textarea><p class="translation-note" style="margin-top:var(--gap-tight);">Copy from a PDF viewer, Word, Google Docs, or a web page. Formatting does not matter \u2014 the parser works on the words.</p>';
+  sheetActions.innerHTML = '';
+  var cancelBtn = document.createElement('button'); cancelBtn.type = 'button'; cancelBtn.className = 'btn-quiet'; cancelBtn.textContent = 'Cancel'; cancelBtn.addEventListener('click', closeSheet);
+  var useBtn = document.createElement('button'); useBtn.type = 'button'; useBtn.className = 'btn-primary'; useBtn.textContent = 'Use this text'; useBtn.disabled = existing.trim().length < 40;
+  useBtn.addEventListener('click', function () {
+    var input = document.getElementById('paste-text-input');
+    if (!input) return;
+    var text = input.value.trim();
+    if (text.length < 40) return;
+    setupState.pastedText[which] = text;
+    closeSheet();
+    renderChosenSummary();
+    footerAction.disabled = !hasAnyPendingInput();
+    showToastSmall('Pasted ' + label + ' text added.');
+  });
+  sheetActions.appendChild(cancelBtn); sheetActions.appendChild(useBtn);
+  scrim.hidden = false; sheet.hidden = false;
+  requestAnimationFrame(function () { scrim.classList.add('open'); sheet.classList.add('open'); });
+  var input = document.getElementById('paste-text-input');
+  setTimeout(function () { if (input) input.focus(); }, 240);
+  input.addEventListener('input', function () { useBtn.disabled = input.value.trim().length < 40; });
+}
+
+function openImagePlaceholderSheet() {
+  openSheet({
+    title: 'Image upload is coming',
+    body: '<p>I can\u2019t read images yet. If you have a photo of your syllabus or brief \u2014 a screenshot, or a picture of a handout \u2014 here\u2019s what to do instead:</p><p><strong>Open the image in your phone\u2019s photo viewer or gallery, select the text, copy it, and use "Paste text instead".</strong> Or upload a PDF version if you have one.</p><p class="quiet" style="font-size:var(--size-small);color:var(--text-quiet);font-style:italic;">This is a signpost, not a feature. When image upload arrives, the button will do what it says.</p>',
+    actions: [{ label: 'Got it', primary: true }]
+  });
+}
 
 function renderManualEntries() {
   manualEntriesEl.innerHTML = '';
@@ -1693,8 +1899,15 @@ function openDeleteConfirm(id) {
   cancel.addEventListener('click', closeSheet);
   var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-primary'; del.textContent = 'Delete';
   del.addEventListener('click', function () {
+    var courseId = a.courseId;
     assignments = assignments.filter(function (x) { return x.id !== id; });
     deleteAssignmentRecord(id).catch(function (e) { console.error('Could not delete record:', e); });
+    // Prune orphaned course
+    var stillHas = assignments.some(function (x) { return x.courseId === courseId; });
+    if (!stillHas) {
+      courses = courses.filter(function (c) { return c.id !== courseId; });
+      deleteCourseRecord(courseId).catch(function (e) { console.error('Could not delete course record:', e); });
+    }
     closeSheet(); renderAssignments(); renderChosenSummary();
     footerAction.disabled = !hasAnyPendingInput();
     updateSetupExitVisibility();
@@ -1715,9 +1928,16 @@ function startParsing() {
   parseState.cancelled = false;
   parseState.results = [];
   parseState.queue = [];
-  setupState.syllabusFiles.forEach(function (f) { parseState.queue.push({ kind: 'syllabus', file: f }); });
-  setupState.briefFiles.forEach(function (f) { parseState.queue.push({ kind: 'brief', file: f }); });
-  parseLede.textContent = 'This will take a moment. ' + parseState.queue.length + ' file' + (parseState.queue.length === 1 ? '' : 's') + ' will be read and parsed.';
+  setupState.syllabusFiles.forEach(function (f) { parseState.queue.push({ kind: 'syllabus', source: 'file', file: f }); });
+  setupState.briefFiles.forEach(function (f) { parseState.queue.push({ kind: 'brief', source: 'file', file: f }); });
+  if (setupState.pastedText.syllabus && setupState.pastedText.syllabus.trim().length > 0) {
+    parseState.queue.push({ kind: 'syllabus', source: 'paste', text: setupState.pastedText.syllabus, label: 'Pasted syllabus text' });
+  }
+  if (setupState.pastedText.brief && setupState.pastedText.brief.trim().length > 0) {
+    parseState.queue.push({ kind: 'brief', source: 'paste', text: setupState.pastedText.brief, label: 'Pasted brief text' });
+  }
+  var total = parseState.queue.length;
+  parseLede.textContent = 'This will take a moment. ' + total + ' item' + (total === 1 ? '' : 's') + ' will be read and parsed.';
   progressInner.style.width = '0%';
   parseStatus.innerHTML = '';
   runParseQueue();
@@ -1732,17 +1952,23 @@ async function runParseQueue() {
     var percentAtStart = Math.round((done / total) * 100);
     var percentAfterRead = Math.round(((done + 0.7) / total) * 100);
     progressInner.style.width = percentAtStart + '%';
-    parseStatus.innerHTML = '<span class="ps-step">Reading <span class="ps-file">' + escapeHtml(item.file.name) + '</span>\u2026</span>';
+    var sourceLabel = item.source === 'paste' ? item.label : item.file.name;
+    parseStatus.innerHTML = '<span class="ps-step">' + (item.source === 'paste' ? 'Reading pasted text\u2026' : 'Reading <span class="ps-file">' + escapeHtml(sourceLabel) + '</span>\u2026') + '</span>';
     try {
-      var fileResult = await readFileAsText(item.file);
+      var fileResult;
+      if (item.source === 'paste') {
+        fileResult = { text: item.text, kind: 'text', warning: '' };
+      } else {
+        fileResult = await readFileAsText(item.file);
+      }
       progressInner.style.width = percentAfterRead + '%';
-      parseStatus.innerHTML = '<span class="ps-step">Parsing <span class="ps-file">' + escapeHtml(item.file.name) + '</span>\u2026</span>';
+      parseStatus.innerHTML = '<span class="ps-step">Parsing <span class="ps-file">' + escapeHtml(sourceLabel) + '</span>\u2026</span>';
       var parsed = await parseSyllabusText(fileResult.text);
       if (parsed.notes && fileResult.warning) parsed.notes = parsed.notes + ' ' + fileResult.warning;
       else if (fileResult.warning) parsed.notes = fileResult.warning;
       parseState.results.push({
         kind: item.kind,
-        fileName: item.file.name,
+        fileName: sourceLabel,
         course: parsed.course,
         assignments: parsed.assignments,
         assessments: parsed.assessments,
@@ -1751,7 +1977,7 @@ async function runParseQueue() {
     } catch (e) {
       parseState.results.push({
         kind: item.kind,
-        fileName: item.file.name,
+        fileName: sourceLabel,
         error: e && e.message ? e.message : String(e)
       });
     }
@@ -1769,12 +1995,10 @@ async function commitParseResults() {
   var firstCourseId = null;
   var unassignedCourseId = null;
 
-  // 1. Create courses and assignments from syllabus results
   for (var i = 0; i < parseState.results.length; i++) {
     var r = parseState.results[i];
     if (r.kind !== 'syllabus' || r.error) continue;
     
-    // Check if course already exists (e.g. re-uploading a brief for an existing course)
     var existingCourse = courses.find(function(c) { return c.code === r.course.code || (c.name === r.course.name && c.name !== ''); });
     
     var course = existingCourse;
@@ -1795,7 +2019,6 @@ async function commitParseResults() {
       courses.push(course);
       try { await saveCourseRecord(course); } catch (e) { console.error('Could not save course:', e); }
     } else {
-      // Merge assessments if uploading a new syllabus
       if (r.assessments && r.assessments.length > 0) {
          course.assessments = r.assessments;
          try { await saveCourseRecord(course); } catch(e) {}
@@ -1807,6 +2030,11 @@ async function commitParseResults() {
 
     for (var j = 0; j < r.assignments.length; j++) {
       var pa = r.assignments[j];
+      // Only add the assignment if it doesn't already exist for this course
+      var alreadyExists = assignments.some(function(a) {
+        return a.courseId === course.id && a.title === (pa.title || 'Untitled assignment');
+      });
+      if (alreadyExists) continue;
       var a = makeAssignmentFromParsed(pa, course, r.fileName);
       if (a) {
         assignments.push(a);
@@ -1816,7 +2044,6 @@ async function commitParseResults() {
     }
   }
 
-  // 2. Attach brief results to the first course
   for (var k = 0; k < parseState.results.length; k++) {
     var r2 = parseState.results[k];
     if (r2.kind !== 'brief' || r2.error) continue;
@@ -1843,6 +2070,10 @@ async function commitParseResults() {
     var createdIds = [];
     for (var m = 0; m < r2.assignments.length; m++) {
       var pa2 = r2.assignments[m];
+      var exists2 = assignments.some(function(a) {
+        return a.courseId === targetCourse.id && a.title === (pa2.title || 'Untitled assignment');
+      });
+      if (exists2) continue;
       var a2 = makeAssignmentFromParsed(pa2, targetCourse, r2.fileName);
       if (a2) {
         assignments.push(a2);
@@ -1867,6 +2098,7 @@ function makeAssignmentFromParsed(pa, course, sourceFile) {
     aiPolicy: pa.aiPolicy || { category: '', rules: course.spec.aiPolicy || '' },
     rubric: pa.rubricRows || [],
     citationStyle: pa.citationStyle || '',
+    citationStyleOther: '',
     groupWork: pa.groupWork || '',
     presentation: pa.presentation || '',
     pageSize: pa.pageSize || '',
@@ -1881,11 +2113,11 @@ function makeAssignmentFromParsed(pa, course, sourceFile) {
     dueInDays: deriveDueInDays(pa.dueDate || ''),
     wordCount: deriveWordCount(pa.wordCount || ''),
     estimatedHours: 8,
-    phase: 2, phaseLabel: 'Phase 2 \u2014 Find Sources',
+    phase: 2, phaseLabel: 'Phase 2 \u2014 Gather Sources',
     progressPercent: 30, sections: [], quietLine: 'Phase 1 complete. Ready for Phase 2.',
     canDeadlineMode: false,
     spec: spec,
-    parserFields: ['purpose', 'skills', 'knowledge', 'task', 'criteria', 'logistics'],
+    parserFields: ['purpose', 'skills', 'knowledge', 'task', 'criteria', 'logistics', 'aiPolicy', 'rubric', 'citationStyle', 'groupWork'],
     p2: { topic: '', sources: [] },
     p3: { structure: null, thesis: '', outline: [] },
     sourceFile: sourceFile || ''
@@ -1915,7 +2147,6 @@ function renderReview() {
     
     var allAssignments = group.syllabusFiles.concat(group.briefFiles);
     
-    // Combine assignments and assessments for the timeline view in review
     var reviewItems = [];
     allAssignments.forEach(function (r) {
       (r._createdIds || []).forEach(function (aid) {
@@ -1924,7 +2155,6 @@ function renderReview() {
         reviewItems.push({ type: 'assignment', title: a.title, dateStr: a.spec.logistics || 'No date set', rawId: a.id });
       });
     });
-    // Add assessments (from the syllabus parse)
     if (c.assessments) {
       c.assessments.forEach(function(as) {
         reviewItems.push({ type: 'assessment', title: as.title, dateStr: as.date + (as.weight ? ' (' + as.weight + ')' : ''), rawId: null });
@@ -1935,9 +2165,9 @@ function renderReview() {
       html += '<ul class="review-assignment-list">';
       reviewItems.forEach(function(item) {
         if (item.type === 'assignment') {
-          html += '<li><span class="ra-title" onclick="openReviewAssignmentSheet(\'' + item.rawId + '\')">' + escapeHtml(item.title) + '</span><span class="ra-meta">' + escapeHtml(item.dateStr) + '</span></li>';
+          html += '<li><span class="ra-title" onclick="openReviewAssignmentSheet(\'' + item.rawId + '\')">' + escapeHtml(item.title) + '<span class="ra-pencil">✎</span></span><span class="ra-meta">' + escapeHtml(item.dateStr) + '</span></li>';
         } else {
-          html += '<li style="opacity:0.7;"><span class="ra-title" style="font-weight:400;cursor:default;">' + escapeHtml(item.title) + '</span><span class="ra-meta">' + escapeHtml(item.dateStr) + '</span></li>';
+          html += '<li><span class="ra-title-passive">' + escapeHtml(item.title) + '</span><span class="ra-meta">' + escapeHtml(item.dateStr) + '</span></li>';
         }
       });
       html += '</ul>';
@@ -1954,7 +2184,7 @@ function renderReview() {
   if (errors.length > 0) {
     html += '<div class="review-course"><div class="review-course-name">Some files could not be read.</div><ul class="review-assignment-list">';
     errors.forEach(function (r) {
-      html += '<li><span class="ra-title">' + escapeHtml(r.fileName) + '</span><span class="ra-meta">' + escapeHtml(r.error) + '</span></li>';
+      html += '<li><span class="ra-title-passive">' + escapeHtml(r.fileName) + '</span><span class="ra-meta">' + escapeHtml(r.error) + '</span></li>';
     });
     html += '</ul></div>';
   }
@@ -1992,7 +2222,6 @@ function openReviewAssignmentSheet(assignmentId) {
 }
 
 function cancelReview() {
-  // If we're reviewing, cancel means going back to setup
   showSetupScreen('a');
 }
 
@@ -2029,10 +2258,16 @@ function enterPhase1(mode, assignmentId) {
     if (!a) { enterSetup(true); return; }
     phase1State.mode = 'edit'; phase1State.targetId = assignmentId;
     phase1State.sourceEntry = a.spec.studentAnswer || '';
+    var knownStyle = (CITATION_STYLES[a.spec.citationStyle]) ? a.spec.citationStyle : (a.spec.citationStyle ? 'Other' : '');
     phase1State.fields = {
       purpose: a.spec.purpose || '', skills: a.spec.skills || '',
       knowledge: a.spec.knowledge || '', task: a.spec.task || '',
-      criteria: a.spec.criteria || '', logistics: a.spec.logistics || ''
+      criteria: a.spec.criteria || '', logistics: a.spec.logistics || '',
+      aiPolicy: a.spec.aiPolicy || { category: '', rules: '' },
+      rubric: a.spec.rubric || [],
+      citationStyle: knownStyle,
+      citationStyleOther: knownStyle === 'Other' ? (a.spec.citationStyle || '') : '',
+      groupWork: a.spec.groupWork || ''
     };
     phase1State.fromParser = {};
     if (a.parserFields) {
@@ -2057,7 +2292,7 @@ function showP1Screen(which) {
   footerState.textContent = 'Verify details';
   footerAction.classList.remove('hidden');
   footerAction.disabled = false;
-  footerAction.textContent = phase1State.mode === 'edit' ? 'Confirm & Start Find Sources \u2192' : 'Start Find Sources \u2192';
+  footerAction.textContent = phase1State.mode === 'edit' ? 'Confirm & Start Finding Sources \u2192' : 'Start Finding Sources \u2192';
 }
 
 function renderExtractScreen() {
@@ -2069,31 +2304,131 @@ function renderExtractScreen() {
   p1FilesNote.style.display = 'none';
   var f = phase1State.fields;
   var fp = phase1State.fromParser || {};
+  
   var ownAnswerHTML = '<div class="p1-field p1-own-answer"><label for="p1-field-own-answer">Your answer \u2014 what you said the assignment is asking</label><textarea id="p1-field-own-answer">' + escapeHtml(phase1State.sourceEntry) + '</textarea></div>';
-  p1ExtractBody.innerHTML = ownAnswerHTML +
+  
+  var html = ownAnswerHTML +
     fieldHTML('purpose', 'Purpose', f.purpose, fp.purpose) +
     fieldHTML('skills', 'Skills', f.skills, fp.skills) +
     fieldHTML('knowledge', 'Knowledge', f.knowledge, fp.knowledge) +
     fieldHTML('task', 'Task', f.task, fp.task) +
     fieldHTML('criteria', 'Criteria for Success', f.criteria, fp.criteria) +
     fieldHTML('logistics', 'Logistics', f.logistics, fp.logistics);
+    
+  // AI Policy Block
+  html += '<div class="p1-field">' +
+          '<label for="p1-field-ai-category">AI Policy Category</label>' +
+          '<select id="p1-field-ai-category">' +
+          '<option value="" ' + (f.aiPolicy.category === '' ? 'selected' : '') + '>Not specified</option>' +
+          '<option value="prohibited" ' + (f.aiPolicy.category === 'prohibited' ? 'selected' : '') + '>Prohibited</option>' +
+          '<option value="limited" ' + (f.aiPolicy.category === 'limited' ? 'selected' : '') + '>Limited</option>' +
+          '<option value="declared" ' + (f.aiPolicy.category === 'declared' ? 'selected' : '') + '>Declared</option>' +
+          '<option value="integrated" ' + (f.aiPolicy.category === 'integrated' ? 'selected' : '') + '>Integrated</option>' +
+          '</select>' +
+          '<div class="p1-field-from-parser" ' + (fp.aiPolicy ? '' : 'style="display:none;"') + '>From your syllabus. Check this.</div>' +
+          '</div>';
+          
+  html += '<div class="p1-field">' +
+          '<label for="p1-field-ai-rules">AI Policy Rules</label>' +
+          '<textarea id="p1-field-ai-rules">' + escapeHtml(f.aiPolicy.rules || '') + '</textarea>' +
+          '<div class="p1-field-from-parser" ' + (fp.aiPolicy ? '' : 'style="display:none;"') + '>From your syllabus. Check this.</div>' +
+          '</div>';
+          
+  // Rubric Block
+  html += '<div class="p1-field">' +
+          '<label>Rubric</label>' +
+          '<div class="rubric-list" id="p1-rubric-list">';
+  if (f.rubric.length === 0) {
+    html += '<div style="font-size:var(--size-small);color:var(--text-quiet);font-style:italic;margin-bottom:6px;">No rubric found.</div>';
+  } else {
+    f.rubric.forEach(function(r, idx) {
+      html += '<div class="rubric-row" data-idx="' + idx + '">' +
+              '<input type="text" class="rubric-criterion" value="' + escapeHtml(r.criterion) + '" placeholder="Criterion">' +
+              '<input type="text" class="rubric-weight" value="' + escapeHtml(r.weight) + '" placeholder="Weight">' +
+              '<button type="button" class="rubric-remove" data-idx="' + idx + '">&times;</button>' +
+              '</div>';
+    });
+  }
+  html += '</div>' +
+          '<button type="button" class="rubric-add" id="p1-rubric-add">+ Add criterion</button>' +
+          '<div class="p1-field-from-parser" ' + (fp.rubric ? '' : 'style="display:none;"') + '>From your syllabus. Check this.</div>' +
+          '</div>';
+          
+  // Citation style as dropdown
+  var citOptions = '';
+  CITATION_STYLE_OPTIONS.forEach(function (opt) {
+    citOptions += '<option value="' + escapeHtml(opt.value) + '"' + (f.citationStyle === opt.value ? ' selected' : '') + '>' + escapeHtml(opt.label) + '</option>';
+  });
+  html += '<div class="p1-field"><label for="p1-field-citationStyle">Citation Style</label>' +
+          '<select id="p1-field-citationStyle">' + citOptions + '</select>' +
+          '<div class="p1-field-from-parser" ' + (fp.citationStyle ? '' : 'style="display:none;"') + '>From your syllabus. Check this.</div>' +
+          '<input type="text" id="p1-field-citationStyleOther" placeholder="Please name the citation style" style="margin-top:6px; display:' + (f.citationStyle === 'Other' ? 'block' : 'none') + ';" value="' + escapeHtml(f.citationStyleOther || '') + '">' +
+          '</div>';
+  
+  html += fieldHTML('groupWork', 'Group Work', f.groupWork, fp.groupWork);
+  
+  p1ExtractBody.innerHTML = html;
   
   var ownAnswerEl = document.getElementById('p1-field-own-answer');
   if (ownAnswerEl) ownAnswerEl.addEventListener('input', function () { phase1State.sourceEntry = ownAnswerEl.value; });
   
-  Object.keys(phase1State.fields).forEach(function (key) {
+  ['purpose','skills','knowledge','task','criteria','logistics','groupWork'].forEach(function (key) {
     var el = document.getElementById('p1-field-' + key);
     if (el) el.addEventListener('input', function () {
       phase1State.fields[key] = el.value;
       var fromMark = document.getElementById('p1-from-' + key);
       if (fromMark) fromMark.style.display = 'none';
-      
       var targetA = assignments.find(function (x) { return x.id === phase1State.targetId; });
       if (targetA && targetA.parserFields) {
         targetA.parserFields = targetA.parserFields.filter(function (f) { return f !== key; });
         saveAssignmentRecord(targetA).catch(function (e) { console.error(e); });
       }
     });
+  });
+  
+  var aiCatEl = document.getElementById('p1-field-ai-category');
+  if (aiCatEl) aiCatEl.addEventListener('change', function () {
+    phase1State.fields.aiPolicy.category = aiCatEl.value;
+  });
+  
+  var aiRulesEl = document.getElementById('p1-field-ai-rules');
+  if (aiRulesEl) aiRulesEl.addEventListener('input', function () {
+    phase1State.fields.aiPolicy.rules = aiRulesEl.value;
+  });
+  
+  var rubricList = document.getElementById('p1-rubric-list');
+  if (rubricList) {
+    rubricList.querySelectorAll('.rubric-criterion').forEach(function(el, idx) {
+      el.addEventListener('input', function() { phase1State.fields.rubric[idx].criterion = el.value; });
+    });
+    rubricList.querySelectorAll('.rubric-weight').forEach(function(el, idx) {
+      el.addEventListener('input', function() { phase1State.fields.rubric[idx].weight = el.value; });
+    });
+    rubricList.querySelectorAll('.rubric-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(btn.getAttribute('data-idx'), 10);
+        phase1State.fields.rubric.splice(idx, 1);
+        renderExtractScreen();
+      });
+    });
+  }
+  
+  var rubricAdd = document.getElementById('p1-rubric-add');
+  if (rubricAdd) rubricAdd.addEventListener('click', function() {
+    phase1State.fields.rubric.push({ criterion: '', weight: '' });
+    renderExtractScreen();
+  });
+  
+  var citEl = document.getElementById('p1-field-citationStyle');
+  if (citEl) citEl.addEventListener('change', function () {
+    phase1State.fields.citationStyle = citEl.value;
+    var otherInput = document.getElementById('p1-field-citationStyleOther');
+    if (otherInput) otherInput.style.display = citEl.value === 'Other' ? 'block' : 'none';
+  });
+  
+  var citOtherEl = document.getElementById('p1-field-citationStyleOther');
+  if (citOtherEl) citOtherEl.addEventListener('input', function () {
+    phase1State.fields.citationStyleOther = citOtherEl.value;
   });
 }
 
@@ -2111,10 +2446,14 @@ function fieldHTML(key, label, value, fromParser) {
 function confirmExtraction() {
   var ownAnswerEl = document.getElementById('p1-field-own-answer');
   if (ownAnswerEl) phase1State.sourceEntry = ownAnswerEl.value;
-  Object.keys(phase1State.fields).forEach(function (key) {
+  ['purpose','skills','knowledge','task','criteria','logistics','groupWork'].forEach(function (key) {
     var el = document.getElementById('p1-field-' + key);
     if (el) phase1State.fields[key] = el.value;
   });
+  
+  // Resolve the final citation style
+  var finalCitation = phase1State.fields.citationStyle;
+  if (finalCitation === 'Other') finalCitation = phase1State.fields.citationStyleOther || 'Other';
   
   if (phase1State.mode === 'edit') {
     var a = assignments.find(function (x) { return x.id === phase1State.targetId; });
@@ -2122,26 +2461,23 @@ function confirmExtraction() {
       a.spec.purpose = phase1State.fields.purpose; a.spec.skills = phase1State.fields.skills;
       a.spec.knowledge = phase1State.fields.knowledge; a.spec.task = phase1State.fields.task;
       a.spec.criteria = phase1State.fields.criteria; a.spec.logistics = phase1State.fields.logistics;
+      a.spec.aiPolicy = phase1State.fields.aiPolicy;
+      a.spec.rubric = phase1State.fields.rubric;
+      a.spec.citationStyle = finalCitation;
+      a.spec.groupWork = phase1State.fields.groupWork;
       a.spec.studentAnswer = phase1State.sourceEntry;
       saveAssignmentRecord(a).catch(function (e) { console.error('Could not save assignment:', e); });
     }
     
-    // If we came from the "Fix this" link on the Review screen, we are still in the setup flow.
-    // If we came from an assignment card, we need to go back to the assignment view.
     if (setupState.isEditMode) {
-      // We came from the Review screen. Move them to the Semester View.
       setupState.isEditMode = false; 
       enterSemester(true);
     } else {
-      // We came from a card on the Semester View. Go back to that assignment.
       enterAssignment(phase1State.targetId);
     }
     return;
   }
   
-  // ... rest of the function (manual entry creation)
-  
-  // For manual entries, create a new assignment with an UNASSIGNED course.
   var entryText = phase1State.sourceEntry || '';
   var title = deriveTitle(entryText);
   var f = phase1State.fields;
@@ -2158,14 +2494,14 @@ function confirmExtraction() {
     courseName: unassigned.name,
     title: title,
     dueInDays: deriveDueInDays(f.logistics), wordCount: deriveWordCount(f.task + ' ' + entryText),
-    estimatedHours: 8, phase: 2, phaseLabel: 'Phase 2 \u2014 Find Sources',
+    estimatedHours: 8, phase: 2, phaseLabel: 'Phase 2 \u2014 Gather Sources',
     progressPercent: 30, sections: [], quietLine: 'Phase 1 complete. Ready for Phase 2.',
     canDeadlineMode: false,
     spec: {
       purpose: f.purpose, skills: f.skills, knowledge: f.knowledge, task: f.task,
       criteria: f.criteria, logistics: f.logistics, studentAnswer: entryText,
-      aiPolicy: { category: '', rules: '' }, rubric: [],
-      citationStyle: '', groupWork: '', presentation: '', pageSize: '', orientation: ''
+      aiPolicy: f.aiPolicy, rubric: f.rubric,
+      citationStyle: finalCitation, groupWork: f.groupWork
     },
     p2: { topic: '', sources: [] }, p3: { structure: null, thesis: '', outline: [] }
   };
@@ -2178,7 +2514,10 @@ function confirmExtraction() {
 
 function generateFirstPass(text) {
   var lower = (text || '').toLowerCase();
-  var out = { purpose: '', skills: '', knowledge: '', task: '', criteria: '', logistics: '' };
+  var out = {
+    purpose: '', skills: '', knowledge: '', task: '', criteria: '', logistics: '',
+    aiPolicy: { category: '', rules: '' }, rubric: [], citationStyle: '', citationStyleOther: '', groupWork: ''
+  };
   var forms = [
     { word: 'essay', purpose: 'To make an argument in the form of an essay.', task: 'Write an essay.' },
     { word: 'report', purpose: 'To write a report describing work and findings.', task: 'Write a report.' },
@@ -2275,11 +2614,9 @@ function renderSemester() {
     var bandAssignments = assignments.filter(function (a) { return a.dueInDays >= band.min && a.dueInDays <= band.max; });
     var bandAssessments = [];
     
-    // Check courses for assessments in this time band
     courses.forEach(function(c) {
       if (c.assessments && c.assessments.length > 0) {
         c.assessments.forEach(function(as) {
-           // Rough parse of date string to days
            var days = deriveDueInDays(as.date);
            if (days >= band.min && days <= band.max) {
               bandAssessments.push({ course: c, assessment: as, days: days });
@@ -2296,7 +2633,6 @@ function renderSemester() {
       html += '<div class="pv-bottleneck" id="bottleneck-band"><div class="bn-title">Bottleneck: ' + windowCount + ' assignments, ~' + windowHours + ' hours this week.</div><div>Worth starting early.</div><button type="button" class="bn-why" id="bn-why">Why?</button><div class="bn-explanation">This is a bottleneck because more than two assignments fall due inside the same seven-day window, and together they ask for more than eight hours of work. That\u2019s a signal to look at, not a reason to panic. The way to handle a bottleneck isn\u2019t to work harder when it arrives \u2014 it\u2019s to plant early.</div></div>';
     }
     
-    // Group everything by course
     var byCourse = {};
     bandAssignments.forEach(function (a) {
       if (!byCourse[a.courseId]) byCourse[a.courseId] = { course: courses.find(function(c){return c.id === a.courseId;}), assignments: [], assessments: [] };
@@ -2314,7 +2650,6 @@ function renderSemester() {
       html += '<div class="pv-course-group"><div class="pv-course-label">' + escapeHtml(label) + '</div>';
       html += '<div class="course-card">';
       
-      // Sort all items by date (assignments use dueInDays, assessments use days)
       var items = [];
       group.assignments.forEach(function(a) { items.push({ type: 'assignment', item: a, days: a.dueInDays }); });
       group.assessments.forEach(function(as) { items.push({ type: 'assessment', item: as, days: deriveDueInDays(as.date) }); });
@@ -2392,7 +2727,7 @@ function setActivePhaseTab(phaseNum) {
   document.getElementById('phase3-body').style.display = (phaseNum === 3) ? 'block' : 'none';
   document.getElementById('phase4-body').style.display = (phaseNum === 4) ? 'block' : 'none';
   document.getElementById('phase5-body').style.display = (phaseNum === 5) ? 'block' : 'none';
-  if (phaseNum === 2) { p5UI.screen = 'inactive'; footerState.textContent = 'Find Sources'; footerAction.classList.add('hidden'); surface.scrollTop = 0; renderPhase2(); }
+  if (phaseNum === 2) { p5UI.screen = 'inactive'; footerState.textContent = 'Gather Sources'; footerAction.classList.add('hidden'); surface.scrollTop = 0; renderPhase2(); }
   else if (phaseNum === 3) { p5UI.screen = 'inactive'; footerState.textContent = 'Build the Argument'; footerAction.classList.add('hidden'); surface.scrollTop = 0; renderPhase3(); }
   else if (phaseNum === 4) { p5UI.screen = 'inactive'; surface.scrollTop = 0; renderPhase4(); }
   else if (phaseNum === 5) {
@@ -2454,7 +2789,7 @@ function renderAnchored(anchorId, renderFn) {
 }
 
 // ============================================================================
-// PHASE 2
+// PHASE 2 — GATHER SOURCES
 // ============================================================================
 function renderPhase2() {
   var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
@@ -2466,7 +2801,8 @@ function renderPhase2() {
   var html = '';
   html += '<div class="p2-section"><label class="p2-label" for="p2-topic">What are you looking for sources on?</label><input type="text" id="p2-topic" class="p2-input" placeholder="e.g. Causes of the French Revolution" value="' + escapeHtml(st.topic || '') + '"><div class="p2-search-row"><button type="button" class="p2-search-btn" id="p2-search-btn">Search for sources</button></div><p class="p2-honesty">DeepSeek suggests sources it knows about from its training. It cannot search the web live. Check each source\u2019s DOI before you rely on it.</p><div class="p2-status" id="p2-status"></div></div>';
   html += '<div class="p2-section"><div class="p2-label">Sources</div>';
-  if (st.sources.length === 0) html += '<div class="source-empty">No sources yet. Search for some above.</div>';
+  html += '<button type="button" class="manual-link" id="p2-add-source-link">Or add a source you already have \u2192</button>';
+  if (st.sources.length === 0) html += '<div class="source-empty">No sources yet. Search for some above, or add one you already have.</div>';
   else st.sources.forEach(function (src) { html += renderSourceCard(src, notePrompt); });
   html += '</div>';
   var approvedCount = st.sources.filter(function (s) { return s.approved; }).length;
@@ -2482,6 +2818,8 @@ function renderPhase2() {
   if (topicEl) topicEl.addEventListener('input', function () { st.topic = topicEl.value; });
   var searchBtn = document.getElementById('p2-search-btn');
   if (searchBtn) searchBtn.addEventListener('click', function () { runSourceSearch(a.id); });
+  var addSourceLink = document.getElementById('p2-add-source-link');
+  if (addSourceLink) addSourceLink.addEventListener('click', function () { openAddSourceSheet(a.id); });
   var continueBtn = document.getElementById('p2-continue-btn');
   if (continueBtn) continueBtn.addEventListener('click', function () { updatePhaseTabsForAssignment(); setActivePhaseTab(3); });
   phase2Body.querySelectorAll('.source-approve-btn').forEach(function (btn) { btn.addEventListener('click', function () { approveSource(a.id, btn.getAttribute('data-src-id')); }); });
@@ -2599,14 +2937,9 @@ function removeSource(assignmentId, srcId) {
   if (!a || !a.p2) return;
   var removedIndex = -1;
   a.p2.sources = a.p2.sources.filter(function (s, i) { if (s.id === srcId) { removedIndex = i; return false; } return true; });
-  if (a.p3 && a.p3.outline) {
-    a.p3.outline.forEach(function (sec) {
-      if (Array.isArray(sec.sources)) sec.sources = sec.sources.filter(function (id) { return id !== srcId; });
-    });
-  }
   var approvedCount = a.p2.sources.filter(function (s) { return s.approved; }).length;
   if (approvedCount < 3 && a.phase > 2) {
-    a.phase = 2; a.phaseLabel = 'Phase 2 \u2014 Find Sources';
+    a.phase = 2; a.phaseLabel = 'Phase 2 \u2014 Gather Sources';
     a.progressPercent = 30; a.quietLine = 'Phase 2 in progress.';
     updatePhaseTabsForAssignment();
   }
@@ -2618,9 +2951,158 @@ function removeSource(assignmentId, srcId) {
     renderPhase2();
   }
 }
+// ----------------------------------------------------------------------------
+// ITEM 2 — Add a source manually (three doors: upload / paste citation / by hand)
+// ----------------------------------------------------------------------------
+function openAddSourceSheet(assignmentId) {
+  sheetTitle.textContent = 'Add a source';
+  var tabsHtml = '<div class="phase-tabs" role="tablist" style="margin-bottom:var(--gap);">' +
+    '<button type="button" class="phase-tab active" data-src-tab="upload" role="tab">Upload a file</button>' +
+    '<button type="button" class="phase-tab" data-src-tab="citation" role="tab">Paste a citation</button>' +
+    '<button type="button" class="phase-tab" data-src-tab="manual" role="tab">Fill in by hand</button>' +
+    '</div>';
+  var uploadPane = '<div data-src-pane="upload">' +
+    '<p style="font-size:var(--size-small);color:var(--text-quiet);line-height:1.55;margin:0 0 var(--gap);">Upload a PDF or Word file (.docx). I\u2019ll read the text and pull out the title, author, year, journal, and DOI. You check them.</p>' +
+    '<input type="file" id="src-upload-input" accept=".pdf,.docx" style="display:block;width:100%;font-size:var(--size-small);margin-bottom:var(--gap-tight);">' +
+    '<div class="p2-status" id="src-upload-status"></div>' +
+    '</div>';
+  var citationPane = '<div data-src-pane="citation" style="display:none;">' +
+    '<p style="font-size:var(--size-small);color:var(--text-quiet);line-height:1.55;margin:0 0 var(--gap);">Paste a citation in APA, Chicago, Harvard, or MLA. I\u2019ll parse it into fields. If I can\u2019t read it, I\u2019ll say so and open the empty form.</p>' +
+    '<textarea class="manual-textarea" id="src-citation-input" placeholder="e.g. Smith, J. (2020). The title. Journal of Things, 12(3), 45-67. https://doi.org/10.xxxx/yyyy"></textarea>' +
+    '<button type="button" class="btn-primary" id="src-citation-parse-btn" style="margin-top:var(--gap-tight); padding:8px 16px; border-radius:999px; font-size:var(--size-small); font-weight:600;">Parse this citation</button>' +
+    '<div class="p2-status" id="src-citation-status"></div>' +
+    '</div>';
+  var manualPane = '<div data-src-pane="manual" style="display:none;">' +
+    '<p style="font-size:var(--size-small);color:var(--text-quiet);line-height:1.55;margin:0 0 var(--gap);">Type the details yourself. Nothing is guessed.</p>' +
+    '</div>';
+  var formPane = '<div data-src-pane="form" style="display:none;">' +
+    '<p style="font-size:var(--size-small);color:var(--text-quiet);line-height:1.55;margin:0 0 var(--gap);">Check these fields. Fix anything wrong. They came from the AI, so they can be wrong.</p>' +
+    '<label class="manual-label" for="src-form-title">Title</label><input type="text" id="src-form-title" class="cap-input" style="margin-bottom:var(--gap-tight);">' +
+    '<label class="manual-label" for="src-form-author">Author (first author\u2019s surname)</label><input type="text" id="src-form-author" class="cap-input" style="margin-bottom:var(--gap-tight);">' +
+    '<label class="manual-label" for="src-form-year">Year</label><input type="text" id="src-form-year" class="cap-input" style="margin-bottom:var(--gap-tight);">' +
+    '<label class="manual-label" for="src-form-journal">Journal or publisher</label><input type="text" id="src-form-journal" class="cap-input" style="margin-bottom:var(--gap-tight);">' +
+    '<label class="manual-label" for="src-form-doi">DOI (optional)</label><input type="text" id="src-form-doi" class="cap-input" style="margin-bottom:var(--gap-tight);">' +
+    '</div>';
+  sheetBody.innerHTML = tabsHtml + uploadPane + citationPane + manualPane + formPane;
+  sheetActions.innerHTML = '';
+  var cancelBtn = document.createElement('button'); cancelBtn.type = 'button'; cancelBtn.className = 'btn-quiet'; cancelBtn.textContent = 'Cancel'; cancelBtn.addEventListener('click', closeSheet);
+  var continueBtn = document.createElement('button'); continueBtn.type = 'button'; continueBtn.className = 'btn-primary'; continueBtn.textContent = 'Add this source'; continueBtn.style.display = 'none';
+  sheetActions.appendChild(cancelBtn); sheetActions.appendChild(continueBtn);
+  scrim.hidden = false; sheet.hidden = false;
+  requestAnimationFrame(function () { scrim.classList.add('open'); sheet.classList.add('open'); });
+
+  function showPane(name) {
+    var paneToShow = name === 'manual' ? 'form' : name;
+    sheetBody.querySelectorAll('[data-src-pane]').forEach(function (p) {
+      p.style.display = p.getAttribute('data-src-pane') === paneToShow ? 'block' : 'none';
+    });
+    sheetBody.querySelectorAll('[data-src-tab]').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-src-tab') === name);
+    });
+    continueBtn.style.display = paneToShow === 'form' ? 'inline-block' : 'none';
+  }
+
+  function showForm(prefill, source) {
+    var formIntro = sheetBody.querySelector('[data-src-pane="form"] p');
+    if (formIntro) {
+      if (source === 'manual') formIntro.textContent = 'Type the details below. Nothing is guessed \u2014 this is what you know.';
+      else if (source === 'upload') formIntro.textContent = 'Check these fields. Fix anything wrong. They came from a file the AI read, so they can be wrong.';
+      else formIntro.textContent = 'Check these fields. Fix anything wrong. They came from the AI, so they can be wrong.';
+    }
+    document.getElementById('src-form-title').value = prefill.title || '';
+    document.getElementById('src-form-author').value = prefill.author || '';
+    document.getElementById('src-form-year').value = prefill.year || '';
+    document.getElementById('src-form-journal').value = prefill.journal || '';
+    document.getElementById('src-form-doi').value = prefill.doi || '';
+    showPane('form');
+  }
+
+  sheetBody.querySelectorAll('[data-src-tab]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var name = b.getAttribute('data-src-tab');
+      showPane(name);
+      if (name === 'manual') showForm({}, 'manual');
+    });
+  });
+
+  document.getElementById('src-upload-input').addEventListener('change', function () {
+    var input = this;
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var statusEl = document.getElementById('src-upload-status');
+    statusEl.className = 'p2-status busy';
+    statusEl.textContent = 'Reading ' + file.name + '\u2026';
+    readFileAsText(file).then(function (result) {
+      statusEl.className = 'p2-status busy';
+      statusEl.textContent = 'Extracting metadata\u2026';
+      return extractSourceMetadata(result.text, 'text');
+    }).then(function (meta) {
+      statusEl.className = 'p2-status ok';
+      statusEl.textContent = '\u2713 Read. Check the fields below.';
+      showForm(meta);
+    }).catch(function (e) {
+      statusEl.className = 'p2-status error';
+      statusEl.textContent = '\u2717 ' + (e && e.message ? e.message : String(e));
+    });
+  });
+
+  sheetBody.querySelector('#src-citation-input').addEventListener('blur', function () {
+    var val = this.value.trim();
+    if (val.length < 15) return;
+    var statusEl = document.getElementById('src-citation-status');
+    statusEl.className = 'p2-status busy';
+    statusEl.textContent = 'Parsing citation\u2026';
+    extractSourceMetadata(val, 'citation').then(function (meta) {
+      var anyField = meta.title || meta.author || meta.year;
+      if (!anyField) {
+        statusEl.className = 'p2-status error';
+        statusEl.textContent = 'I couldn\u2019t read that citation. Fill in the fields by hand.';
+        showForm({});
+        return;
+      }
+      statusEl.className = 'p2-status ok';
+      statusEl.textContent = '\u2713 Parsed. Check the fields below.';
+      showForm(meta);
+    }).catch(function (e) {
+      statusEl.className = 'p2-status error';
+      statusEl.textContent = 'I couldn\u2019t read that citation. Fill in the fields by hand.';
+      showForm({});
+    });
+  });
+
+  continueBtn.addEventListener('click', function () {
+    var title = (document.getElementById('src-form-title').value || '').trim();
+    var author = (document.getElementById('src-form-author').value || '').trim();
+    var year = (document.getElementById('src-form-year').value || '').trim();
+    var journal = (document.getElementById('src-form-journal').value || '').trim();
+    var doi = (document.getElementById('src-form-doi').value || '').trim();
+    if (!title) {
+      showToastSmall('Add a title first.');
+      return;
+    }
+    var a = assignments.find(function (x) { return x.id === assignmentId; });
+    if (!a) return;
+    if (!a.p2) a.p2 = { topic: '', sources: [] };
+    if (!Array.isArray(a.p2.sources)) a.p2.sources = [];
+    a.p2.sources.push({
+      id: 'src-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
+      title: title,
+      author: author,
+      year: year,
+      journal: journal,
+      doi: doi,
+      readingNote: '',
+      approved: false
+    });
+    saveAssignmentRecord(a).catch(function (e) { console.error(e); });
+    closeSheet();
+    renderPhase2();
+    showToastSmall('Source added. Write a reading note to approve it.');
+  });
+}
 
 // ============================================================================
-// PHASE 3
+// PHASE 3 — BUILD THE ARGUMENT
 // ============================================================================
 function renderPhase3() {
   var a = assignments.find(function (x) { return x.id === currentAssignmentId; });
@@ -2628,7 +3110,6 @@ function renderPhase3() {
   if (!a.p3) a.p3 = { structure: null, thesis: '', outline: [] };
   var st = a.p3;
   st.outline.forEach(function (sec) { if (!Array.isArray(sec.sources)) sec.sources = []; });
-  var approvedSources = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }) : [];
   var html = '';
   html += '<p class="p3-lede">Before we write anything, let\u2019s plan what we are going to write. We start by choosing the shape of our assignment.</p>';
   html += '<div class="p3-section"><h2 class="p3-section-title">The structure</h2><p class="p3-section-hint">Pick the one that fits your argument.</p>';
@@ -2659,9 +3140,9 @@ function renderPhase3() {
   if (p3UI.thesisSocraticVisible) html += '<div class="sb-title">Questions on your thesis</div>' + escapeHtml(p3UI.thesisSocraticText || '');
   html += '</div></div>';
   html += '<div class="p3-section"><h2 class="p3-section-title">The outline</h2>';
-  html += '<p class="p3-section-hint">Next, write the heading, what you want to achieve under this heading, the estimated word count and which sources you think are relevant. This is just an outline; you can change it anytime later.</p>';
+  html += '<p class="p3-section-hint">Next, write the heading, what you want to achieve under this heading, and the estimated word count. This is just an outline; you can change it anytime later.</p>';
   if (st.outline.length === 0) html += '<p class="p3-section-hint" style="font-style:italic;">Pick a structure above to seed the outline.</p>';
-  st.outline.forEach(function (sec, idx) { html += renderOutlineSectionCard(sec, idx, approvedSources); });
+  st.outline.forEach(function (sec, idx) { html += renderOutlineSectionCard(sec, idx); });
   html += '<button type="button" class="add-section-btn" id="p3-add-section">+ Add a section</button></div>';
   if (st.outline.length > 0 && a.wordCount > 0) {
     var total = st.outline.reduce(function (sum, sec) { return sum + (parseInt(sec.target, 10) || 0); }, 0);
@@ -2673,7 +3154,15 @@ function renderPhase3() {
     if (Math.abs(diff) > tolerance) html += '<div class="wcc-row"><span class="wcc-label">' + (diff < 0 ? 'Under by' : 'Over by') + '</span><span class="wcc-value">' + Math.abs(diff) + ' words</span></div>';
     html += '</div>';
   }
-  html += '<p class="rubric-note">Rubric check arrives in Block 10.</p>';
+  
+  if (a.spec.rubric && a.spec.rubric.length > 0) {
+    html += '<div class="rubric-panel"><div class="rp-title">Your syllabus grades these criteria:</div><ul>';
+    a.spec.rubric.forEach(function(r) {
+      html += '<li>' + escapeHtml(r.criterion) + ' (' + escapeHtml(r.weight) + ')</li>';
+    });
+    html += '</ul></div>';
+  }
+  
   var gateMet = (st.thesis.trim().length >= 20) && (st.outline.length >= 2);
   html += '<div class="p2-section" style="margin-top:var(--gap-loose);">';
   if (gateMet) {
@@ -2712,17 +3201,6 @@ function renderPhase3() {
       a.p3.outline[idx][field] = el.value;
     });
   });
-  phase3Body.querySelectorAll('.outline-source-checkbox').forEach(function (inp) {
-    inp.addEventListener('change', function () {
-      var idx = parseInt(inp.getAttribute('data-idx'), 10);
-      var srcId = inp.getAttribute('data-src-id');
-      if (isNaN(idx) || !a.p3.outline[idx]) return;
-      var arr = a.p3.outline[idx].sources;
-      if (!Array.isArray(arr)) arr = a.p3.outline[idx].sources = [];
-      if (inp.checked) { if (arr.indexOf(srcId) === -1) arr.push(srcId); }
-      else { var pos = arr.indexOf(srcId); if (pos !== -1) arr.splice(pos, 1); }
-    });
-  });
   phase3Body.querySelectorAll('.outline-section-remove').forEach(function (btn) { btn.addEventListener('click', function () { removeOutlineSection(a.id, parseInt(btn.getAttribute('data-idx'), 10)); }); });
   var continueBtn = document.getElementById('p3-continue-btn');
   if (continueBtn) continueBtn.addEventListener('click', function () {
@@ -2730,21 +3208,9 @@ function renderPhase3() {
     setActivePhaseTab(4);
   });
 }
-function renderOutlineSectionCard(sec, idx, approvedSources) {
-  var sourcesHTML = '';
-  if (!approvedSources || approvedSources.length === 0) {
-    sourcesHTML = '<div class="source-checklist"><div class="source-checklist-empty">No approved sources yet.</div></div>';
-  } else {
-    sourcesHTML = '<div class="source-checklist">';
-    approvedSources.forEach(function (src) {
-      var checked = Array.isArray(sec.sources) && sec.sources.indexOf(src.id) !== -1;
-      var shortForm = (src.author ? src.author : 'Unknown') + (src.year ? ' ' + src.year : '');
-      sourcesHTML += '<label class="source-checkbox-row"><input type="checkbox" class="outline-source-checkbox" data-idx="' + idx + '" data-src-id="' + src.id + '"' + (checked ? ' checked' : '') + '><span class="scb-label"><span class="scb-short">' + escapeHtml(shortForm) + '</span><span class="scb-title">' + escapeHtml(src.title) + '</span></span></label>';
-    });
-    sourcesHTML += '</div>';
-  }
+function renderOutlineSectionCard(sec, idx) {
   var headingPlaceholder = (sec.heading && sec.heading.trim()) ? '' : 'placeholder="Section 1"';
-  return '<div class="outline-section-card"><div class="outline-section-heading"><span class="outline-section-index">Section ' + (idx + 1) + '</span><button type="button" class="outline-section-remove" data-idx="' + idx + '">Remove</button></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-heading">Heading</label><input type="text" class="outline-input" id="sec-' + idx + '-heading" data-idx="' + idx + '" data-field="heading" ' + headingPlaceholder + ' value="' + escapeHtml(sec.heading || '') + '"></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-purpose">Purpose</label><input type="text" class="outline-input" id="sec-' + idx + '-purpose" data-idx="' + idx + '" data-field="purpose" value="' + escapeHtml(sec.purpose || '') + '"></div><div class="outline-targets-row"><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-target">Word target</label><input type="text" class="outline-input" id="sec-' + idx + '-target" data-idx="' + idx + '" data-field="target" value="' + escapeHtml(sec.target || '') + '"></div></div><div class="outline-field"><label class="outline-field-label">Which sources?</label>' + sourcesHTML + '</div></div>';
+  return '<div class="outline-section-card"><div class="outline-section-heading"><span class="outline-section-index">Section ' + (idx + 1) + '</span><button type="button" class="outline-section-remove" data-idx="' + idx + '">Remove</button></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-heading">Heading</label><input type="text" class="outline-input" id="sec-' + idx + '-heading" data-idx="' + idx + '" data-field="heading" ' + headingPlaceholder + ' value="' + escapeHtml(sec.heading || '') + '"></div><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-purpose">Purpose</label><input type="text" class="outline-input" id="sec-' + idx + '-purpose" data-idx="' + idx + '" data-field="purpose" value="' + escapeHtml(sec.purpose || '') + '"></div><div class="outline-targets-row"><div class="outline-field"><label class="outline-field-label" for="sec-' + idx + '-target">Word target</label><input type="text" class="outline-input" id="sec-' + idx + '-target" data-idx="' + idx + '" data-field="target" value="' + escapeHtml(sec.target || '') + '"></div></div></div>';
 }
 function chooseStructure(assignmentId, structId) {
   var a = assignments.find(function (x) { return x.id === assignmentId; });
@@ -2752,12 +3218,12 @@ function chooseStructure(assignmentId, structId) {
   var previous = a.p3.structure;
   a.p3.structure = structId;
   var s = STRUCTURES.find(function (x) { return x.id === structId; });
-  var allEmpty = a.p3.outline.length === 0 || a.p3.outline.every(function (sec) { return (!sec.purpose || sec.purpose === '') && (!sec.target || sec.target === '') && (!sec.sources || sec.sources.length === 0); });
+  var allEmpty = a.p3.outline.length === 0 || a.p3.outline.every(function (sec) { return (!sec.purpose || sec.purpose === '') && (!sec.target || sec.target === ''); });
   if (s && allEmpty && previous !== structId) {
     if (s.id === 'custom') {
-      a.p3.outline = [{ heading: '', purpose: '', target: '', sources: [] }];
+      a.p3.outline = [{ heading: '', purpose: '', target: '' }];
     } else {
-      a.p3.outline = s.sections.map(function (name) { return { heading: name, purpose: '', target: '', sources: [] }; });
+      a.p3.outline = s.sections.map(function (name) { return { heading: name, purpose: '', target: '' }; });
     }
   }
   saveAssignmentRecord(a).catch(function (e) { console.error(e); });
@@ -2775,7 +3241,7 @@ function chooseThesisFrame(assignmentId, frameId) {
 function addOutlineSection(assignmentId) {
   var a = assignments.find(function (x) { return x.id === assignmentId; });
   if (!a || !a.p3) return;
-  a.p3.outline.push({ heading: '', purpose: '', target: '', sources: [] });
+  a.p3.outline.push({ heading: '', purpose: '', target: '' });
   saveAssignmentRecord(a).catch(function (e) { console.error(e); });
   renderPhase3();
 }
@@ -2814,7 +3280,7 @@ async function runThesisSocratic(assignmentId) {
 }
 
 // ============================================================================
-// PHASE 4
+// PHASE 4 — WRITE (with inline citations)
 // ============================================================================
 function initPhase4ForAssignment(a) {
   if (!a.p4) a.p4 = { body: { sections: [], state: 'not-started' }, conclusion: { text: '', state: 'not-started' }, introduction: { text: '', state: 'not-started' } };
@@ -2896,6 +3362,7 @@ function renderPhase4() {
   if (surfaces.indexOf(p4UI.activeSurface) === -1) p4UI.activeSurface = surfaces[0];
   footerState.textContent = getSurfaceLabel(p4UI.activeSurface) + ' \u00b7 ' + stateLabel(surfaceStateForUI(a, p4UI.activeSurface));
   footerAction.classList.remove('hidden');
+  var approvedCount = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }).length : 0;
   var html = '';
   html += '<div class="p4-surface-selector"><button type="button" class="p4-surface-selector-btn" id="p4-surface-btn">Write the: ' + getSurfaceLabel(p4UI.activeSurface) + ' <span class="caret">\u25be</span></button>';
   html += '<div class="p4-surface-menu" id="p4-surface-menu" role="menu">';
@@ -2905,6 +3372,7 @@ function renderPhase4() {
     html += '<button type="button" role="menuitem" data-surface="' + sid + '"' + (sid === p4UI.activeSurface ? ' class="current"' : '') + '>' + getSurfaceLabel(sid) + (stateTag ? '<span class="state-tag">' + stateTag + '</span>' : '') + '</button>';
   });
   html += '</div></div>';
+  
   if (p4UI.activeSurface === 'body') {
     html += '<div class="p4-surface-header"><h1 class="p4-surface-title">Body</h1><p class="p4-surface-state">' + stateLabel(surfaceStateForUI(a, 'body')) + '</p></div>';
     if (a.p4.body.sections.length === 0) {
@@ -2914,14 +3382,41 @@ function renderPhase4() {
         var hasText = sec.text && sec.text.trim().length > 0;
         html += '<div class="p4-body-section"><h2 class="p4-body-heading' + (hasText ? ' filled' : '') + '">' + escapeHtml(sec.heading) + '</h2>';
         if (sec.purpose) html += '<p class="p4-body-purpose">' + escapeHtml(sec.purpose) + '</p>';
-        html += '<textarea class="p4-body-editor" data-body-idx="' + idx + '" placeholder="Write this section.">' + escapeHtml(sec.text || '') + '</textarea></div>';
+        html += '<textarea class="p4-body-editor" data-body-idx="' + idx + '" placeholder="Write this section.">' + escapeHtml(sec.text || '') + '</textarea>';
+        html += '<div class="p4-cite-row">';
+        if (approvedCount > 0) {
+          html += '<button type="button" class="p4-cite-btn" data-cite="body:' + idx + '">+ Add citation from reading list</button>';
+        } else {
+          html += '<span class="p4-cite-note">No approved sources yet \u2014 approve some in Gather Sources.</span>';
+        }
+        html += '</div>';
+        html += '</div>';
       });
     }
   } else if (p4UI.activeSurface === 'conclusion') {
-    html += renderSingleSurface(a, 'conclusion', 'Conclusion', 'How to land the plane', 'The conclusion brings the reader to the destination and lets them off. It should not repeat what you already said \u2014 it should make the reader see what they\u2019ve just been shown.');
+    html += '<div class="p4-surface-header"><h1 class="p4-surface-title">Conclusion</h1><p class="p4-surface-state">' + stateLabel(surfaceStateForUI(a, 'conclusion')) + '</p></div>';
+    html += '<div class="p4-advice"><div class="p4-advice-title">How to land the plane</div><p>The conclusion brings the reader to the destination and lets them off. It should not repeat what you already said \u2014 it should make the reader see what they\u2019ve just been shown.</p></div>';
+    html += '<textarea class="p4-single-editor" data-single-surface="conclusion" placeholder="Write your conclusion here.">' + escapeHtml(a.p4.conclusion.text || '') + '</textarea>';
+    html += '<div class="p4-cite-row">';
+    if (approvedCount > 0) {
+      html += '<button type="button" class="p4-cite-btn" data-cite="conclusion">+ Add citation from reading list</button>';
+    } else {
+      html += '<span class="p4-cite-note">No approved sources yet \u2014 approve some in Gather Sources.</span>';
+    }
+    html += '</div>';
   } else if (p4UI.activeSurface === 'introduction') {
-    html += renderSingleSurface(a, 'introduction', 'Introduction', 'How to board the plane', 'The introduction gets the reader on the plane and tells them where they\u2019re going. By the time you write this, you know what your argument is. Tell them.');
+    html += '<div class="p4-surface-header"><h1 class="p4-surface-title">Introduction</h1><p class="p4-surface-state">' + stateLabel(surfaceStateForUI(a, 'introduction')) + '</p></div>';
+    html += '<div class="p4-advice"><div class="p4-advice-title">How to board the plane</div><p>The introduction gets the reader on the plane and tells them where they\u2019re going. By the time you write this, you know what your argument is. Tell them.</p></div>';
+    html += '<textarea class="p4-single-editor" data-single-surface="introduction" placeholder="Write your introduction here.">' + escapeHtml(a.p4.introduction.text || '') + '</textarea>';
+    html += '<div class="p4-cite-row">';
+    if (approvedCount > 0) {
+      html += '<button type="button" class="p4-cite-btn" data-cite="introduction">+ Add citation from reading list</button>';
+    } else {
+      html += '<span class="p4-cite-note">No approved sources yet \u2014 approve some in Gather Sources.</span>';
+    }
+    html += '</div>';
   }
+  
   var seedKey = a.id + ':' + p4UI.activeSurface;
   if (p4UI.seedsVisible[seedKey] && p4UI.seedsVisible[seedKey].length > 0) {
     html += '<div class="p4-seeds-inline"><div class="seeds-title">Seed questions</div><ul>';
@@ -2940,7 +3435,6 @@ function renderPhase4() {
   html += '<button role="menuitem" type="button" id="p4-walkthrough-btn">Walkthrough</button>';
   html += '<button role="menuitem" type="button" id="p4-stuck-btn">I\u2019m stuck</button>';
   html += '<button role="menuitem" type="button" id="p4-translation-btn">Translation</button>';
-  html += '<button role="menuitem" type="button" disabled>Rubric feedback (Block 10)</button>';
   html += '<button role="menuitem" type="button" id="p4-ai-log-btn">AI-use log</button>';
   html += '<div class="menu-sep"></div>';
   html += '<button role="menuitem" type="button" id="p4-arrival-view">Arrival (plane metaphor)</button>';
@@ -2951,14 +3445,6 @@ function renderPhase4() {
   updatePhase4Footer(a);
 }
 function stateLabel(s) { return { 'not-started': 'Not started', 'in-progress': 'In progress', 'drafted': 'Drafted', 'revised': 'Revised' }[s] || 'Not started'; }
-function renderSingleSurface(a, surfaceId, title, adviceTitle, adviceBody) {
-  var html = '';
-  html += '<div class="p4-surface-header"><h1 class="p4-surface-title">' + title + '</h1><p class="p4-surface-state">' + stateLabel(surfaceStateForUI(a, surfaceId)) + '</p></div>';
-  html += '<div class="p4-advice"><div class="p4-advice-title">' + escapeHtml(adviceTitle) + '</div><p>' + escapeHtml(adviceBody) + '</p></div>';
-  var text = surfaceId === 'conclusion' ? a.p4.conclusion.text : a.p4.introduction.text;
-  html += '<textarea class="p4-single-editor" data-single-surface="' + surfaceId + '" placeholder="Write your ' + title.toLowerCase() + ' here.">' + escapeHtml(text || '') + '</textarea>';
-  return html;
-}
 function bindPhase4Events(a) {
   var btn = document.getElementById('p4-surface-btn');
   var menu = document.getElementById('p4-surface-menu');
@@ -2992,6 +3478,16 @@ function bindPhase4Events(a) {
       saveAssignmentRecord(a).catch(function (e) { console.error(e); });
     });
   });
+  
+  // Citation button listeners
+  phase4Body.querySelectorAll('.p4-cite-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var target = btn.getAttribute('data-cite');
+      openCitationPicker(a, target);
+    });
+  });
+  
   var toolsBtn = document.getElementById('p4-tools-btn');
   var toolsMenu = document.getElementById('p4-tools-menu');
   if (toolsBtn && toolsMenu) {
@@ -3047,6 +3543,69 @@ function handlePhase4Footer() {
     renderPhase4();
   } else if (action === 'read') { openCompletionView(a); }
 }
+
+// ---- Citation picker ----
+function openCitationPicker(a, targetKey) {
+  var approved = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }) : [];
+  if (approved.length === 0) {
+    openSheet({ title: 'Add citation', body: '<p>You haven\u2019t approved any sources yet. Go to Gather Sources to add and approve sources first.</p>', actions: [{ label: 'Close' }] });
+    return;
+  }
+  var body = '<p>Which source would you like to cite? The tool will insert it at your cursor.</p>';
+  body += '<div class="stuck-options">';
+  approved.forEach(function(src) {
+    var short = (src.author || 'Unknown') + ' ' + (src.year || '');
+    body += '<button type="button" class="stuck-option" data-cit-source="' + src.id + '">' + escapeHtml(short) + ' \u2014 ' + escapeHtml(src.title) + '</button>';
+  });
+  body += '</div>';
+  body += '<p class="translation-note" style="margin-top:var(--gap);">No lead-in text will be inserted. Just the citation. Check that it fits the sentence.</p>';
+  openSheet({
+    title: 'Add citation',
+    body: body,
+    actions: [{ label: 'Cancel' }]
+  });
+  sheetBody.querySelectorAll('[data-cit-source]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var srcId = btn.getAttribute('data-cit-source');
+      closeSheet();
+      insertCitation(a, targetKey, srcId);
+    });
+  });
+}
+
+function insertCitation(a, targetKey, srcId) {
+  var src = a.p2.sources.find(function (s) { return s.id === srcId; });
+  if (!src) return;
+  var style = a.spec.citationStyle || 'APA 7';
+  var citation = formatInlineCitation(src, style);
+  // Find the target textarea and insert at the cursor
+  var textarea = null;
+  if (targetKey.indexOf('body:') === 0) {
+    var idx = parseInt(targetKey.split(':')[1], 10);
+    textarea = phase4Body.querySelector('.p4-body-editor[data-body-idx="' + idx + '"]');
+  } else if (targetKey === 'conclusion') {
+    textarea = phase4Body.querySelector('.p4-single-editor[data-single-surface="conclusion"]');
+  } else if (targetKey === 'introduction') {
+    textarea = phase4Body.querySelector('.p4-single-editor[data-single-surface="introduction"]');
+  }
+  if (!textarea) return;
+  var start = textarea.selectionStart || textarea.value.length;
+  var end = textarea.selectionEnd || textarea.value.length;
+  var before = textarea.value.slice(0, start);
+  var after = textarea.value.slice(end);
+  // Insert with a space before if the preceding char is not whitespace
+  var prefix = (before.length > 0 && !/\s$/.test(before)) ? ' ' : '';
+  var newValue = before + prefix + citation + after;
+  textarea.value = newValue;
+  textarea.setSelectionRange(start + prefix.length + citation.length, start + prefix.length + citation.length);
+  textarea.focus();
+  textarea.dispatchEvent(new Event('input'));
+  // Log the AI use
+  logAIUse(a, 'citation', targetKey);
+  // Quiet confirmation
+  showToastSmall('Citation inserted. Check that it fits the sentence.');
+}
+
 function logAIUse(a, tool, surface) {
   if (!a.p4) return;
   if (!a.p4.aiLog) a.p4.aiLog = [];
@@ -3277,7 +3836,7 @@ function openAiLogSheet(a) {
   } else {
     a.p4.aiLog.slice().reverse().forEach(function (entry) {
       var surfaceLabel = getSurfaceLabel(entry.surface);
-      var toolLabel = entry.tool === 'structure-feedback' ? 'Structure feedback' : entry.tool === 'paragraph-feedback' ? 'Paragraph feedback' : entry.tool === 'sentence-feedback' ? 'Sentence feedback' : entry.tool === 'seeds' ? 'Seed questions' : entry.tool === 'walkthrough' ? 'Walkthrough' : entry.tool === 'translation' ? 'Translation' : entry.tool;
+      var toolLabel = entry.tool === 'structure-feedback' ? 'Structure feedback' : entry.tool === 'paragraph-feedback' ? 'Paragraph feedback' : entry.tool === 'sentence-feedback' ? 'Sentence feedback' : entry.tool === 'seeds' ? 'Seed questions' : entry.tool === 'walkthrough' ? 'Walkthrough' : entry.tool === 'translation' ? 'Translation' : entry.tool === 'citation' ? 'Citation inserted' : entry.tool;
       var dt = new Date(entry.timestamp);
       var dtStr = dt.toLocaleString();
       body += '<div class="ai-log-entry" data-log-id="' + entry.id + '">';
@@ -3400,7 +3959,7 @@ function initPhase5ForAssignment(a) {
     a.p5 = {
       citationResult: null, wordCountResult: null, formattingDone: false,
       integrityAnswers: [null, null, null, null], integrityComments: ['', '', '', ''],
-      institutionPolicy: 'Default (unspecified)', citationStyle: 'None / not required',
+      institutionPolicy: 'Default (unspecified)', citationStyle: a.spec.citationStyle || 'None / not required',
       declarationText: '', studentNumber: '', lecturerName: '', submissionDate: '', assignmentTitle: a.title || '',
       exportFormat: 'doc', checksRun: { citations: false, wordCount: false, formatting: false, integrity: false }
     };
@@ -3602,7 +4161,7 @@ function renderP5Declaration(a) {
   var log = (a.p4 && a.p4.aiLog) || [];
   var summary = {};
   log.forEach(function (e) {
-    var label = e.tool === 'structure-feedback' ? 'Structure feedback' : e.tool === 'paragraph-feedback' ? 'Paragraph feedback' : e.tool === 'sentence-feedback' ? 'Sentence feedback' : e.tool === 'seeds' ? 'Seed questions' : e.tool === 'walkthrough' ? 'Walkthrough' : e.tool === 'translation' ? 'Translation' : e.tool;
+    var label = e.tool === 'structure-feedback' ? 'Structure feedback' : e.tool === 'paragraph-feedback' ? 'Paragraph feedback' : e.tool === 'sentence-feedback' ? 'Sentence feedback' : e.tool === 'seeds' ? 'Seed questions' : e.tool === 'walkthrough' ? 'Walkthrough' : e.tool === 'translation' ? 'Translation' : e.tool === 'citation' ? 'Citation inserted' : e.tool;
     summary[label] = (summary[label] || 0) + 1;
   });
   html += '<div class="p5-export-summary"><h3 style="font-size:var(--size-small);font-weight:600;color:var(--text);margin:0 0 var(--gap-tight);">Log summary</h3>';
@@ -3617,7 +4176,10 @@ function renderP5Declaration(a) {
   Object.keys(INSTITUTION_POLICIES).forEach(function (k) { html += '<option value="' + escapeHtml(k) + '"' + (a.p5.institutionPolicy === k ? ' selected' : '') + '>' + escapeHtml(k) + '</option>'; });
   html += '</select><div class="form-hint" id="p5-inst-pol-text">' + escapeHtml(INSTITUTION_POLICIES[a.p5.institutionPolicy] || '') + '</div></div>';
   html += '<div class="p5-form-row"><label for="p5-cit-style">Citation style</label><select id="p5-cit-style" data-field="citationStyle">';
-  Object.keys(CITATION_STYLES).forEach(function (k) { html += '<option value="' + escapeHtml(k) + '"' + (a.p5.citationStyle === k ? ' selected' : '') + '>' + escapeHtml(k) + '</option>'; });
+  CITATION_STYLE_OPTIONS.forEach(function(opt) {
+    var val = opt.value || 'None / not required';
+    html += '<option value="' + escapeHtml(val) + '"' + (a.p5.citationStyle === val ? ' selected' : '') + '>' + escapeHtml(opt.label) + '</option>';
+  });
   html += '</select><div class="form-hint" id="p5-cit-style-text">' + escapeHtml(CITATION_STYLES[a.p5.citationStyle] || '') + '</div></div>';
   html += '<div class="p5-form-row"><label for="p5-decl-text">Your declaration (in your own words)</label>';
   html += '<textarea id="p5-decl-text" data-field="declarationText" style="min-height:140px;">' + escapeHtml(a.p5.declarationText || '') + '</textarea>';
@@ -3645,7 +4207,7 @@ function renderDeclarationPreview(a) {
   var log = (a.p4 && a.p4.aiLog) || [];
   var summary = {};
   log.forEach(function (e) {
-    var label = e.tool === 'structure-feedback' ? 'Structure feedback' : e.tool === 'paragraph-feedback' ? 'Paragraph feedback' : e.tool === 'sentence-feedback' ? 'Sentence feedback' : e.tool === 'seeds' ? 'Seed questions' : e.tool === 'walkthrough' ? 'Walkthrough' : e.tool === 'translation' ? 'Translation' : e.tool;
+    var label = e.tool === 'structure-feedback' ? 'Structure feedback' : e.tool === 'paragraph-feedback' ? 'Paragraph feedback' : e.tool === 'sentence-feedback' ? 'Sentence feedback' : e.tool === 'seeds' ? 'Seed questions' : e.tool === 'walkthrough' ? 'Walkthrough' : e.tool === 'translation' ? 'Translation' : e.tool === 'citation' ? 'Citation inserted' : e.tool;
     summary[label] = (summary[label] || 0) + 1;
   });
   var parts = [];
@@ -4002,8 +4564,8 @@ function smallestNextAction(a) {
   if (phase === 2) {
     var approved = (a.p2 && a.p2.sources) ? a.p2.sources.filter(function (s) { return s.approved; }).length : 0;
     if (approved >= 3) return 'Tap Continue to Build the Argument. That\u2019s the whole task.';
-    if (a.p2 && a.p2.sources && a.p2.sources.length > 0) return 'Open the top source in Find Sources and write one sentence of reading note. That\u2019s the whole task.';
-    return 'Type a working question into the topic box in Find Sources. You don\u2019t have to search yet. That\u2019s the whole task.';
+    if (a.p2 && a.p2.sources && a.p2.sources.length > 0) return 'Open the top source in Gather Sources and write one sentence of reading note. That\u2019s the whole task.';
+    return 'Type a working question into the topic box in Gather Sources. You don\u2019t have to search yet. That\u2019s the whole task.';
   }
   if (phase === 3) {
     if (!a.p3 || !a.p3.structure) return 'Pick a structure in Build the Argument. Any one. You can change it later. That\u2019s the whole task.';
@@ -4167,6 +4729,15 @@ function boot() {
   Promise.all([coursesPromise, assignmentsPromise]).then(function (results) {
     courses = Array.isArray(results[0]) ? results[0] : [];
     assignments = Array.isArray(results[1]) ? results[1] : [];
+    // Reconcile: prune courses with no surviving assignments
+    var courseIdsInUse = {};
+    assignments.forEach(function(a) { if (a.courseId) courseIdsInUse[a.courseId] = true; });
+    var before = courses.length;
+    courses = courses.filter(function(c) { return courseIdsInUse[c.id]; });
+    if (courses.length < before) {
+      // Save the pruned set on next write (individual deletes are handled elsewhere)
+      // No need to delete from DB synchronously here; it'll be re-checked.
+    }
     if (assignments.length > 0) bootLine.textContent = 'Opening your semester\u2026';
     if (welcome.setupComplete) {
       setTimeout(function () {
