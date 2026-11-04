@@ -240,6 +240,34 @@
   .course-card .assessment-meta { flex: 0 0 auto; color: var(--text-quiet); font-size: var(--size-tiny); margin-left: var(--gap-tight); text-align: right; }
   .course-card .assessment-row.passive .assessment-title { font-weight: 400; color: var(--text-quiet); }
   
+  /* ITEM 3 — assignment card */
+  .asg-card { display: block; border-top: 1px solid var(--rule); padding: 10px 0; }
+  .asg-card:first-of-type { border-top: 0; }
+  .asg-face { padding: 2px 0; }
+  .asg-title-row { display: flex; align-items: center; gap: 8px; }
+  .asg-dots { display: inline-flex; gap: 4px; flex: 0 0 auto; }
+  .asg-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--skeleton); background: transparent; box-sizing: border-box; }
+  .asg-dot.dot-filled { background: var(--accent); border-color: var(--accent); }
+  .asg-dot.dot-half { background: linear-gradient(90deg, var(--accent) 50%, transparent 50%); border-color: var(--accent); }
+  .asg-dot.dot-hollow { background: transparent; border-color: var(--skeleton); }
+  .asg-title-btn { flex: 1 1 auto; min-width: 0; font-family: inherit; font-size: var(--size-small); font-weight: 600; color: var(--text); background: none; border: 0; padding: 0; text-align: left; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .asg-title-btn:hover { color: var(--accent); }
+  .asg-expand { flex: 0 0 auto; font-size: 14px; line-height: 1; color: var(--text-quiet); background: none; border: 0; padding: 4px 6px; cursor: pointer; }
+  .asg-expand:hover { color: var(--text); }
+  .asg-meta { font-size: var(--size-tiny); color: var(--text-quiet); margin: 4px 0 6px 16px; }
+  .asg-bar { position: relative; height: 6px; background: var(--rule); border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+  .asg-bar-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 999px; transition: width 200ms ease; }
+  .asg-bar-subfill { position: absolute; inset: 0 auto 0 0; height: 100%; background: rgba(74, 111, 165, 0.35); border-radius: 999px; pointer-events: none; }
+  .asg-quiet { font-size: var(--size-tiny); color: var(--text-quiet); font-style: italic; line-height: 1.5; }
+  .asg-expanded { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--rule); }
+  .asg-exp-panel { font-size: var(--size-small); color: var(--text); line-height: 1.55; }
+  .asg-exp-row { display: flex; justify-content: space-between; gap: var(--gap-tight); padding: 3px 0; }
+  .asg-exp-label { color: var(--text-quiet); }
+  .asg-exp-value { font-weight: 600; color: var(--text); text-align: right; }
+  .asg-exp-actions { margin-top: var(--gap-tight); display: flex; justify-content: flex-end; }
+  .asg-continue-btn { font-size: var(--size-small); font-weight: 600; color: var(--surface); background: var(--accent); padding: 8px 16px; border-radius: 999px; border: 0; font-family: inherit; cursor: pointer; }
+  .asg-continue-btn:hover { opacity: 0.9; }  
+  
   .phase-tabs { display: flex; gap: 4px; margin: 0 0 var(--gap-loose); overflow-x: auto; padding-bottom: 2px; }
   .phase-tab { flex: 0 0 auto; font-size: var(--size-small); color: var(--text-quiet); background: none; border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; font-family: inherit; cursor: pointer; white-space: nowrap; }
   .phase-tab.active { color: var(--surface); background: var(--accent); border-color: var(--accent); font-weight: 600; }
@@ -551,7 +579,8 @@
   @media (prefers-reduced-motion: reduce) {
     #scrim, .sheet, #support-menu, .p4-surface-menu, .p4-tools-menu,
     .level-card, #footer-action,
-    .progress-fill, .progress-inner, .setup-complete-line, #boot-screen { transition: none; }
+    .progress-fill, .progress-inner, .setup-complete-line, #boot-screen,
+    .asg-bar-fill { transition: none; }
   }
 </style>
 </head>
@@ -2085,6 +2114,25 @@ async function commitParseResults() {
   }
 }
 
+// ----------------------------------------------------------------------------
+// ITEM 3 — Workload estimate
+// Heuristic, not a promise: ~180 words/hour for an undergrad essay; group work
+// shaves 15% (shared load). Falls back to 8h when word count is unknown.
+// Round to the nearest half-hour. Surfaced as "~N hrs" so it never reads as a
+// precise measurement — this is a planning aid, not a grade predictor.
+// ----------------------------------------------------------------------------
+function deriveWorkloadHours(wordCount, isGroup) {
+  var wc = parseInt(wordCount, 10) || 0;
+  var base;
+  if (wc <= 0) base = 8;
+  else if (wc < 750) base = 3 + (wc / 750) * 2;          // 0–750  → 3–5 h
+  else if (wc < 1500) base = 5 + ((wc - 750) / 750) * 3; // 750–1500 → 5–8 h
+  else if (wc < 3000) base = 8 + ((wc - 1500) / 1500) * 4; // 1500–3000 → 8–12 h
+  else base = 12 + ((wc - 3000) / 3000) * 6;             // 3000+  → 12–18 h
+  if (isGroup) base *= 0.85;
+  // Round to nearest 0.5
+  return Math.max(1, Math.round(base * 2) / 2);
+}
 function makeAssignmentFromParsed(pa, course, sourceFile) {
   var title = pa.title || 'Untitled assignment';
   var spec = {
@@ -2104,6 +2152,7 @@ function makeAssignmentFromParsed(pa, course, sourceFile) {
     pageSize: pa.pageSize || '',
     orientation: pa.orientation || ''
   };
+  var wc = deriveWordCount(pa.wordCount || '');
   return {
     id: 'asgn-' + Date.now() + '-' + Math.floor(Math.random() * 100000),
     courseId: course.id,
@@ -2111,10 +2160,10 @@ function makeAssignmentFromParsed(pa, course, sourceFile) {
     courseName: course.name || 'Unassigned course',
     title: title,
     dueInDays: deriveDueInDays(pa.dueDate || ''),
-    wordCount: deriveWordCount(pa.wordCount || ''),
-    estimatedHours: 8,
+    wordCount: wc,
+    estimatedHours: deriveWorkloadHours(wc, (pa.groupWork || '').toLowerCase() === 'group'),
     phase: 2, phaseLabel: 'Phase 2 \u2014 Gather Sources',
-    progressPercent: 30, sections: [], quietLine: 'Phase 1 complete. Ready for Phase 2.',
+    progressPercent: 30, sections: [], quietLine: 'Details verified. Next: gather at least three sources.',
     canDeadlineMode: false,
     spec: spec,
     parserFields: ['purpose', 'skills', 'knowledge', 'task', 'criteria', 'logistics', 'aiPolicy', 'rubric', 'citationStyle', 'groupWork'],
@@ -2494,8 +2543,9 @@ function confirmExtraction() {
     courseName: unassigned.name,
     title: title,
     dueInDays: deriveDueInDays(f.logistics), wordCount: deriveWordCount(f.task + ' ' + entryText),
-    estimatedHours: 8, phase: 2, phaseLabel: 'Phase 2 \u2014 Gather Sources',
-    progressPercent: 30, sections: [], quietLine: 'Phase 1 complete. Ready for Phase 2.',
+    estimatedHours: deriveWorkloadHours(deriveWordCount(f.task + ' ' + entryText), (f.groupWork || '').toLowerCase() === 'group'),
+    phase: 2, phaseLabel: 'Phase 2 \u2014 Gather Sources',
+    progressPercent: 30, sections: [], quietLine: 'Details verified. Next: gather at least three sources.',
     canDeadlineMode: false,
     spec: {
       purpose: f.purpose, skills: f.skills, knowledge: f.knowledge, task: f.task,
@@ -2657,10 +2707,7 @@ function renderSemester() {
       
       items.forEach(function(row) {
         if (row.type === 'assignment') {
-          var a = row.item;
-          var dueLine = a.dueInDays > 0 ? 'Due in ' + a.dueInDays + ' day' + (a.dueInDays === 1 ? '' : 's') : 'No due date';
-          var wcLine = a.wordCount > 0 ? ' \u00b7 ' + a.wordCount + ' words' : '';
-          html += '<div class="assessment-row"><div class="assessment-title clickable" onclick="enterAssignment(\'' + a.id + '\')">' + escapeHtml(a.title) + ' <span style="font-weight:400;font-size:var(--size-tiny);color:var(--text-quiet);">(' + escapeHtml(a.phaseLabel.split(' \u2014 ')[0]) + ')</span></div><div class="assessment-meta">' + dueLine + wcLine + '</div></div>';
+          html += renderAssignmentCard(row.item);
         } else {
           var as = row.item;
           html += '<div class="assessment-row passive"><div class="assessment-title">' + escapeHtml(as.title) + '</div><div class="assessment-meta">' + escapeHtml(as.date) + (as.weight ? ' \u00b7 ' + escapeHtml(as.weight) : '') + '</div></div>';
@@ -2675,6 +2722,132 @@ function renderSemester() {
   pvBody.innerHTML = html;
   var why = document.getElementById('bn-why');
   if (why) why.addEventListener('click', function (e) { e.stopPropagation(); document.getElementById('bottleneck-band').classList.toggle('explained'); });
+  // Item 3: wire the expand chevrons
+  pvBody.querySelectorAll('[data-asg-expand]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var id = btn.getAttribute('data-asg-expand');
+      var panel = pvBody.querySelector('[data-asg-expanded="' + id + '"]');
+      var card = btn.closest('.asg-card');
+      if (!panel || !card) return;
+      var isOpen = !panel.hidden;
+      panel.hidden = isOpen;
+      card.classList.toggle('asg-card-open', !isOpen);
+      btn.setAttribute('aria-expanded', (!isOpen) ? 'true' : 'false');
+      btn.textContent = (!isOpen) ? '\u25b4' : '\u25be';
+    });
+  });
+}
+
+// ----------------------------------------------------------------------------
+// ITEM 3 — Assignment card (programme view)
+// Card face: title + section dots + due/meta line + progress bar (with Phase-4
+// sub-fill) + quiet line + expand chevron.
+// Expanded: workload breakdown + a Continue button.
+// Card title is a separate tap target from the expand chevron.
+// ----------------------------------------------------------------------------
+function renderAssignmentCard(a) {
+  var phase = a.phase || 2;
+  var surfaces = getSurfacesForAssignment(a);
+  var dots = renderSectionDots(a, surfaces);
+  var dueLine = a.dueInDays > 0 ? 'Due in ' + a.dueInDays + ' day' + (a.dueInDays === 1 ? '' : 's') : 'No due date';
+  var wcLine = a.wordCount > 0 ? ' \u00b7 ' + a.wordCount + ' words' : '';
+  var hrsLine = a.estimatedHours ? ' \u00b7 ~' + formatHours(a.estimatedHours) + ' hrs' : '';
+  var bar = renderProgressBar(a, phase);
+  var quiet = a.quietLine ? escapeHtml(a.quietLine) : '';
+  var idAttr = escapeHtml(a.id);
+  var html = '';
+  html += '<div class="asg-card" data-asg-id="' + idAttr + '">';
+  // Card face — title row: dots + title + chevron
+  html += '<div class="asg-face">';
+  html += '<div class="asg-title-row">';
+  html += '<div class="asg-dots" aria-hidden="true">' + dots + '</div>';
+  html += '<button type="button" class="asg-title-btn" onclick="enterAssignment(\'' + idAttr + '\')">' + escapeHtml(a.title) + '</button>';
+  html += '<button type="button" class="asg-expand" aria-label="Show details" aria-expanded="false" data-asg-expand="' + idAttr + '">\u25be</button>';
+  html += '</div>';
+  // Meta line
+  html += '<div class="asg-meta">' + dueLine + wcLine + hrsLine + '</div>';
+  // Progress bar
+  html += bar;
+  // Quiet line
+  if (quiet) html += '<div class="asg-quiet">' + quiet + '</div>';
+  html += '</div>';
+  // Expanded panel (hidden by default)
+  html += '<div class="asg-expanded" data-asg-expanded="' + idAttr + '" hidden>';
+  html += renderAssignmentExpanded(a, surfaces);
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+function formatHours(h) {
+  // 9 -> "9", 8.5 -> "8.5", 0.5 -> "0.5"
+  if (h === Math.floor(h)) return String(h);
+  return h.toFixed(1);
+}
+
+function renderSectionDots(a, surfaces) {
+  // Dots are meaningful once the student has an assignment; before Phase 4 the
+  // dots show hollow (not-started) but only for surfaces that will exist.
+  // IRAC has one surface (body); others have three.
+  var html = '';
+  surfaces.forEach(function (sid) {
+    var st = getSurfaceState(a, sid);
+    var hasText = a.p4 && surfaceHasAnyText(a, sid);
+    var cls = 'asg-dot';
+    if (st === 'drafted' || st === 'revised') cls += ' dot-filled';
+    else if (hasText || st === 'in-progress') cls += ' dot-half';
+    else cls += ' dot-hollow';
+    html += '<span class="' + cls + '"></span>';
+  });
+  return html;
+}
+
+function renderProgressBar(a, phase) {
+  // Overall progress from a.progressPercent (0–100). The Phase-4 span
+  // (70→90) is drawn as three equal sub-segments driven by surface state.
+  var pct = Math.max(0, Math.min(100, a.progressPercent || 0));
+  var html = '<div class="asg-bar" role="img" aria-label="Progress: ' + pct + '%">';
+  html += '<div class="asg-bar-fill" style="width:' + pct + '%"></div>';
+  // Sub-fill: only meaningful when Phase 4 is active (phase >= 4) and not IRAC-with-only-body
+  var surfaces = getSurfacesForAssignment(a);
+  if (phase >= 4 && surfaces.length > 1 && a.p4) {
+    var drafted = surfaces.map(function (sid) {
+      var st = getSurfaceState(a, sid);
+      return (st === 'drafted' || st === 'revised') ? 1 : (surfaceHasAnyText(a, sid) ? 0.5 : 0);
+    });
+    var subTotal = drafted.reduce(function (s, v) { return s + v; }, 0);
+    var subPct = Math.round((subTotal / surfaces.length) * 100);
+    html += '<div class="asg-bar-subfill" style="width:' + subPct + '%"></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderAssignmentExpanded(a, surfaces) {
+  var html = '';
+  html += '<div class="asg-exp-panel">';
+  // Workload
+  var hrs = a.estimatedHours || 0;
+  if (hrs > 0) {
+    html += '<div class="asg-exp-row"><span class="asg-exp-label">Workload estimate</span><span class="asg-exp-value">~' + formatHours(hrs) + ' hrs</span></div>';
+    if (a.wordCount > 0) {
+      html += '<div class="asg-exp-row"><span class="asg-exp-label">Based on</span><span class="asg-exp-value">' + a.wordCount + ' words' + (a.spec && a.spec.groupWork && a.spec.groupWork.toLowerCase() === 'group' ? ', group work' : '') + '</span></div>';
+    }
+    // Phase-4 hint if we can see surfaces
+    if (a.p4 && surfaces.length > 1) {
+      var notStarted = surfaces.filter(function (sid) { return getSurfaceState(a, sid) === 'not-started' && !surfaceHasAnyText(a, sid); });
+      if (notStarted.length > 0 && (a.phase || 2) >= 4) {
+        html += '<div class="asg-exp-row"><span class="asg-exp-label">Still to draft</span><span class="asg-exp-value">' + notStarted.map(getSurfaceLabel).join(', ') + '</span></div>';
+      }
+    }
+  } else {
+    html += '<div class="asg-exp-row"><span class="asg-exp-label">Workload estimate</span><span class="asg-exp-value">Not enough detail yet</span></div>';
+  }
+  // Continue button
+  html += '<div class="asg-exp-actions"><button type="button" class="asg-continue-btn" onclick="enterAssignment(\'' + escapeHtml(a.id) + '\')">Continue \u2192</button></div>';
+  html += '</div>';
+  return html;
 }
 
 function enterAssignment(id) {
@@ -2731,7 +2904,7 @@ function setActivePhaseTab(phaseNum) {
   else if (phaseNum === 3) { p5UI.screen = 'inactive'; footerState.textContent = 'Build the Argument'; footerAction.classList.add('hidden'); surface.scrollTop = 0; renderPhase3(); }
   else if (phaseNum === 4) { p5UI.screen = 'inactive'; surface.scrollTop = 0; renderPhase4(); }
   else if (phaseNum === 5) {
-    if (a.phase < 5) { a.phase = 5; a.phaseLabel = 'Phase 5 \u2014 Complete'; a.progressPercent = 90; a.quietLine = 'Draft complete. Ready to submit.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
+    if (a.phase < 5) { a.phase = 5; a.phaseLabel = 'Phase 5 \u2014 Complete'; a.progressPercent = 90; a.quietLine = 'Draft complete. Run the checks, then export.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
     p5UI.screen = 'arrival';
     surface.scrollTop = 0;
     renderPhase5();
@@ -2926,7 +3099,7 @@ function approveSource(assignmentId, srcId) {
   var approvedCount = a.p2.sources.filter(function (s) { return s.approved; }).length;
   if (approvedCount >= 3 && a.phase < 3) {
     a.phase = 3; a.phaseLabel = 'Phase 3 \u2014 Build the Argument';
-    a.progressPercent = 50; a.quietLine = 'Phase 2 complete. Ready for Phase 3.';
+    a.progressPercent = 50; a.quietLine = 'Sources gathered. Next: choose the shape and write the thesis.';
     updatePhaseTabsForAssignment();
   }
   saveAssignmentRecord(a).catch(function (e) { console.error(e); });
@@ -2940,7 +3113,7 @@ function removeSource(assignmentId, srcId) {
   var approvedCount = a.p2.sources.filter(function (s) { return s.approved; }).length;
   if (approvedCount < 3 && a.phase > 2) {
     a.phase = 2; a.phaseLabel = 'Phase 2 \u2014 Gather Sources';
-    a.progressPercent = 30; a.quietLine = 'Phase 2 in progress.';
+    a.progressPercent = 30; a.quietLine = 'Back to sources \u2014 at least three need a reading note to continue.';
     updatePhaseTabsForAssignment();
   }
   saveAssignmentRecord(a).catch(function (e) { console.error(e); });
@@ -3204,7 +3377,7 @@ function renderPhase3() {
   phase3Body.querySelectorAll('.outline-section-remove').forEach(function (btn) { btn.addEventListener('click', function () { removeOutlineSection(a.id, parseInt(btn.getAttribute('data-idx'), 10)); }); });
   var continueBtn = document.getElementById('p3-continue-btn');
   if (continueBtn) continueBtn.addEventListener('click', function () {
-    if (a.phase < 4) { a.phase = 4; a.phaseLabel = 'Phase 4 \u2014 Write'; a.progressPercent = 70; a.quietLine = 'Phase 3 complete. Ready to write.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
+    if (a.phase < 4) { a.phase = 4; a.phaseLabel = 'Phase 4 \u2014 Write'; a.progressPercent = 70; a.quietLine = 'Thesis and outline set. Next: write the body.'; saveAssignmentRecord(a).catch(function (e) { console.error(e); }); updatePhaseTabsForAssignment(); }
     setActivePhaseTab(4);
   });
 }
@@ -4729,6 +4902,20 @@ function boot() {
   Promise.all([coursesPromise, assignmentsPromise]).then(function (results) {
     courses = Array.isArray(results[0]) ? results[0] : [];
     assignments = Array.isArray(results[1]) ? results[1] : [];
+    // ITEM 3 backfill: recompute estimatedHours for records that still carry the
+    // old fixed 8h, or that pre-date the heuristic. Idempotent; safe to run each boot.
+    var backfillCount = 0;
+    assignments.forEach(function (a) {
+      var isGroup = !!(a.spec && a.spec.groupWork && a.spec.groupWork.toLowerCase() === 'group');
+      var expected = deriveWorkloadHours(a.wordCount || 0, isGroup);
+      // Only overwrite the known-stale fixed default, or records with no estimate.
+      if (a.estimatedHours === 8 || !a.estimatedHours || a.estimatedHours !== expected && a.wordCount > 0) {
+        if (a.estimatedHours !== expected) { a.estimatedHours = expected; backfillCount++; }
+      }
+    });
+    if (backfillCount > 0) {
+      assignments.forEach(function (a) { saveAssignmentRecord(a).catch(function (e) { console.error(e); }); });
+    }
     // Reconcile: prune courses with no surviving assignments
     var courseIdsInUse = {};
     assignments.forEach(function(a) { if (a.courseId) courseIdsInUse[a.courseId] = true; });
