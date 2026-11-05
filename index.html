@@ -2998,7 +2998,8 @@ function renderPhase2() {
   phase2Body.querySelectorAll('.source-approve-btn').forEach(function (btn) { btn.addEventListener('click', function () { approveSource(a.id, btn.getAttribute('data-src-id')); }); });
   phase2Body.querySelectorAll('.source-remove-btn').forEach(function (btn) { btn.addEventListener('click', function () { removeSource(a.id, btn.getAttribute('data-src-id')); }); });
   phase2Body.querySelectorAll('.reading-note-input').forEach(function (el) {
-    el.addEventListener('input', function () {
+    el.addEventListener('input', function (ev) {
+      if (ev && ev.isComposing) return;
       var srcId = el.getAttribute('data-src-id');
       var src = a.p2.sources.find(function (s) { return s.id === srcId; });
       if (src) {
@@ -3628,7 +3629,8 @@ function bindPhase4Events(a) {
   }
   phase4Body.querySelectorAll('.p4-body-editor').forEach(function (el) {
     autosizeTextarea(el);
-    el.addEventListener('input', function () {
+    el.addEventListener('input', function (ev) {
+      if (ev && ev.isComposing) return;
       var idx = parseInt(el.getAttribute('data-body-idx'), 10);
       if (isNaN(idx) || !a.p4.body.sections[idx]) return;
       a.p4.body.sections[idx].text = el.value;
@@ -3642,7 +3644,8 @@ function bindPhase4Events(a) {
   });
   phase4Body.querySelectorAll('.p4-single-editor').forEach(function (el) {
     autosizeTextarea(el);
-    el.addEventListener('input', function () {
+    el.addEventListener('input', function (ev) {
+      if (ev && ev.isComposing) return;
       var surfaceId = el.getAttribute('data-single-surface');
       if (surfaceId === 'conclusion') a.p4.conclusion.text = el.value;
       else if (surfaceId === 'introduction') a.p4.introduction.text = el.value;
@@ -4360,7 +4363,8 @@ function renderP5Declaration(a) {
   html += '<div class="p5-declaration-preview"><span class="dp-label">Preview (assembled by the tool)</span><span id="p5-decl-preview">' + renderDeclarationPreview(a) + '</span></div>';
   phase5Body.innerHTML = html;
   phase5Body.querySelectorAll('[data-field]').forEach(function (el) {
-    el.addEventListener('input', function () {
+    el.addEventListener('input', function (ev) {
+      if (ev && ev.isComposing) return;
       var f = el.getAttribute('data-field');
       if (f) a.p5[f] = el.value;
       if (f === 'institutionPolicy') { var t = document.getElementById('p5-inst-pol-text'); if (t) t.textContent = INSTITUTION_POLICIES[el.value] || ''; }
